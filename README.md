@@ -1,93 +1,225 @@
 # python3-core-api-client
 
+Python client for Core API.
 
+This client was built for and tested on the **1.241** version of the API.
+
+## Support
+
+This client is officially supported by Cyberfusion.
+
+Have questions? Ask your support questions on the [platform](https://platform.cyberfusion.io/). No access to the platform? Send an email to [support@cyberfusion.io](mailto:support@cyberfusion.io). **GitHub issues are not actively monitored.**
+
+# Install
+
+This client can be used in any Python project and with any framework.
+
+This client requires Python 3.11 or higher.
+
+## PyPI
+
+Run the following command to install the package from PyPI:
+
+    pip3 install python3-core-api-client
+
+## Debian
+
+Run the following commands to build a Debian package:
+
+    mk-build-deps -i -t 'apt -o Debug::pkgProblemResolver=yes --no-install-recommends -y'
+    dpkg-buildpackage -us -uc
+
+# Usage
+
+## API documentation
+
+Refer to the [API documentation](https://core-api.cyberfusion.io/) for information about API requests.
+
+**Enums and Models** are **auto-generated** based on the OpenAPI spec - so the client is completely in line with the Core API. **Requests and Resources** are not auto-generated.
 
 ## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Initialise the `CoreApiConnector` with your username and password **or** API key.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+The connector takes care of authentication, and offers several resources (such as `virtual_hosts`) and endpoints (i.e. `list_virtual_hosts`).
 
-## Add your files
+```python
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+# Using username and password
 
+connector = CoreApiConnector(
+    username='username', password='password'
+)
+
+# Or using API key
+
+connector = CoreApiConnector(
+    api_key='api_key'
+)
+
+virtual_hosts = connector.virtual_hosts.list_virtual_hosts()
 ```
-cd existing_repo
-git remote add origin https://vcs.cyberfusion.nl/core/python3-core-api-client.git
-git branch -M main
-git push -uf origin main
+
+## Authentication
+
+This client takes care of authentication.
+
+If authentication using username and password fails, `cyberfusion.CoreApiClient.exceptions.AuthenticationException` is thrown.
+
+If authentication using API key fails, the regular `CallException` exception fis raised.
+
+Don't have an API user? Contact Cyberfusion.
+
+## Requests
+
+The client uses a fluent interface to build requests.
+
+To view all possible requests:
+
+- Start with the connector
+- Go to the desired resource
+- Call the desired endpoint
+
+Code example:
+
+```python
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
+
+from cyberfusion.CoreApiClient.models import MailDomainCreateRequest
+
+connector = CoreApiConnector(
+    username='username', password='password'
+)
+
+connector.mail_domains.create_mail_domain(
+    MailDomainCreateRequest(
+        domain='cyberfusion.io',
+        unix_user_id=1,
+        is_local=True,
+        catch_all_forward_email_addresses=[],
+    )
+)
 ```
 
-## Integrate with your tools
+Models are validated before sending the request (using [Pydantic](https://docs.pydantic.dev/latest/)). If invalid data is provided, `pydantic.ValidationError` is thrown.
 
-- [ ] [Set up project integrations](https://vcs.cyberfusion.nl/core/python3-core-api-client/-/settings/integrations)
+For example:
 
-## Collaborate with your team
+```python
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+from cyberfusion.CoreApiClient.models import MailAliasCreateRequest
 
-## Test and Deploy
+connector = CoreApiConnector(
+    username='username', password='password'
+)
 
-Use the built-in continuous integration in GitLab.
+connector.mail_aliases.create_mail_alias(
+    MailAliasCreateRequest(
+        local_part='&^@$#^&@$#^&',
+        mail_domain_id=1,
+    )
+)
+# throw pydantic.ValidationError
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+The exception will provide more details about the validation errors.
 
-***
+## Responses
 
-# Editing this README
+### Get model from response
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Calling a n endpoint returns the resource model.
 
-## Suggestions for a good README
+For example:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+```python
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
 
-## Name
-Choose a self-explaining name for your project.
+from cyberfusion.CoreApiClient.models import MailDomainCreateRequest
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+connector = CoreApiConnector(
+    username='username', password='password'
+)
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+mail_domain_resource = connector.mail_domains.create_mail_domain(
+    MailDomainCreateRequest(
+        domain='cyberfusion.io',
+        unix_user_id=1,
+        is_local=True,
+        catch_all_forward_email_addresses=[],
+    )
+)
+# mail_domain_resource is a model representing the API resource
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Throw exception on failure
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+If a request returns an unexpected HTTP status code, `cyberfusion.CoreApiClient.exceptions.CallException` is thrown.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Enums
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Some properties only accept certain values (enums).
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Find these values in `cyberfusion.CoreApiClient.models`.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Deep dive
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### Custom `requests` session
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Want to provide your own `requests` session? Pass it to the connector:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```python
+import requests
 
-## License
-For open source projects, say how it is licensed.
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+connector = CoreApiConnector(
+    ..., requests_session=requests.Session()
+)
+```
+
+Don't pass a custom session? A default one is created, including retries.
+
+### Manual requests
+
+Don't want to use the full SDK, but easily send requests and retrieve responses from the Core API?
+
+Initialise the connector as usual, and call `send`:
+
+```python
+import requests
+
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
+
+connector = CoreApiConnector(...)
+
+response = connector.send(method='GET', path='/foobar', data={}, query_parameters={})
+
+response.status_code
+response.json
+response.body
+response.headers
+response.failed
+```
+
+To raise `cyberfusion.CoreApiClient.exceptions.CallException` in case of an unexpected HTTP status code, use `send_or_fail`.
+
+### Generating models
+
+Auto-generate models as follows:
+
+    datamodel-codegen --input-file-type openapi --input $file --output src/cyberfusion/CoreApiClient/models.py --target-python-version 3.11
+
+Replace `$file` by the path to the OpenAPI spec (JSON).
+
+Note: don't replace `models.py` in full - it contains customisations.
+
+# Test strategy
+
+Tests use a mock server, [Stoplight Prism](https://stoplight.io/open-source/prism).
+
+Prism checks requests' syntactic validity - based on the OpenAPI spec.
+
+Therefore, the resources' test suites solely call methods without asserting specifics: nearly all possible issues - invalid requests, mismatch between resource models and endpoint, etc. - are already caught by having a validating mock server.
