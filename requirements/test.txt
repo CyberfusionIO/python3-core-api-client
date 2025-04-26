@@ -1,8 +1,8 @@
-coverage==7.6.1
-Faker==37.0.1
+coverage==7.8.0
+Faker==37.1.0
 polyfactory==2.21.0
-pytest==8.3.2
-pytest-cov==6.0.0
+pytest==8.3.5
+pytest-cov==6.1.1
 pytest-repeat==0.9.4
 pytest-xdist==3.6.1
 requests-mock==1.12.1
