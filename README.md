@@ -41,7 +41,7 @@ Refer to the [API documentation](https://core-api.cyberfusion.io/) for informati
 
 Initialise the `CoreApiConnector` with your username and password **or** API key.
 
-The connector takes care of authentication, and offers several resources (such as `virtual_hosts`) and endpoints (i.e. `list_virtual_hosts`).
+The connector takes care of authentication, and offers several resources (e.g. `virtual_hosts`) and endpoints (e.g. `list_virtual_hosts`).
 
 ```python
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
@@ -67,15 +67,13 @@ This client takes care of authentication.
 
 If authentication using username and password fails, `cyberfusion.CoreApiClient.exceptions.AuthenticationException` is thrown.
 
-If authentication using API key fails, the regular `CallException` exception fis raised.
+If authentication using API key fails, the regular `CallException` exception is raised.
 
 Don't have an API user? Contact Cyberfusion.
 
 ## Requests
 
 The client uses a fluent interface to build requests.
-
-To view all possible requests:
 
 - Start with the connector
 - Go to the desired resource
@@ -130,7 +128,7 @@ The exception will provide more details about the validation errors.
 
 ### Get model from response
 
-Calling a n endpoint returns the resource model.
+Calling an endpoint returns the resource model.
 
 For example:
 
@@ -180,7 +178,7 @@ connector = CoreApiConnector(
 )
 ```
 
-Don't pass a custom session? A default one is created, including retries.
+Don't pass a custom session? A default one is created, with retries enabled.
 
 ### Manual requests
 
@@ -204,7 +202,7 @@ response.headers
 response.failed
 ```
 
-To raise `cyberfusion.CoreApiClient.exceptions.CallException` in case of an unexpected HTTP status code, use `send_or_fail`.
+To raise `cyberfusion.CoreApiClient.exceptions.CallException` in case of an unexpected HTTP status code, use `send_or_fail` instead of `send`. It takes the same parameters.
 
 ### Generating models
 
