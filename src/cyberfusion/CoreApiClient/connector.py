@@ -1,6 +1,5 @@
 import json
 from typing import Optional, Tuple
-from urllib.parse import urlparse
 
 from cyberfusion.CoreApiClient._encoders import DatetimeEncoder
 from cyberfusion.CoreApiClient.exceptions import CallException, AuthenticationException
@@ -17,7 +16,7 @@ import importlib.metadata
 from cyberfusion.CoreApiClient.http import Response
 
 
-class CoreApiConnector:
+class CoreApiClient:
     def __init__(
         self,
         base_url: str = "https://core-api.cyberfusion.io",
@@ -51,10 +50,6 @@ class CoreApiConnector:
         self.requests_session = requests_session or self.get_default_requests_session()
 
     @property
-    def root_url(self) -> str:
-        return urlparse(self.base_url)._replace(path="").geturl()
-
-    @property
     def authentication_headers(self) -> Dict[str, str]:
         headers = {}
 
@@ -73,7 +68,7 @@ class CoreApiConnector:
 
             if login:
                 response = self.requests_session.post(
-                    "".join([self.root_url, "/api/v1/login/access-token"]),
+                    "".join([self.base_url, "/api/v1/login/access-token"]),
                     data={"username": self.username, "password": self.password},
                     verify=certifi.where(),
                     timeout=60,
@@ -181,6 +176,8 @@ class CoreApiConnector:
 
         return session
 
+
+class CoreApiConnector(CoreApiClient):
     @cached_property
     def login(self) -> resources.login.Login:
         return resources.login.Login(self)
