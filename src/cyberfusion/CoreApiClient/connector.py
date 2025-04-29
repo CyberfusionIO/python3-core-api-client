@@ -1,7 +1,7 @@
 import json
 from typing import Optional, Tuple
 
-from cyberfusion.CoreApiClient._encoders import DatetimeEncoder
+from cyberfusion.CoreApiClient._encoders import CustomEncoder
 from cyberfusion.CoreApiClient.exceptions import CallException, AuthenticationException
 
 from requests.sessions import Session
@@ -108,13 +108,13 @@ class CoreApiClient:
         url = "".join([self.base_url, path])
 
         if data and content_type == "application/json":
-            data = json.dumps(data, cls=DatetimeEncoder)
+            data = json.dumps(data, cls=CustomEncoder)
 
         if query_parameters:
             for key, value in query_parameters.items():
                 if isinstance(value, datetime.datetime):
                     query_parameters[key] = json.loads(
-                        json.dumps(value, cls=DatetimeEncoder)
+                        json.dumps(value, cls=CustomEncoder)
                     )
 
         requests_response = self.requests_session.request(
