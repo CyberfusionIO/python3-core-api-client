@@ -1,3 +1,9 @@
+python3-core-api-client (0.2) unstable; urgency=low
+
+  - Split `CoreApiClient` into dedicated class
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Tue, 29 Apr 2025 11:09:00 +0200
+
 python3-core-api-client (0.1) unstable; urgency=low
 
   - Initial release

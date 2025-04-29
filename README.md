@@ -102,7 +102,7 @@ connector.mail_domains.create_mail_domain(
 
 Models are validated before sending the request (using [Pydantic](https://docs.pydantic.dev/latest/)). If invalid data is provided, `pydantic.ValidationError` is thrown.
 
-For example:
+Code example:
 
 ```python
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
@@ -122,7 +122,36 @@ connector.mail_aliases.create_mail_alias(
 # throw pydantic.ValidationError
 ```
 
-The exception will provide more details about the validation errors.
+The exception has an `errors()` method to get all validation errors.
+
+Code example:
+
+```python
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
+
+from cyberfusion.CoreApiClient.models import MailAliasCreateRequest
+
+import pydantic
+
+connector = CoreApiConnector(
+    username='username', password='password'
+)
+
+try:
+    connector.mail_aliases.create_mail_alias(
+        MailAliasCreateRequest(
+            local_part='&^@$#^&@$#^&',
+            mail_domain_id=1,
+        )
+    )
+except pydantic.ValidationError as e:
+    errors = e.errors()
+
+for error in errors:
+    print(error['loc'])
+    print(error['msg'])
+    print(error['type'])
+```
 
 ## Responses
 
@@ -130,7 +159,7 @@ The exception will provide more details about the validation errors.
 
 Calling an endpoint returns the resource model.
 
-For example:
+Code example:
 
 ```python
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
@@ -155,6 +184,8 @@ mail_domain_resource = connector.mail_domains.create_mail_domain(
 ### Throw exception on failure
 
 If a request returns an unexpected HTTP status code, `cyberfusion.CoreApiClient.exceptions.CallException` is thrown.
+
+The exception includes the response, and the HTTP status code.
 
 ## Enums
 

@@ -66,7 +66,6 @@ def test_attributes_jwt(faker: faker.Faker, base_url: str) -> None:
     )
 
     assert api_connector.base_url == base_url
-    assert api_connector.root_url == base_url
     assert api_connector.username == username
     assert api_connector.password == password
     assert api_connector.api_key is None
@@ -80,7 +79,6 @@ def test_attributes_api_key(faker: faker.Faker, base_url: str) -> None:
     api_connector = CoreApiConnector(base_url=base_url, api_key=api_key)
 
     assert api_connector.base_url == base_url
-    assert api_connector.root_url == base_url
     assert api_connector.api_key == api_key
     assert api_connector.username is None
     assert api_connector.password is None
@@ -296,19 +294,3 @@ def test_send_query_parameters_datetime_serialised(
     )
 
     assert str(VALUE.year) in noop_mock.last_request.qs[KEY][0]
-
-
-def test_root_url_sub(faker: faker.Faker) -> None:
-    username = faker.user_name()
-    password = faker.password()
-
-    base_url = "https://example.com/sub"
-
-    api_connector = CoreApiConnector(
-        base_url=base_url,
-        username=username,
-        password=password,
-    )
-
-    assert api_connector.base_url == base_url
-    assert api_connector.root_url == "https://example.com"
