@@ -4,5 +4,5 @@ polyfactory==2.21.0
 pytest==8.3.5
 pytest-cov==6.1.1
 pytest-repeat==0.9.4
-pytest-xdist==3.6.1
+pytest-xdist==3.7.0
 requests-mock==1.12.1
