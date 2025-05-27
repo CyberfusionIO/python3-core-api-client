@@ -1110,7 +1110,7 @@ class HTTPRetryConditionEnum(StrEnum):
     EMPTY_RESPONSE = "Empty response"
     JUNK_RESPONSE = "Junk response"
     RESPONSE_TIMEOUT = "Response timeout"
-    FIELD_0_RTT_REJECTED = "0-RTT rejected"
+    ZERO_RTT_REJECTED = "0-RTT rejected"
     HTTP_STATUS_401 = "HTTP status 401"
     HTTP_STATUS_403 = "HTTP status 403"
     HTTP_STATUS_404 = "HTTP status 404"
