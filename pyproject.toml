@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "python3-core-api-client"
-version = "0.3"
+version = "0.4"
 description = "Python client for Core API."
 readme = "README.md"
 authors = [

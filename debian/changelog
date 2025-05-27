@@ -1,3 +1,10 @@
+python3-core-api-client (0.4) unstable; urgency=low
+
+  - Fix initing tombstone models
+  - Rename `HTTPRetryConditionEnum.FIELD_0_RTT_REJECTED` to `HTTPRetryConditionEnum.ZERO_RTT_REJECTED`
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Tue, 27 May 2025 17:14:00 +0200
+
 python3-core-api-client (0.3) unstable; urgency=low
 
   - Encode IPv6Address + IPv4Address
