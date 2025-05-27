@@ -1856,11 +1856,11 @@ class TokenTypeEnum(StrEnum):
 
 
 class TombstoneDataCertificate(CoreApiModel):
-    data_type: Literal["certificate"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["certificate"] = Field(..., title="Data Type")
 
 
 class TombstoneDataCron(CoreApiModel):
-    data_type: Literal["cron"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["cron"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
@@ -1868,14 +1868,14 @@ class TombstoneDataCron(CoreApiModel):
 
 
 class TombstoneDataDaemon(CoreApiModel):
-    data_type: Literal["daemon"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["daemon"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
 
 
 class TombstoneDataFPMPool(CoreApiModel):
-    data_type: Literal["fpm_pool"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["fpm_pool"] = Field(..., title="Data Type")
     version: str = Field(..., title="Version")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
@@ -1883,7 +1883,7 @@ class TombstoneDataFPMPool(CoreApiModel):
 
 
 class TombstoneDataMailAccount(CoreApiModel):
-    data_type: Literal["mail_account"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["mail_account"] = Field(..., title="Data Type")
     local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
         ...,
         description="May not be in use by mail alias in the same mail domain.",
@@ -1894,14 +1894,14 @@ class TombstoneDataMailAccount(CoreApiModel):
 
 
 class TombstoneDataPassengerApp(CoreApiModel):
-    data_type: Literal["passenger_app"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["passenger_app"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
 
 
 class TombstoneDataRedisInstance(CoreApiModel):
-    data_type: Literal["redis_instance"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["redis_instance"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
@@ -1909,22 +1909,20 @@ class TombstoneDataRedisInstance(CoreApiModel):
 
 
 class TombstoneDataUNIXUser(CoreApiModel):
-    data_type: Literal["unix_user"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["unix_user"] = Field(..., title="Data Type")
     home_directory: str = Field(..., title="Home Directory")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
 
 
 class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
-    data_type: Literal["unix_user_rabbitmq_credentials"] = Field(
-        ..., const=True, title="Data Type"
-    )
+    data_type: Literal["unix_user_rabbitmq_credentials"] = Field(..., title="Data Type")
     rabbitmq_virtual_host_name: constr(
         regex=r"^[a-z0-9-.]+$", min_length=1, max_length=32
     ) = Field(..., title="Rabbitmq Virtual Host Name")
 
 
 class TombstoneDataVirtualHost(CoreApiModel):
-    data_type: Literal["virtual_host"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["virtual_host"] = Field(..., title="Data Type")
     domain_root: str = Field(..., title="Domain Root")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
 
@@ -1934,7 +1932,7 @@ class TombstoneIncludes(CoreApiModel):
 
 
 class TombstoneDataDatabase(CoreApiModel):
-    data_type: Literal["database"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["database"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
         ..., title="Name"
     )
