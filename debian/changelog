@@ -1,3 +1,9 @@
+python3-core-api-client (0.4.1) unstable; urgency=low
+
+  - Install email-validator + dotenv on Debian
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Mon, 02 Jun 2025 09:35:00 +0200
+
 python3-core-api-client (0.4) unstable; urgency=low
 
   - Fix initing tombstone models
