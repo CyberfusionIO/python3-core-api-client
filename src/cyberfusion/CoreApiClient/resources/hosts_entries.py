@@ -8,8 +8,8 @@ class HostsEntries(Resource):
         self,
         request: models.HostsEntryCreateRequest,
     ) -> models.HostsEntryResource:
-        return models.HostsEntryResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HostsEntryResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/hosts-entries",
                 data=request.dict(),
@@ -26,7 +26,7 @@ class HostsEntries(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.HostsEntryResource]:
         return [
-            models.HostsEntryResource.construct(**model)
+            models.HostsEntryResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/hosts-entries",
@@ -45,8 +45,8 @@ class HostsEntries(Resource):
         *,
         id_: int,
     ) -> models.HostsEntryResource:
-        return models.HostsEntryResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HostsEntryResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/hosts-entries/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -56,8 +56,8 @@ class HostsEntries(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/hosts-entries/{id_}", data=None, query_parameters={}
             ).json
         )

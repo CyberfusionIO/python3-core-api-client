@@ -9,8 +9,8 @@ class HtpasswdUsers(Resource):
         self,
         request: models.HtpasswdUserCreateRequest,
     ) -> models.HtpasswdUserResource:
-        return models.HtpasswdUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HtpasswdUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/htpasswd-users",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class HtpasswdUsers(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.HtpasswdUserResource]:
         return [
-            models.HtpasswdUserResource.construct(**model)
+            models.HtpasswdUserResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/htpasswd-users",
@@ -46,8 +46,8 @@ class HtpasswdUsers(Resource):
         *,
         id_: int,
     ) -> models.HtpasswdUserResource:
-        return models.HtpasswdUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HtpasswdUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/htpasswd-users/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class HtpasswdUsers(Resource):
         *,
         id_: int,
     ) -> models.HtpasswdUserResource:
-        return models.HtpasswdUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HtpasswdUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/htpasswd-users/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -72,8 +72,8 @@ class HtpasswdUsers(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/htpasswd-users/{id_}",
                 data=None,

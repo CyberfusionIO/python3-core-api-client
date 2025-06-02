@@ -9,8 +9,8 @@ class FirewallRules(Resource):
         self,
         request: models.FirewallRuleCreateRequest,
     ) -> models.FirewallRuleResource:
-        return models.FirewallRuleResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FirewallRuleResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/firewall-rules",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class FirewallRules(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.FirewallRuleResource]:
         return [
-            models.FirewallRuleResource.construct(**model)
+            models.FirewallRuleResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/firewall-rules",
@@ -46,8 +46,8 @@ class FirewallRules(Resource):
         *,
         id_: int,
     ) -> models.FirewallRuleResource:
-        return models.FirewallRuleResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FirewallRuleResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/firewall-rules/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -57,8 +57,8 @@ class FirewallRules(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/firewall-rules/{id_}",
                 data=None,

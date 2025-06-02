@@ -14,7 +14,7 @@ class Logs(Resource):
         limit: Optional[int] = None,
     ) -> list[models.LogAccessResource]:
         return [
-            models.LogAccessResource.construct(**model)
+            models.LogAccessResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/logs/access/{virtual_host_id}",
@@ -36,7 +36,7 @@ class Logs(Resource):
         limit: Optional[int] = None,
     ) -> list[models.LogErrorResource]:
         return [
-            models.LogErrorResource.construct(**model)
+            models.LogErrorResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/logs/error/{virtual_host_id}",

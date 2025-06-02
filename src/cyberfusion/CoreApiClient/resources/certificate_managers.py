@@ -9,8 +9,8 @@ class CertificateManagers(Resource):
         self,
         request: models.CertificateManagerCreateRequest,
     ) -> models.CertificateManagerResource:
-        return models.CertificateManagerResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CertificateManagerResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/certificate-managers",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class CertificateManagers(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.CertificateManagerResource]:
         return [
-            models.CertificateManagerResource.construct(**model)
+            models.CertificateManagerResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/certificate-managers",
@@ -46,8 +46,8 @@ class CertificateManagers(Resource):
         *,
         id_: int,
     ) -> models.CertificateManagerResource:
-        return models.CertificateManagerResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CertificateManagerResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/certificate-managers/{id_}",
                 data=None,
@@ -61,8 +61,8 @@ class CertificateManagers(Resource):
         *,
         id_: int,
     ) -> models.CertificateManagerResource:
-        return models.CertificateManagerResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CertificateManagerResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/certificate-managers/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -75,8 +75,8 @@ class CertificateManagers(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/certificate-managers/{id_}",
                 data=None,
@@ -89,8 +89,8 @@ class CertificateManagers(Resource):
         *,
         id_: int,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/certificate-managers/{id_}/request",
                 data=None,

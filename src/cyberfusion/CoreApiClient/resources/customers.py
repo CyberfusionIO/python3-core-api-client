@@ -14,7 +14,7 @@ class Customers(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.CustomerResource]:
         return [
-            models.CustomerResource.construct(**model)
+            models.CustomerResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/customers",
@@ -33,8 +33,8 @@ class Customers(Resource):
         *,
         id_: int,
     ) -> models.CustomerResource:
-        return models.CustomerResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CustomerResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/customers/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -44,8 +44,8 @@ class Customers(Resource):
         *,
         id_: int,
     ) -> models.CustomerIPAddresses:
-        return models.CustomerIPAddresses.construct(
-            **self.api_connector.send_or_fail(
+        return models.CustomerIPAddresses.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/customers/{id_}/ip-addresses",
                 data=None,
@@ -59,8 +59,8 @@ class Customers(Resource):
         *,
         id_: int,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/customers/{id_}/ip-addresses",
                 data=request.dict(),
@@ -74,8 +74,8 @@ class Customers(Resource):
         id_: int,
         ip_address: str,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/customers/{id_}/ip-addresses/{ip_address}",
                 data=None,
@@ -87,7 +87,7 @@ class Customers(Resource):
         self,
     ) -> list[models.IPAddressProduct]:
         return [
-            models.IPAddressProduct.construct(**model)
+            models.IPAddressProduct.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/customers/ip-addresses/products",

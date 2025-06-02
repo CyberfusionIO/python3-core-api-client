@@ -12,8 +12,8 @@ class CustomConfigSnippets(Resource):
             models.CustomConfigSnippetCreateFromTemplateRequest,
         ],
     ) -> models.CustomConfigSnippetResource:
-        return models.CustomConfigSnippetResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CustomConfigSnippetResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/custom-config-snippets",
                 data=request.dict(),
@@ -30,7 +30,7 @@ class CustomConfigSnippets(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.CustomConfigSnippetResource]:
         return [
-            models.CustomConfigSnippetResource.construct(**model)
+            models.CustomConfigSnippetResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/custom-config-snippets",
@@ -49,8 +49,8 @@ class CustomConfigSnippets(Resource):
         *,
         id_: int,
     ) -> models.CustomConfigSnippetResource:
-        return models.CustomConfigSnippetResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CustomConfigSnippetResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/custom-config-snippets/{id_}",
                 data=None,
@@ -64,8 +64,8 @@ class CustomConfigSnippets(Resource):
         *,
         id_: int,
     ) -> models.CustomConfigSnippetResource:
-        return models.CustomConfigSnippetResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CustomConfigSnippetResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/custom-config-snippets/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -78,8 +78,8 @@ class CustomConfigSnippets(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/custom-config-snippets/{id_}",
                 data=None,

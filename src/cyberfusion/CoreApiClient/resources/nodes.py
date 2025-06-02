@@ -11,8 +11,8 @@ class Nodes(Resource):
         *,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/nodes",
                 data=request.dict(),
@@ -31,7 +31,7 @@ class Nodes(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.NodeResource]:
         return [
-            models.NodeResource.construct(**model)
+            models.NodeResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/nodes",
@@ -49,7 +49,7 @@ class Nodes(Resource):
         self,
     ) -> list[models.NodeProduct]:
         return [
-            models.NodeProduct.construct(**model)
+            models.NodeProduct.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET", "/api/v1/nodes/products", data=None, query_parameters={}
             ).json
@@ -60,8 +60,8 @@ class Nodes(Resource):
         *,
         id_: int,
     ) -> models.NodeResource:
-        return models.NodeResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.NodeResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/nodes/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -72,8 +72,8 @@ class Nodes(Resource):
         *,
         id_: int,
     ) -> models.NodeResource:
-        return models.NodeResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.NodeResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/nodes/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -86,8 +86,8 @@ class Nodes(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/nodes/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -99,8 +99,8 @@ class Nodes(Resource):
         callback_url: Optional[str] = None,
         product: str,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/nodes/{id_}/xgrade",
                 data=None,

@@ -14,7 +14,7 @@ class Sites(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.SiteResource]:
         return [
-            models.SiteResource.construct(**model)
+            models.SiteResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/sites",

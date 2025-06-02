@@ -1,3 +1,9 @@
+python3-core-api-client (0.4.2) unstable; urgency=low
+
+  - Recursively cast models from JSON to Python objects
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Mon, 02 Jun 2025 13:29:00 +0200
+
 python3-core-api-client (0.4.1) unstable; urgency=low
 
   - Install email-validator + dotenv on Debian

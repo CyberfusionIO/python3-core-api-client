@@ -9,8 +9,8 @@ class MariaDBEncryptionKeys(Resource):
         self,
         request: models.MariaDBEncryptionKeyCreateRequest,
     ) -> models.MariaDBEncryptionKeyResource:
-        return models.MariaDBEncryptionKeyResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MariaDBEncryptionKeyResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/mariadb-encryption-keys",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class MariaDBEncryptionKeys(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.MariaDBEncryptionKeyResource]:
         return [
-            models.MariaDBEncryptionKeyResource.construct(**model)
+            models.MariaDBEncryptionKeyResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/mariadb-encryption-keys",
@@ -46,8 +46,8 @@ class MariaDBEncryptionKeys(Resource):
         *,
         id_: int,
     ) -> models.MariaDBEncryptionKeyResource:
-        return models.MariaDBEncryptionKeyResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MariaDBEncryptionKeyResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/mariadb-encryption-keys/{id_}",
                 data=None,

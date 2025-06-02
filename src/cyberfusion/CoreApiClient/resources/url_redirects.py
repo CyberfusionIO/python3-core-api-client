@@ -9,8 +9,8 @@ class URLRedirects(Resource):
         self,
         request: models.URLRedirectCreateRequest,
     ) -> models.URLRedirectResource:
-        return models.URLRedirectResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.URLRedirectResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/url-redirects",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class URLRedirects(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.URLRedirectResource]:
         return [
-            models.URLRedirectResource.construct(**model)
+            models.URLRedirectResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/url-redirects",
@@ -46,8 +46,8 @@ class URLRedirects(Resource):
         *,
         id_: int,
     ) -> models.URLRedirectResource:
-        return models.URLRedirectResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.URLRedirectResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/url-redirects/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class URLRedirects(Resource):
         *,
         id_: int,
     ) -> models.URLRedirectResource:
-        return models.URLRedirectResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.URLRedirectResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/url-redirects/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -72,8 +72,8 @@ class URLRedirects(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/url-redirects/{id_}", data=None, query_parameters={}
             ).json
         )

@@ -9,8 +9,8 @@ class FPMPools(Resource):
         self,
         request: models.FPMPoolCreateRequest,
     ) -> models.FPMPoolResource:
-        return models.FPMPoolResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FPMPoolResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST", "/api/v1/fpm-pools", data=request.dict(), query_parameters={}
             ).json
         )
@@ -24,7 +24,7 @@ class FPMPools(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.FPMPoolResource]:
         return [
-            models.FPMPoolResource.construct(**model)
+            models.FPMPoolResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/fpm-pools",
@@ -43,8 +43,8 @@ class FPMPools(Resource):
         *,
         id_: int,
     ) -> models.FPMPoolResource:
-        return models.FPMPoolResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FPMPoolResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/fpm-pools/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -55,8 +55,8 @@ class FPMPools(Resource):
         *,
         id_: int,
     ) -> models.FPMPoolResource:
-        return models.FPMPoolResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FPMPoolResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/fpm-pools/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -69,8 +69,8 @@ class FPMPools(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/fpm-pools/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -81,8 +81,8 @@ class FPMPools(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/fpm-pools/{id_}/restart",
                 data=None,
@@ -98,8 +98,8 @@ class FPMPools(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/fpm-pools/{id_}/reload",
                 data=None,

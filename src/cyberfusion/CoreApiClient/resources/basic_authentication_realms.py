@@ -9,8 +9,8 @@ class BasicAuthenticationRealms(Resource):
         self,
         request: models.BasicAuthenticationRealmCreateRequest,
     ) -> models.BasicAuthenticationRealmResource:
-        return models.BasicAuthenticationRealmResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BasicAuthenticationRealmResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/basic-authentication-realms",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class BasicAuthenticationRealms(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.BasicAuthenticationRealmResource]:
         return [
-            models.BasicAuthenticationRealmResource.construct(**model)
+            models.BasicAuthenticationRealmResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/basic-authentication-realms",
@@ -46,8 +46,8 @@ class BasicAuthenticationRealms(Resource):
         *,
         id_: int,
     ) -> models.BasicAuthenticationRealmResource:
-        return models.BasicAuthenticationRealmResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BasicAuthenticationRealmResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/basic-authentication-realms/{id_}",
                 data=None,
@@ -61,8 +61,8 @@ class BasicAuthenticationRealms(Resource):
         *,
         id_: int,
     ) -> models.BasicAuthenticationRealmResource:
-        return models.BasicAuthenticationRealmResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BasicAuthenticationRealmResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/basic-authentication-realms/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -75,8 +75,8 @@ class BasicAuthenticationRealms(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/basic-authentication-realms/{id_}",
                 data=None,

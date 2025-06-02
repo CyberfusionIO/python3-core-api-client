@@ -13,7 +13,7 @@ class DomainRouters(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.DomainRouterResource]:
         return [
-            models.DomainRouterResource.construct(**model)
+            models.DomainRouterResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/domain-routers",
@@ -33,8 +33,8 @@ class DomainRouters(Resource):
         *,
         id_: int,
     ) -> models.DomainRouterResource:
-        return models.DomainRouterResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DomainRouterResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/domain-routers/{id_}",
                 data=request.dict(exclude_unset=True),

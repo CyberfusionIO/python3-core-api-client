@@ -9,8 +9,8 @@ class DatabaseUserGrants(Resource):
         self,
         request: models.DatabaseUserGrantCreateRequest,
     ) -> models.DatabaseUserGrantResource:
-        return models.DatabaseUserGrantResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseUserGrantResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/database-user-grants",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class DatabaseUserGrants(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.DatabaseUserGrantResource]:
         return [
-            models.DatabaseUserGrantResource.construct(**model)
+            models.DatabaseUserGrantResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/database-user-grants",
@@ -51,7 +51,7 @@ class DatabaseUserGrants(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.DatabaseUserGrantResource]:
         return [
-            models.DatabaseUserGrantResource.construct(**model)
+            models.DatabaseUserGrantResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/database-user-grants/{database_user_id}",

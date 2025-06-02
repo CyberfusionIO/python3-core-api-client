@@ -9,8 +9,8 @@ class MailAccounts(Resource):
         self,
         request: models.MailAccountCreateRequest,
     ) -> models.MailAccountResource:
-        return models.MailAccountResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MailAccountResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/mail-accounts",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class MailAccounts(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.MailAccountResource]:
         return [
-            models.MailAccountResource.construct(**model)
+            models.MailAccountResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/mail-accounts",
@@ -46,8 +46,8 @@ class MailAccounts(Resource):
         *,
         id_: int,
     ) -> models.MailAccountResource:
-        return models.MailAccountResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MailAccountResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/mail-accounts/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class MailAccounts(Resource):
         *,
         id_: int,
     ) -> models.MailAccountResource:
-        return models.MailAccountResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MailAccountResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/mail-accounts/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -73,8 +73,8 @@ class MailAccounts(Resource):
         id_: int,
         delete_on_cluster: Optional[bool] = None,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/mail-accounts/{id_}",
                 data=None,
@@ -92,7 +92,7 @@ class MailAccounts(Resource):
         time_unit: Optional[models.MailAccountUsageResource] = None,
     ) -> list[models.MailAccountUsageResource]:
         return [
-            models.MailAccountUsageResource.construct(**model)
+            models.MailAccountUsageResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/mail-accounts/usages/{mail_account_id}",
