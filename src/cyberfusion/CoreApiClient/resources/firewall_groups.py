@@ -9,8 +9,8 @@ class FirewallGroups(Resource):
         self,
         request: models.FirewallGroupCreateRequest,
     ) -> models.FirewallGroupResource:
-        return models.FirewallGroupResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FirewallGroupResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/firewall-groups",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class FirewallGroups(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.FirewallGroupResource]:
         return [
-            models.FirewallGroupResource.construct(**model)
+            models.FirewallGroupResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/firewall-groups",
@@ -46,8 +46,8 @@ class FirewallGroups(Resource):
         *,
         id_: int,
     ) -> models.FirewallGroupResource:
-        return models.FirewallGroupResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FirewallGroupResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/firewall-groups/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class FirewallGroups(Resource):
         *,
         id_: int,
     ) -> models.FirewallGroupResource:
-        return models.FirewallGroupResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.FirewallGroupResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/firewall-groups/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -72,8 +72,8 @@ class FirewallGroups(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/firewall-groups/{id_}",
                 data=None,

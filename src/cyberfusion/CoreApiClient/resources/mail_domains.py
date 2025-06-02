@@ -9,8 +9,8 @@ class MailDomains(Resource):
         self,
         request: models.MailDomainCreateRequest,
     ) -> models.MailDomainResource:
-        return models.MailDomainResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MailDomainResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/mail-domains",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class MailDomains(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.MailDomainResource]:
         return [
-            models.MailDomainResource.construct(**model)
+            models.MailDomainResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/mail-domains",
@@ -46,8 +46,8 @@ class MailDomains(Resource):
         *,
         id_: int,
     ) -> models.MailDomainResource:
-        return models.MailDomainResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MailDomainResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/mail-domains/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class MailDomains(Resource):
         *,
         id_: int,
     ) -> models.MailDomainResource:
-        return models.MailDomainResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.MailDomainResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/mail-domains/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -72,8 +72,8 @@ class MailDomains(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/mail-domains/{id_}", data=None, query_parameters={}
             ).json
         )

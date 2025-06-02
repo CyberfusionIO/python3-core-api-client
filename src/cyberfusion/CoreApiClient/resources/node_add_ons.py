@@ -9,8 +9,8 @@ class NodeAddOns(Resource):
         self,
         request: models.NodeAddOnCreateRequest,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/node-add-ons",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class NodeAddOns(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.NodeAddOnResource]:
         return [
-            models.NodeAddOnResource.construct(**model)
+            models.NodeAddOnResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/node-add-ons",
@@ -45,7 +45,7 @@ class NodeAddOns(Resource):
         self,
     ) -> list[models.NodeAddOnProduct]:
         return [
-            models.NodeAddOnProduct.construct(**model)
+            models.NodeAddOnProduct.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET", "/api/v1/node-add-ons/products", data=None, query_parameters={}
             ).json
@@ -56,8 +56,8 @@ class NodeAddOns(Resource):
         *,
         id_: int,
     ) -> models.NodeAddOnResource:
-        return models.NodeAddOnResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.NodeAddOnResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/node-add-ons/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -67,8 +67,8 @@ class NodeAddOns(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/node-add-ons/{id_}", data=None, query_parameters={}
             ).json
         )

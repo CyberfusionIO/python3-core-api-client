@@ -9,8 +9,8 @@ class HAProxyListensToNodes(Resource):
         self,
         request: models.HAProxyListenToNodeCreateRequest,
     ) -> models.HAProxyListenToNodeResource:
-        return models.HAProxyListenToNodeResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HAProxyListenToNodeResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/haproxy-listens-to-nodes",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class HAProxyListensToNodes(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.HAProxyListenToNodeResource]:
         return [
-            models.HAProxyListenToNodeResource.construct(**model)
+            models.HAProxyListenToNodeResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/haproxy-listens-to-nodes",
@@ -46,8 +46,8 @@ class HAProxyListensToNodes(Resource):
         *,
         id_: int,
     ) -> models.HAProxyListenToNodeResource:
-        return models.HAProxyListenToNodeResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HAProxyListenToNodeResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/haproxy-listens-to-nodes/{id_}",
                 data=None,
@@ -60,8 +60,8 @@ class HAProxyListensToNodes(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/haproxy-listens-to-nodes/{id_}",
                 data=None,

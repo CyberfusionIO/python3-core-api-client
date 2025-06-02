@@ -11,8 +11,8 @@ class BorgArchives(Resource):
         *,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/borg-archives/database",
                 data=request.dict(),
@@ -28,8 +28,8 @@ class BorgArchives(Resource):
         *,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/borg-archives/unix-user",
                 data=request.dict(),
@@ -48,7 +48,7 @@ class BorgArchives(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.BorgArchiveResource]:
         return [
-            models.BorgArchiveResource.construct(**model)
+            models.BorgArchiveResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/borg-archives",
@@ -67,8 +67,8 @@ class BorgArchives(Resource):
         *,
         id_: int,
     ) -> models.BorgArchiveResource:
-        return models.BorgArchiveResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BorgArchiveResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/borg-archives/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -78,8 +78,8 @@ class BorgArchives(Resource):
         *,
         id_: int,
     ) -> models.BorgArchiveMetadata:
-        return models.BorgArchiveMetadata.construct(
-            **self.api_connector.send_or_fail(
+        return models.BorgArchiveMetadata.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/borg-archives/{id_}/metadata",
                 data=None,
@@ -94,8 +94,8 @@ class BorgArchives(Resource):
         callback_url: Optional[str] = None,
         path: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/borg-archives/{id_}/restore",
                 data=None,
@@ -113,7 +113,7 @@ class BorgArchives(Resource):
         path: Optional[str] = None,
     ) -> list[models.BorgArchiveContent]:
         return [
-            models.BorgArchiveContent.construct(**model)
+            models.BorgArchiveContent.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/borg-archives/{id_}/contents",
@@ -131,8 +131,8 @@ class BorgArchives(Resource):
         callback_url: Optional[str] = None,
         path: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/borg-archives/{id_}/download",
                 data=None,

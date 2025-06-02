@@ -11,7 +11,7 @@ class TaskCollections(Resource):
         uuid: str,
     ) -> list[models.TaskResult]:
         return [
-            models.TaskResult.construct(**model)
+            models.TaskResult.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/task-collections/{uuid}/results",
@@ -26,8 +26,8 @@ class TaskCollections(Resource):
         uuid: str,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/task-collections/{uuid}/retry",
                 data=None,

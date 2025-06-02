@@ -14,7 +14,7 @@ class Tombstones(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.TombstoneResource]:
         return [
-            models.TombstoneResource.construct(**model)
+            models.TombstoneResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/tombstones",

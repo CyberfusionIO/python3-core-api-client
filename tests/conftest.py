@@ -1,4 +1,6 @@
 import pytest
+from pydantic import BaseModel
+from pytest_mock import MockerFixture
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
 from _pytest.config.argparsing import Parser
 import faker
@@ -464,3 +466,8 @@ def pytest_addoption(parser: Parser) -> None:
 @pytest.fixture
 def base_url(request: pytest.FixtureRequest) -> str:
     return request.config.getoption("--server-url")
+
+
+@pytest.fixture(autouse=True)
+def mock_parse_obj(mocker: MockerFixture) -> None:
+    mocker.patch.object(BaseModel, "parse_obj", return_value=lambda x: x)

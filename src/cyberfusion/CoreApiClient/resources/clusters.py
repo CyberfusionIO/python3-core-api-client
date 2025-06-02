@@ -8,8 +8,8 @@ class Clusters(Resource):
     def get_common_properties(
         self,
     ) -> models.ClustersCommonProperties:
-        return models.ClustersCommonProperties.construct(
-            **self.api_connector.send_or_fail(
+        return models.ClustersCommonProperties.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/clusters/common-properties",
                 data=None,
@@ -23,8 +23,8 @@ class Clusters(Resource):
         *,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/clusters",
                 data=request.dict(),
@@ -43,7 +43,7 @@ class Clusters(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.ClusterResource]:
         return [
-            models.ClusterResource.construct(**model)
+            models.ClusterResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/clusters",
@@ -62,8 +62,8 @@ class Clusters(Resource):
         *,
         id_: int,
     ) -> models.ClusterResource:
-        return models.ClusterResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.ClusterResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/clusters/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -74,8 +74,8 @@ class Clusters(Resource):
         *,
         id_: int,
     ) -> models.ClusterResource:
-        return models.ClusterResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.ClusterResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/clusters/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -88,8 +88,8 @@ class Clusters(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/clusters/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -99,8 +99,8 @@ class Clusters(Resource):
         *,
         id_: int,
     ) -> models.ClusterBorgSSHKey:
-        return models.ClusterBorgSSHKey.construct(
-            **self.api_connector.send_or_fail(
+        return models.ClusterBorgSSHKey.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/clusters/{id_}/borg-ssh-key",
                 data=None,
@@ -113,8 +113,8 @@ class Clusters(Resource):
         *,
         id_: int,
     ) -> models.ClusterIPAddresses:
-        return models.ClusterIPAddresses.construct(
-            **self.api_connector.send_or_fail(
+        return models.ClusterIPAddresses.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/clusters/{id_}/ip-addresses",
                 data=None,
@@ -128,8 +128,8 @@ class Clusters(Resource):
         *,
         id_: int,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/clusters/{id_}/ip-addresses",
                 data=request.dict(),
@@ -143,8 +143,8 @@ class Clusters(Resource):
         id_: int,
         ip_address: str,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}",
                 data=None,
@@ -158,8 +158,8 @@ class Clusters(Resource):
         id_: int,
         ip_address: str,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}/l3-ddos-protection",
                 data=None,
@@ -173,8 +173,8 @@ class Clusters(Resource):
         id_: int,
         ip_address: str,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}/l3-ddos-protection",
                 data=None,
@@ -186,7 +186,7 @@ class Clusters(Resource):
         self,
     ) -> list[models.IPAddressProduct]:
         return [
-            models.IPAddressProduct.construct(**model)
+            models.IPAddressProduct.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/clusters/ip-addresses/products",
@@ -201,8 +201,8 @@ class Clusters(Resource):
         id_: int,
         get_non_running: Optional[bool] = None,
     ) -> models.ClusterDeploymentResults:
-        return models.ClusterDeploymentResults.construct(
-            **self.api_connector.send_or_fail(
+        return models.ClusterDeploymentResults.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/clusters/{id_}/deployments-results",
                 data=None,
@@ -220,7 +220,7 @@ class Clusters(Resource):
         time_unit: Optional[models.UNIXUsersHomeDirectoryUsageResource] = None,
     ) -> list[models.UNIXUsersHomeDirectoryUsageResource]:
         return [
-            models.UNIXUsersHomeDirectoryUsageResource.construct(**model)
+            models.UNIXUsersHomeDirectoryUsageResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/clusters/unix-users-home-directories/usages/{cluster_id}",

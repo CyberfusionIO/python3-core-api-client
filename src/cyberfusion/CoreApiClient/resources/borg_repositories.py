@@ -9,8 +9,8 @@ class BorgRepositories(Resource):
         self,
         request: models.BorgRepositoryCreateRequest,
     ) -> models.BorgRepositoryResource:
-        return models.BorgRepositoryResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BorgRepositoryResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/borg-repositories",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class BorgRepositories(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.BorgRepositoryResource]:
         return [
-            models.BorgRepositoryResource.construct(**model)
+            models.BorgRepositoryResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/borg-repositories",
@@ -46,8 +46,8 @@ class BorgRepositories(Resource):
         *,
         id_: int,
     ) -> models.BorgRepositoryResource:
-        return models.BorgRepositoryResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BorgRepositoryResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/borg-repositories/{id_}",
                 data=None,
@@ -61,8 +61,8 @@ class BorgRepositories(Resource):
         *,
         id_: int,
     ) -> models.BorgRepositoryResource:
-        return models.BorgRepositoryResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.BorgRepositoryResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/borg-repositories/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -75,8 +75,8 @@ class BorgRepositories(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/borg-repositories/{id_}",
                 data=None,
@@ -90,8 +90,8 @@ class BorgRepositories(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/borg-repositories/{id_}/prune",
                 data=None,
@@ -107,8 +107,8 @@ class BorgRepositories(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/borg-repositories/{id_}/check",
                 data=None,
@@ -124,7 +124,7 @@ class BorgRepositories(Resource):
         id_: int,
     ) -> list[models.BorgArchiveMetadata]:
         return [
-            models.BorgArchiveMetadata.construct(**model)
+            models.BorgArchiveMetadata.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/borg-repositories/{id_}/archives-metadata",

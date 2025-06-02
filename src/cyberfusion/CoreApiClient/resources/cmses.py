@@ -9,8 +9,8 @@ class CMSes(Resource):
         self,
         request: models.CMSCreateRequest,
     ) -> models.CMSResource:
-        return models.CMSResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CMSResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST", "/api/v1/cmses", data=request.dict(), query_parameters={}
             ).json
         )
@@ -24,7 +24,7 @@ class CMSes(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.CMSResource]:
         return [
-            models.CMSResource.construct(**model)
+            models.CMSResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/cmses",
@@ -43,8 +43,8 @@ class CMSes(Resource):
         *,
         id_: int,
     ) -> models.CMSResource:
-        return models.CMSResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CMSResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/cmses/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -54,8 +54,8 @@ class CMSes(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/cmses/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -67,8 +67,8 @@ class CMSes(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/install/wordpress",
                 data=request.dict(),
@@ -85,8 +85,8 @@ class CMSes(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/install/nextcloud",
                 data=request.dict(),
@@ -101,8 +101,8 @@ class CMSes(Resource):
         *,
         id_: int,
     ) -> models.CMSOneTimeLogin:
-        return models.CMSOneTimeLogin.construct(
-            **self.api_connector.send_or_fail(
+        return models.CMSOneTimeLogin.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/cmses/{id_}/one-time-login",
                 data=None,
@@ -116,7 +116,7 @@ class CMSes(Resource):
         id_: int,
     ) -> list[models.CMSPlugin]:
         return [
-            models.CMSPlugin.construct(**model)
+            models.CMSPlugin.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET", f"/api/v1/cmses/{id_}/plugins", data=None, query_parameters={}
             ).json
@@ -129,8 +129,8 @@ class CMSes(Resource):
         id_: int,
         name: models.CMSOptionNameEnum,
     ) -> models.CMSOption:
-        return models.CMSOption.construct(
-            **self.api_connector.send_or_fail(
+        return models.CMSOption.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/cmses/{id_}/options/{name}",
                 data=request.dict(),
@@ -145,8 +145,8 @@ class CMSes(Resource):
         id_: int,
         name: str,
     ) -> models.CMSConfigurationConstant:
-        return models.CMSConfigurationConstant.construct(
-            **self.api_connector.send_or_fail(
+        return models.CMSConfigurationConstant.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/cmses/{id_}/configuration-constants/{name}",
                 data=request.dict(),
@@ -161,8 +161,8 @@ class CMSes(Resource):
         id_: int,
         user_id: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/cmses/{id_}/users/{user_id}/credentials",
                 data=request.dict(),
@@ -176,8 +176,8 @@ class CMSes(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/core/update",
                 data=None,
@@ -194,8 +194,8 @@ class CMSes(Resource):
         name: str,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/plugins/{name}/update",
                 data=None,
@@ -213,8 +213,8 @@ class CMSes(Resource):
         replace_string: str,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/search-replace",
                 data=None,
@@ -232,8 +232,8 @@ class CMSes(Resource):
         id_: int,
         name: str,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/plugins/{name}/enable",
                 data=None,
@@ -247,8 +247,8 @@ class CMSes(Resource):
         id_: int,
         name: str,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/plugins/{name}/disable",
                 data=None,
@@ -261,8 +261,8 @@ class CMSes(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/regenerate-salts",
                 data=None,
@@ -279,8 +279,8 @@ class CMSes(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/themes",
                 data=request.dict(),

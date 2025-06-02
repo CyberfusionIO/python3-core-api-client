@@ -9,8 +9,8 @@ class VirtualHosts(Resource):
         self,
         request: models.VirtualHostCreateRequest,
     ) -> models.VirtualHostResource:
-        return models.VirtualHostResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.VirtualHostResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/virtual-hosts",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class VirtualHosts(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.VirtualHostResource]:
         return [
-            models.VirtualHostResource.construct(**model)
+            models.VirtualHostResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/virtual-hosts",
@@ -46,8 +46,8 @@ class VirtualHosts(Resource):
         *,
         id_: int,
     ) -> models.VirtualHostResource:
-        return models.VirtualHostResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.VirtualHostResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/virtual-hosts/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class VirtualHosts(Resource):
         *,
         id_: int,
     ) -> models.VirtualHostResource:
-        return models.VirtualHostResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.VirtualHostResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/virtual-hosts/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -73,8 +73,8 @@ class VirtualHosts(Resource):
         id_: int,
         delete_on_cluster: Optional[bool] = None,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/virtual-hosts/{id_}",
                 data=None,
@@ -89,8 +89,8 @@ class VirtualHosts(Resource):
         *,
         id_: int,
     ) -> models.VirtualHostDocumentRoot:
-        return models.VirtualHostDocumentRoot.construct(
-            **self.api_connector.send_or_fail(
+        return models.VirtualHostDocumentRoot.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/virtual-hosts/{id_}/document-root",
                 data=None,
@@ -106,8 +106,8 @@ class VirtualHosts(Resource):
         callback_url: Optional[str] = None,
         exclude_paths: Optional[List[str]] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/virtual-hosts/{left_virtual_host_id}/domain-root/sync",
                 data=None,

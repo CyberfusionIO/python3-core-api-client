@@ -9,8 +9,8 @@ class PassengerApps(Resource):
         self,
         request: models.PassengerAppCreateNodeJSRequest,
     ) -> models.PassengerAppResource:
-        return models.PassengerAppResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.PassengerAppResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/passenger-apps/nodejs",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class PassengerApps(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.PassengerAppResource]:
         return [
-            models.PassengerAppResource.construct(**model)
+            models.PassengerAppResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/passenger-apps",
@@ -46,8 +46,8 @@ class PassengerApps(Resource):
         *,
         id_: int,
     ) -> models.PassengerAppResource:
-        return models.PassengerAppResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.PassengerAppResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/passenger-apps/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class PassengerApps(Resource):
         *,
         id_: int,
     ) -> models.PassengerAppResource:
-        return models.PassengerAppResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.PassengerAppResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/passenger-apps/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -72,8 +72,8 @@ class PassengerApps(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/passenger-apps/{id_}",
                 data=None,
@@ -87,8 +87,8 @@ class PassengerApps(Resource):
         id_: int,
         callback_url: Optional[str] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/passenger-apps/{id_}/restart",
                 data=None,

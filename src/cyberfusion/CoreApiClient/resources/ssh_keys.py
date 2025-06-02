@@ -9,8 +9,8 @@ class SSHKeys(Resource):
         self,
         request: models.SSHKeyCreatePublicRequest,
     ) -> models.SSHKeyResource:
-        return models.SSHKeyResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.SSHKeyResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/ssh-keys/public",
                 data=request.dict(),
@@ -22,8 +22,8 @@ class SSHKeys(Resource):
         self,
         request: models.SSHKeyCreatePrivateRequest,
     ) -> models.SSHKeyResource:
-        return models.SSHKeyResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.SSHKeyResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/ssh-keys/private",
                 data=request.dict(),
@@ -40,7 +40,7 @@ class SSHKeys(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.SSHKeyResource]:
         return [
-            models.SSHKeyResource.construct(**model)
+            models.SSHKeyResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/ssh-keys",
@@ -59,8 +59,8 @@ class SSHKeys(Resource):
         *,
         id_: int,
     ) -> models.SSHKeyResource:
-        return models.SSHKeyResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.SSHKeyResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/ssh-keys/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -70,8 +70,8 @@ class SSHKeys(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/ssh-keys/{id_}", data=None, query_parameters={}
             ).json
         )

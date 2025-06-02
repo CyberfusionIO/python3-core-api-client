@@ -9,8 +9,8 @@ class Crons(Resource):
         self,
         request: models.CronCreateRequest,
     ) -> models.CronResource:
-        return models.CronResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CronResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST", "/api/v1/crons", data=request.dict(), query_parameters={}
             ).json
         )
@@ -24,7 +24,7 @@ class Crons(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.CronResource]:
         return [
-            models.CronResource.construct(**model)
+            models.CronResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/crons",
@@ -43,8 +43,8 @@ class Crons(Resource):
         *,
         id_: int,
     ) -> models.CronResource:
-        return models.CronResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CronResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/crons/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -55,8 +55,8 @@ class Crons(Resource):
         *,
         id_: int,
     ) -> models.CronResource:
-        return models.CronResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CronResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/crons/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -69,8 +69,8 @@ class Crons(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/crons/{id_}", data=None, query_parameters={}
             ).json
         )

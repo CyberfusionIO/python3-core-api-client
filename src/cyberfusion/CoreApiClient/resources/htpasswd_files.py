@@ -9,8 +9,8 @@ class HtpasswdFiles(Resource):
         self,
         request: models.HtpasswdFileCreateRequest,
     ) -> models.HtpasswdFileResource:
-        return models.HtpasswdFileResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HtpasswdFileResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/htpasswd-files",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class HtpasswdFiles(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.HtpasswdFileResource]:
         return [
-            models.HtpasswdFileResource.construct(**model)
+            models.HtpasswdFileResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/htpasswd-files",
@@ -46,8 +46,8 @@ class HtpasswdFiles(Resource):
         *,
         id_: int,
     ) -> models.HtpasswdFileResource:
-        return models.HtpasswdFileResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.HtpasswdFileResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/htpasswd-files/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -57,8 +57,8 @@ class HtpasswdFiles(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/htpasswd-files/{id_}",
                 data=None,

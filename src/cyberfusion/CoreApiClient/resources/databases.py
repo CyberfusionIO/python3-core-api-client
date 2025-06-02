@@ -9,8 +9,8 @@ class Databases(Resource):
         self,
         request: models.DatabaseCreateRequest,
     ) -> models.DatabaseResource:
-        return models.DatabaseResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST", "/api/v1/databases", data=request.dict(), query_parameters={}
             ).json
         )
@@ -24,7 +24,7 @@ class Databases(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.DatabaseResource]:
         return [
-            models.DatabaseResource.construct(**model)
+            models.DatabaseResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/databases",
@@ -43,8 +43,8 @@ class Databases(Resource):
         *,
         id_: int,
     ) -> models.DatabaseResource:
-        return models.DatabaseResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/databases/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -55,8 +55,8 @@ class Databases(Resource):
         *,
         id_: int,
     ) -> models.DatabaseResource:
-        return models.DatabaseResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/databases/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -70,8 +70,8 @@ class Databases(Resource):
         id_: int,
         delete_on_cluster: Optional[bool] = None,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/databases/{id_}",
                 data=None,
@@ -87,8 +87,8 @@ class Databases(Resource):
         left_database_id: int,
         right_database_id: int,
     ) -> models.DatabaseComparison:
-        return models.DatabaseComparison.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseComparison.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/databases/{left_database_id}/comparison",
                 data=None,
@@ -106,8 +106,8 @@ class Databases(Resource):
         callback_url: Optional[str] = None,
         exclude_tables_names: Optional[List[str]] = None,
     ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.TaskCollectionResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/databases/{left_database_id}/sync",
                 data=None,
@@ -127,7 +127,7 @@ class Databases(Resource):
         time_unit: Optional[models.DatabaseUsageResource] = None,
     ) -> list[models.DatabaseUsageResource]:
         return [
-            models.DatabaseUsageResource.construct(**model)
+            models.DatabaseUsageResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/databases/usages/{database_id}",

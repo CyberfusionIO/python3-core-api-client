@@ -9,8 +9,8 @@ class RedisInstances(Resource):
         self,
         request: models.RedisInstanceCreateRequest,
     ) -> models.RedisInstanceResource:
-        return models.RedisInstanceResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.RedisInstanceResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/redis-instances",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class RedisInstances(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.RedisInstanceResource]:
         return [
-            models.RedisInstanceResource.construct(**model)
+            models.RedisInstanceResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/redis-instances",
@@ -46,8 +46,8 @@ class RedisInstances(Resource):
         *,
         id_: int,
     ) -> models.RedisInstanceResource:
-        return models.RedisInstanceResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.RedisInstanceResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/redis-instances/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class RedisInstances(Resource):
         *,
         id_: int,
     ) -> models.RedisInstanceResource:
-        return models.RedisInstanceResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.RedisInstanceResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/redis-instances/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -73,8 +73,8 @@ class RedisInstances(Resource):
         id_: int,
         delete_on_cluster: Optional[bool] = None,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/redis-instances/{id_}",
                 data=None,

@@ -8,8 +8,8 @@ class Certificates(Resource):
         self,
         request: models.CertificateCreateRequest,
     ) -> models.CertificateResource:
-        return models.CertificateResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CertificateResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/certificates",
                 data=request.dict(),
@@ -26,7 +26,7 @@ class Certificates(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.CertificateResource]:
         return [
-            models.CertificateResource.construct(**model)
+            models.CertificateResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/certificates",
@@ -45,8 +45,8 @@ class Certificates(Resource):
         *,
         id_: int,
     ) -> models.CertificateResource:
-        return models.CertificateResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.CertificateResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/certificates/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -56,8 +56,8 @@ class Certificates(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE", f"/api/v1/certificates/{id_}", data=None, query_parameters={}
             ).json
         )

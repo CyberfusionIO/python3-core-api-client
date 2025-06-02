@@ -9,8 +9,8 @@ class DatabaseUsers(Resource):
         self,
         request: models.DatabaseUserCreateRequest,
     ) -> models.DatabaseUserResource:
-        return models.DatabaseUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/database-users",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class DatabaseUsers(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.DatabaseUserResource]:
         return [
-            models.DatabaseUserResource.construct(**model)
+            models.DatabaseUserResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/database-users",
@@ -46,8 +46,8 @@ class DatabaseUsers(Resource):
         *,
         id_: int,
     ) -> models.DatabaseUserResource:
-        return models.DatabaseUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/database-users/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class DatabaseUsers(Resource):
         *,
         id_: int,
     ) -> models.DatabaseUserResource:
-        return models.DatabaseUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.DatabaseUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/database-users/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -72,8 +72,8 @@ class DatabaseUsers(Resource):
         *,
         id_: int,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/database-users/{id_}",
                 data=None,

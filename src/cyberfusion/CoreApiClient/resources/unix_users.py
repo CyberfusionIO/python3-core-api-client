@@ -9,8 +9,8 @@ class UNIXUsers(Resource):
         self,
         request: models.UNIXUserCreateRequest,
     ) -> models.UNIXUserResource:
-        return models.UNIXUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.UNIXUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/unix-users",
                 data=request.dict(),
@@ -27,7 +27,7 @@ class UNIXUsers(Resource):
         sort: Optional[List[str]] = None,
     ) -> list[models.UNIXUserResource]:
         return [
-            models.UNIXUserResource.construct(**model)
+            models.UNIXUserResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 "/api/v1/unix-users",
@@ -46,8 +46,8 @@ class UNIXUsers(Resource):
         *,
         id_: int,
     ) -> models.UNIXUserResource:
-        return models.UNIXUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.UNIXUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET", f"/api/v1/unix-users/{id_}", data=None, query_parameters={}
             ).json
         )
@@ -58,8 +58,8 @@ class UNIXUsers(Resource):
         *,
         id_: int,
     ) -> models.UNIXUserResource:
-        return models.UNIXUserResource.construct(
-            **self.api_connector.send_or_fail(
+        return models.UNIXUserResource.parse_obj(
+            self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/unix-users/{id_}",
                 data=request.dict(exclude_unset=True),
@@ -73,8 +73,8 @@ class UNIXUsers(Resource):
         id_: int,
         delete_on_cluster: Optional[bool] = None,
     ) -> models.DetailMessage:
-        return models.DetailMessage.construct(
-            **self.api_connector.send_or_fail(
+        return models.DetailMessage.parse_obj(
+            self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/unix-users/{id_}",
                 data=None,
@@ -90,8 +90,8 @@ class UNIXUsers(Resource):
         left_unix_user_id: int,
         right_unix_user_id: int,
     ) -> models.UNIXUserComparison:
-        return models.UNIXUserComparison.construct(
-            **self.api_connector.send_or_fail(
+        return models.UNIXUserComparison.parse_obj(
+            self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/unix-users/{left_unix_user_id}/comparison",
                 data=None,
@@ -109,7 +109,7 @@ class UNIXUsers(Resource):
         time_unit: Optional[models.UNIXUserUsageResource] = None,
     ) -> list[models.UNIXUserUsageResource]:
         return [
-            models.UNIXUserUsageResource.construct(**model)
+            models.UNIXUserUsageResource.parse_obj(model)
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/unix-users/usages/{unix_user_id}",
