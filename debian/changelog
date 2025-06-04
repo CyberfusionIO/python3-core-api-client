@@ -1,3 +1,9 @@
+python3-core-api-client (1.0) unstable; urgency=low
+
+  - Promote to 1.x
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Wed, 04 Jun 2025 15:10:00 +0200
+
 python3-core-api-client (0.4.2) unstable; urgency=low
 
   - Recursively cast models from JSON to Python objects
