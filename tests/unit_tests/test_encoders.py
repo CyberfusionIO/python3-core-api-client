@@ -1,4 +1,5 @@
 import json
+from uuid import UUID
 
 import faker
 import pytest
@@ -32,6 +33,15 @@ def test_CustomEncoder_IPv4Address(faker: faker.Faker) -> None:
         json.dumps(ipv4_address)
 
     assert json.dumps(ipv4_address, cls=CustomEncoder)
+
+
+def test_CustomEncoder_UUID(faker: faker.Faker) -> None:
+    uuid = UUID(faker.uuid4())
+
+    with pytest.raises(TypeError):
+        json.dumps(uuid)
+
+    assert json.dumps(uuid, cls=CustomEncoder)
 
 
 def test_CustomEncoder_builtin(faker: faker.Faker) -> None:
