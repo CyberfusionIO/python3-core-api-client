@@ -1,3 +1,9 @@
+python3-core-api-client (1.0.1) unstable; urgency=low
+
+  - Encode UUID
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Thu, 05 Jun 2025 07:40:00 +0200
+
 python3-core-api-client (1.0) unstable; urgency=low
 
   - Promote to 1.x
