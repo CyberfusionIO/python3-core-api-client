@@ -3,13 +3,41 @@ from __future__ import annotations
 from datetime import datetime
 from enum import StrEnum, IntEnum
 from ipaddress import IPv4Address, IPv6Address
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union, Any
 
 from pydantic import UUID4, AnyUrl, EmailStr, Field, confloat, conint, constr, BaseModel
+from typing import Iterator
 
 
 class CoreApiModel(BaseModel):
     pass
+
+
+class RootModelCollectionMixin:
+    """Mixin supporting iterating over and accessing items in a root model, without explicitly accessing __root__.
+
+    Inspired by https://docs.pydantic.dev/2.0/usage/models/#rootmodel-and-custom-root-types
+    """
+
+    __root__: dict | list | None
+
+    def __iter__(self) -> Iterator:
+        if not isinstance(self.__root__, (list, dict)):
+            raise TypeError("Type does not support iter")
+
+        return iter(self.__root__)
+
+    def __getitem__(self, item: Any) -> Any:
+        if not isinstance(self.__root__, (list, dict)):
+            raise TypeError("Type does not support getitem")
+
+        return self.__root__[item]
+
+    def items(self) -> Any:
+        if not isinstance(self.__root__, (dict)):
+            raise TypeError("Type does not support items")
+
+        return self.__root__.items()
 
 
 class APIUserAuthenticationMethod(StrEnum):
@@ -438,7 +466,7 @@ class ClusterIPAddress(CoreApiModel):
     l3_ddos_protection_enabled: bool = Field(..., title="L3 Ddos Protection Enabled")
 
 
-class ClusterIPAddresses(CoreApiModel):
+class ClusterIPAddresses(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
     __root__: Optional[Dict[str, Dict[str, List[ClusterIPAddress]]]] = None
 
 
@@ -634,7 +662,7 @@ class CustomerIPAddressDatabase(CoreApiModel):
     dns_name: Optional[str] = Field(..., title="Dns Name")
 
 
-class CustomerIPAddresses(CoreApiModel):
+class CustomerIPAddresses(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
     __root__: Optional[Dict[str, Dict[str, List[CustomerIPAddressDatabase]]]] = None
 
 
@@ -1380,7 +1408,7 @@ class MeilisearchEnvironmentEnum(StrEnum):
     DEVELOPMENT = "development"
 
 
-class NestedPathsDict(CoreApiModel):
+class NestedPathsDict(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
     __root__: Optional[Dict[str, Optional[NestedPathsDict]]] = None
 
 
