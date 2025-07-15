@@ -45,10 +45,6 @@ def test_read_cluster(api_connector: CoreApiConnector, faker: faker.Faker) -> No
     api_connector.clusters.read_cluster(id_=faker.pyint())
 
 
-def test_delete_cluster(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
-    api_connector.clusters.delete_cluster(id_=faker.pyint())
-
-
 def test_get_borg_ssh_key(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.clusters.get_borg_ssh_key(id_=faker.pyint())
 

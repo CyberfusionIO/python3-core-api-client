@@ -1598,7 +1598,7 @@ class PHPSettings(CoreApiModel):
     post_max_size: conint(ge=32, le=256) = Field(32, title="Post Max Size")
     upload_max_filesize: conint(ge=32, le=256) = Field(32, title="Upload Max Filesize")
     tideways_api_key: Optional[
-        constr(regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=32)
+        constr(regex=r"^[a-zA-Z0-9_]+$", min_length=16, max_length=32)
     ] = Field(None, title="Tideways Api Key")
     tideways_sample_rate: Optional[conint(ge=1, le=100)] = Field(
         None, title="Tideways Sample Rate"
@@ -1957,7 +1957,7 @@ class TombstoneDataVirtualHost(CoreApiModel):
 
 
 class TombstoneIncludes(CoreApiModel):
-    pass
+    cluster: ClusterResource
 
 
 class TombstoneDataDatabase(CoreApiModel):
