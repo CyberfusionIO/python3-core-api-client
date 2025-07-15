@@ -1,3 +1,9 @@
+python3-core-api-client (1.0.4) unstable; urgency=low
+
+  - Update API to 1.246
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Tue, 15 Jul 2025 12:07:00 +0200
+
 python3-core-api-client (1.0.3) unstable; urgency=low
 
   - Add `RootModelCollectionMixin`

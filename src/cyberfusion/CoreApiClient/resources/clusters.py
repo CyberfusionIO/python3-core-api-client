@@ -83,17 +83,6 @@ class Clusters(Resource):
             ).json
         )
 
-    def delete_cluster(
-        self,
-        *,
-        id_: int,
-    ) -> models.DetailMessage:
-        return models.DetailMessage.parse_obj(
-            self.api_connector.send_or_fail(
-                "DELETE", f"/api/v1/clusters/{id_}", data=None, query_parameters={}
-            ).json
-        )
-
     def get_borg_ssh_key(
         self,
         *,
