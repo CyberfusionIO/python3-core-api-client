@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from datetime import datetime
 from enum import StrEnum, IntEnum
 from ipaddress import IPv4Address, IPv6Address
@@ -1409,7 +1407,7 @@ class MeilisearchEnvironmentEnum(StrEnum):
 
 
 class NestedPathsDict(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
-    __root__: Optional[Dict[str, Optional[NestedPathsDict]]] = None
+    __root__: Optional[Dict[str, Optional["NestedPathsDict"]]] = None
 
 
 class NodeAddOnCreateRequest(CoreApiModel):
@@ -1882,114 +1880,6 @@ class TimeUnitEnum(StrEnum):
 
 class TokenTypeEnum(StrEnum):
     BEARER = "bearer"
-
-
-class TombstoneDataCertificate(CoreApiModel):
-    data_type: Literal["certificate"] = Field(..., title="Data Type")
-
-
-class TombstoneDataCron(CoreApiModel):
-    data_type: Literal["cron"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-
-
-class TombstoneDataDaemon(CoreApiModel):
-    data_type: Literal["daemon"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-
-
-class TombstoneDataFPMPool(CoreApiModel):
-    data_type: Literal["fpm_pool"] = Field(..., title="Data Type")
-    version: str = Field(..., title="Version")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-
-
-class TombstoneDataMailAccount(CoreApiModel):
-    data_type: Literal["mail_account"] = Field(..., title="Data Type")
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail alias in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-
-
-class TombstoneDataPassengerApp(CoreApiModel):
-    data_type: Literal["passenger_app"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-
-
-class TombstoneDataRedisInstance(CoreApiModel):
-    data_type: Literal["redis_instance"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-
-
-class TombstoneDataUNIXUser(CoreApiModel):
-    data_type: Literal["unix_user"] = Field(..., title="Data Type")
-    home_directory: str = Field(..., title="Home Directory")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-
-
-class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
-    data_type: Literal["unix_user_rabbitmq_credentials"] = Field(..., title="Data Type")
-    rabbitmq_virtual_host_name: constr(
-        regex=r"^[a-z0-9-.]+$", min_length=1, max_length=32
-    ) = Field(..., title="Rabbitmq Virtual Host Name")
-
-
-class TombstoneDataVirtualHost(CoreApiModel):
-    data_type: Literal["virtual_host"] = Field(..., title="Data Type")
-    domain_root: str = Field(..., title="Domain Root")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-
-
-class TombstoneIncludes(CoreApiModel):
-    cluster: ClusterResource
-
-
-class TombstoneDataDatabase(CoreApiModel):
-    data_type: Literal["database"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
-    server_software_name: DatabaseServerSoftwareNameEnum
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-
-
-class TombstoneResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    data: Union[
-        TombstoneDataPassengerApp,
-        TombstoneDataCertificate,
-        TombstoneDataFPMPool,
-        TombstoneDataUNIXUserRabbitMQCredentials,
-        TombstoneDataUNIXUser,
-        TombstoneDataCron,
-        TombstoneDataDaemon,
-        TombstoneDataDatabase,
-        TombstoneDataMailAccount,
-        TombstoneDataRedisInstance,
-        TombstoneDataVirtualHost,
-    ] = Field(..., discriminator="data_type", title="Data")
-    object_id: int = Field(..., title="Object Id")
-    object_model_name: ObjectModelNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    includes: TombstoneIncludes
 
 
 class UNIXUserComparison(CoreApiModel):
@@ -5372,6 +5262,114 @@ class MailAliasResource(CoreApiModel):
         ..., min_items=1, title="Forward Email Addresses", unique_items=True
     )
     includes: MailAliasIncludes
+
+
+class TombstoneDataCertificate(CoreApiModel):
+    data_type: Literal["certificate"] = Field(..., title="Data Type")
+
+
+class TombstoneDataCron(CoreApiModel):
+    data_type: Literal["cron"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+    unix_user_id: int = Field(..., title="Unix User Id")
+
+
+class TombstoneDataDaemon(CoreApiModel):
+    data_type: Literal["daemon"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+
+
+class TombstoneDataFPMPool(CoreApiModel):
+    data_type: Literal["fpm_pool"] = Field(..., title="Data Type")
+    version: str = Field(..., title="Version")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+
+
+class TombstoneDataMailAccount(CoreApiModel):
+    data_type: Literal["mail_account"] = Field(..., title="Data Type")
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
+        ...,
+        description="May not be in use by mail alias in the same mail domain.",
+        title="Local Part",
+    )
+    mail_domain_id: int = Field(..., title="Mail Domain Id")
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+
+
+class TombstoneDataPassengerApp(CoreApiModel):
+    data_type: Literal["passenger_app"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+
+
+class TombstoneDataRedisInstance(CoreApiModel):
+    data_type: Literal["redis_instance"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+
+
+class TombstoneDataUNIXUser(CoreApiModel):
+    data_type: Literal["unix_user"] = Field(..., title="Data Type")
+    home_directory: str = Field(..., title="Home Directory")
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+
+
+class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
+    data_type: Literal["unix_user_rabbitmq_credentials"] = Field(..., title="Data Type")
+    rabbitmq_virtual_host_name: constr(
+        regex=r"^[a-z0-9-.]+$", min_length=1, max_length=32
+    ) = Field(..., title="Rabbitmq Virtual Host Name")
+
+
+class TombstoneDataVirtualHost(CoreApiModel):
+    data_type: Literal["virtual_host"] = Field(..., title="Data Type")
+    domain_root: str = Field(..., title="Domain Root")
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+
+
+class TombstoneIncludes(CoreApiModel):
+    cluster: ClusterResource
+
+
+class TombstoneDataDatabase(CoreApiModel):
+    data_type: Literal["database"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
+        ..., title="Name"
+    )
+    server_software_name: DatabaseServerSoftwareNameEnum
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+
+
+class TombstoneResource(CoreApiModel):
+    id: int = Field(..., title="Id")
+    created_at: datetime = Field(..., title="Created At")
+    updated_at: datetime = Field(..., title="Updated At")
+    data: Union[
+        TombstoneDataPassengerApp,
+        TombstoneDataCertificate,
+        TombstoneDataFPMPool,
+        TombstoneDataUNIXUserRabbitMQCredentials,
+        TombstoneDataUNIXUser,
+        TombstoneDataCron,
+        TombstoneDataDaemon,
+        TombstoneDataDatabase,
+        TombstoneDataMailAccount,
+        TombstoneDataRedisInstance,
+        TombstoneDataVirtualHost,
+    ] = Field(..., discriminator="data_type", title="Data")
+    object_id: int = Field(..., title="Object Id")
+    object_model_name: ObjectModelNameEnum
+    cluster_id: int = Field(..., title="Cluster Id")
+    includes: TombstoneIncludes
 
 
 NestedPathsDict.update_forward_refs()
