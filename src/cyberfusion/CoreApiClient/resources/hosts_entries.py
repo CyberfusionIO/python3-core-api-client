@@ -12,7 +12,7 @@ class HostsEntries(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/hosts-entries",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

@@ -13,7 +13,7 @@ class FirewallRules(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/firewall-rules",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

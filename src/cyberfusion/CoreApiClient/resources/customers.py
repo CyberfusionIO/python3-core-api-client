@@ -63,7 +63,7 @@ class Customers(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/customers/{id_}/ip-addresses",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

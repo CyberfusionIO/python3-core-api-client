@@ -13,7 +13,7 @@ class DatabaseUserGrants(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/database-user-grants",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

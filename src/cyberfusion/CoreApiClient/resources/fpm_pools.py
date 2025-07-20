@@ -11,7 +11,10 @@ class FPMPools(Resource):
     ) -> models.FPMPoolResource:
         return models.FPMPoolResource.parse_obj(
             self.api_connector.send_or_fail(
-                "POST", "/api/v1/fpm-pools", data=request.dict(), query_parameters={}
+                "POST",
+                "/api/v1/fpm-pools",
+                data=request.dict(exclude_unset=True),
+                query_parameters={},
             ).json
         )
 

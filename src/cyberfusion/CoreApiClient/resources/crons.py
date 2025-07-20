@@ -11,7 +11,10 @@ class Crons(Resource):
     ) -> models.CronResource:
         return models.CronResource.parse_obj(
             self.api_connector.send_or_fail(
-                "POST", "/api/v1/crons", data=request.dict(), query_parameters={}
+                "POST",
+                "/api/v1/crons",
+                data=request.dict(exclude_unset=True),
+                query_parameters={},
             ).json
         )
 

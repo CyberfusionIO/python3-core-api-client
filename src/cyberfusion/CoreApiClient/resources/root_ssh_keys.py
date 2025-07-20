@@ -13,7 +13,7 @@ class RootSSHKeys(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/root-ssh-keys/public",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )
@@ -26,7 +26,7 @@ class RootSSHKeys(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/root-ssh-keys/private",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

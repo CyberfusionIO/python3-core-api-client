@@ -13,7 +13,7 @@ class BorgRepositories(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/borg-repositories",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )
