@@ -1,3 +1,9 @@
+python3-core-api-client (1.0.6) unstable; urgency=low
+
+  - Use API defaults on create + don't send `null` for unspecified attributes on update
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Sun, 20 Jul 2025 13:41:00 +0200
+
 python3-core-api-client (1.0.5) unstable; urgency=low
 
   - Fix tombstone forward reference

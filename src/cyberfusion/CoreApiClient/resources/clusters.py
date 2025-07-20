@@ -27,7 +27,7 @@ class Clusters(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/clusters",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={
                     "callback_url": callback_url,
                 },
@@ -121,7 +121,7 @@ class Clusters(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/clusters/{id_}/ip-addresses",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

@@ -11,7 +11,10 @@ class Daemons(Resource):
     ) -> models.DaemonResource:
         return models.DaemonResource.parse_obj(
             self.api_connector.send_or_fail(
-                "POST", "/api/v1/daemons", data=request.dict(), query_parameters={}
+                "POST",
+                "/api/v1/daemons",
+                data=request.dict(exclude_unset=True),
+                query_parameters={},
             ).json
         )
 

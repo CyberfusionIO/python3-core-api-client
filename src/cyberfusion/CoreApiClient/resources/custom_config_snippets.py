@@ -16,7 +16,7 @@ class CustomConfigSnippets(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/custom-config-snippets",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

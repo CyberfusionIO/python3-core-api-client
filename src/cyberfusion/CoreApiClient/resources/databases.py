@@ -11,7 +11,10 @@ class Databases(Resource):
     ) -> models.DatabaseResource:
         return models.DatabaseResource.parse_obj(
             self.api_connector.send_or_fail(
-                "POST", "/api/v1/databases", data=request.dict(), query_parameters={}
+                "POST",
+                "/api/v1/databases",
+                data=request.dict(exclude_unset=True),
+                query_parameters={},
             ).json
         )
 

@@ -13,7 +13,7 @@ class HAProxyListensToNodes(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/haproxy-listens-to-nodes",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

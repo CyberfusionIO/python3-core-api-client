@@ -11,7 +11,10 @@ class FTPUsers(Resource):
     ) -> models.FTPUserResource:
         return models.FTPUserResource.parse_obj(
             self.api_connector.send_or_fail(
-                "POST", "/api/v1/ftp-users", data=request.dict(), query_parameters={}
+                "POST",
+                "/api/v1/ftp-users",
+                data=request.dict(exclude_unset=True),
+                query_parameters={},
             ).json
         )
 
@@ -83,7 +86,7 @@ class FTPUsers(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/ftp-users/temporary",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

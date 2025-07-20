@@ -11,7 +11,10 @@ class CMSes(Resource):
     ) -> models.CMSResource:
         return models.CMSResource.parse_obj(
             self.api_connector.send_or_fail(
-                "POST", "/api/v1/cmses", data=request.dict(), query_parameters={}
+                "POST",
+                "/api/v1/cmses",
+                data=request.dict(exclude_unset=True),
+                query_parameters={},
             ).json
         )
 
@@ -71,7 +74,7 @@ class CMSes(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/install/wordpress",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={
                     "callback_url": callback_url,
                 },
@@ -89,7 +92,7 @@ class CMSes(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/install/nextcloud",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={
                     "callback_url": callback_url,
                 },
@@ -133,7 +136,7 @@ class CMSes(Resource):
             self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/cmses/{id_}/options/{name}",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )
@@ -149,7 +152,7 @@ class CMSes(Resource):
             self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/cmses/{id_}/configuration-constants/{name}",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )
@@ -165,7 +168,7 @@ class CMSes(Resource):
             self.api_connector.send_or_fail(
                 "PATCH",
                 f"/api/v1/cmses/{id_}/users/{user_id}/credentials",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )
@@ -283,7 +286,7 @@ class CMSes(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 f"/api/v1/cmses/{id_}/themes",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={},
             ).json
         )

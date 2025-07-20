@@ -15,7 +15,7 @@ class BorgArchives(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/borg-archives/database",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={
                     "callback_url": callback_url,
                 },
@@ -32,7 +32,7 @@ class BorgArchives(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/borg-archives/unix-user",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={
                     "callback_url": callback_url,
                 },

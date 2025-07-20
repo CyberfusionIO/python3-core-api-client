@@ -15,7 +15,7 @@ class Nodes(Resource):
             self.api_connector.send_or_fail(
                 "POST",
                 "/api/v1/nodes",
-                data=request.dict(),
+                data=request.dict(exclude_unset=True),
                 query_parameters={
                     "callback_url": callback_url,
                 },
