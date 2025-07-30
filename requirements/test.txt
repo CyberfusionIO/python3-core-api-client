@@ -1,5 +1,5 @@
 coverage==7.10.1
-Faker==37.5.1
+Faker==37.5.3
 polyfactory==2.22.1
 pytest==8.4.1
 pytest-cov==6.2.1
