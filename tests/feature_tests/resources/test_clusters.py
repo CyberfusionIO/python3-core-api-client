@@ -101,3 +101,9 @@ def test_list_unix_users_home_directory_usages(
     api_connector.clusters.list_unix_users_home_directory_usages(
         cluster_id=faker.pyint(), timestamp=faker.date_time()
     )
+
+
+def test_list_nodes_dependencies(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.list_nodes_dependencies(id_=faker.pyint())
