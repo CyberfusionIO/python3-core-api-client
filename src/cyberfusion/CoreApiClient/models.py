@@ -5438,7 +5438,7 @@ class TombstoneDataMailHostnameIncludes(BaseModel):
 
 
 class TombstoneDataDatabaseUser(BaseModel):
-    data_type: Literal["database_user"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["database_user"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
         ..., title="Name"
     )
@@ -5467,9 +5467,7 @@ class TombstoneDataDatabaseUserGrantIncludes(BaseModel):
 
 
 class TombstoneDataDatabaseUserGrant(BaseModel):
-    data_type: Literal["database_user_grant"] = Field(
-        ..., const=True, title="Data Type"
-    )
+    data_type: Literal["database_user_grant"] = Field(..., title="Data Type")
     table_name: Optional[
         constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     ] = Field(..., title="Table Name")
@@ -5480,13 +5478,13 @@ class TombstoneDataDatabaseUserGrant(BaseModel):
 
 
 class TombstoneDataDomainRouter(BaseModel):
-    data_type: Literal["domain_router"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["domain_router"] = Field(..., title="Data Type")
     domain: str = Field(..., title="Domain")
     includes: TombstoneDataDomainRouterIncludes
 
 
 class TombstoneDataRootSSHKey(BaseModel):
-    data_type: Literal["root_ssh_key"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["root_ssh_key"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
@@ -5495,7 +5493,7 @@ class TombstoneDataRootSSHKey(BaseModel):
 
 
 class TombstoneDataSSHKey(BaseModel):
-    data_type: Literal["ssh_key"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["ssh_key"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
@@ -5504,7 +5502,7 @@ class TombstoneDataSSHKey(BaseModel):
 
 
 class TombstoneDataMailHostname(BaseModel):
-    data_type: Literal["mail_hostname"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["mail_hostname"] = Field(..., title="Data Type")
     domain: str = Field(..., title="Domain")
     includes: TombstoneDataMailHostnameIncludes
 
@@ -5573,7 +5571,7 @@ class TombstoneDataHtpasswdFileIncludes(BaseModel):
 
 
 class TombstoneDataHtpasswdFile(BaseModel):
-    data_type: Literal["htpasswd_file"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["htpasswd_file"] = Field(..., title="Data Type")
     unix_user_id: int = Field(..., title="Unix User Id")
     includes: TombstoneDataHtpasswdFileIncludes
 
@@ -5585,7 +5583,7 @@ class TombstoneDataMailDomainIncludes(BaseModel):
 
 
 class TombstoneDataMailDomain(BaseModel):
-    data_type: Literal["mail_domain"] = Field(..., const=True, title="Data Type")
+    data_type: Literal["mail_domain"] = Field(..., title="Data Type")
     domain: str = Field(..., title="Domain")
     unix_user_id: int = Field(..., title="Unix User Id")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
