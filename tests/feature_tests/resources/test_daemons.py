@@ -31,3 +31,7 @@ def test_delete_daemon(api_connector: CoreApiConnector, faker: faker.Faker) -> N
 
 def test_list_daemons(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.daemons.list_daemons()
+
+
+def test_list_logs(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
+    api_connector.daemons.list_logs(daemon_id=faker.pyint())

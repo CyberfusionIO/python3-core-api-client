@@ -107,3 +107,9 @@ def test_list_nodes_dependencies(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.clusters.list_nodes_dependencies(id_=faker.pyint())
+
+
+def test_get_nodes_specifications(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.get_nodes_specifications(id_=faker.pyint())

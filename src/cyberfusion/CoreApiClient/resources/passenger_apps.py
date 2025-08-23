@@ -71,13 +71,14 @@ class PassengerApps(Resource):
         self,
         *,
         id_: int,
+        delete_on_cluster: Optional[bool] = None,
     ) -> models.DetailMessage:
         return models.DetailMessage.parse_obj(
             self.api_connector.send_or_fail(
                 "DELETE",
                 f"/api/v1/passenger-apps/{id_}",
                 data=None,
-                query_parameters={},
+                query_parameters={"delete_on_cluster": delete_on_cluster},
             ).json
         )
 
