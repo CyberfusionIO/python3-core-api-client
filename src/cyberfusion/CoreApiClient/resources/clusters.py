@@ -2,6 +2,7 @@ from cyberfusion.CoreApiClient import models
 from typing import Optional, List
 
 from cyberfusion.CoreApiClient.interfaces import Resource
+from cyberfusion.CoreApiClient.models import NodeDependenciesResource
 
 
 class Clusters(Resource):
@@ -218,5 +219,16 @@ class Clusters(Resource):
                     "timestamp": timestamp,
                     "time_unit": time_unit,
                 },
+            ).json
+        ]
+
+    def list_nodes_dependencies(self, *, id_: int) -> list[NodeDependenciesResource]:
+        return [
+            models.NodeDependenciesResource.parse_obj(model)
+            for model in self.api_connector.send_or_fail(
+                "GET",
+                f"/api/v1/clusters/{id_}/nodes-dependencies",
+                data=None,
+                query_parameters={},
             ).json
         ]

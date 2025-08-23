@@ -510,7 +510,7 @@ class CronCreateRequest(CoreApiModel):
         title="Locking Enabled",
     )
     is_active: bool = Field(..., title="Is Active")
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         None,
         description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
         title="Memory Limit",
@@ -599,7 +599,7 @@ class CronUpdateRequest(CoreApiModel):
         title="Locking Enabled",
     )
     is_active: Optional[bool] = Field(None, title="Is Active")
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         None,
         description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
         title="Memory Limit",
@@ -692,7 +692,7 @@ class DaemonCreateRequest(CoreApiModel):
         ..., title="Command"
     )
     nodes_ids: List[int] = Field(..., min_items=1, title="Nodes Ids", unique_items=True)
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         None,
         description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
         title="Memory Limit",
@@ -722,7 +722,7 @@ class DaemonUpdateRequest(CoreApiModel):
         Field(None, title="Command")
     )
     nodes_ids: Optional[List[int]] = Field(None, title="Nodes Ids")
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         None,
         description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
         title="Memory Limit",
@@ -939,7 +939,7 @@ class FPMPoolCreateRequest(CoreApiModel):
         description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
         title="Is Namespaced",
     )
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         None,
         description="In MB.\n\nWhen the memory limit is reached, the FPM pool is restarted.\n\nUse this to prevent an FPM pool from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
         title="Memory Limit",
@@ -1023,7 +1023,7 @@ class FPMPoolUpdateRequest(CoreApiModel):
         description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
         title="Is Namespaced",
     )
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         None,
         description="In MB.\n\nWhen the memory limit is reached, the FPM pool is restarted.\n\nUse this to prevent an FPM pool from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
         title="Memory Limit",
@@ -1634,9 +1634,7 @@ class RedisInstanceCreateRequest(CoreApiModel):
     password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = Field(
         ..., title="Password"
     )
-    memory_limit: conint(ge=8, le=4096) = Field(
-        ..., description="In MB.", title="Memory Limit"
-    )
+    memory_limit: conint(ge=8) = Field(..., description="In MB.", title="Memory Limit")
     max_databases: int = Field(..., title="Max Databases")
     eviction_policy: RedisEvictionPolicyEnum = Field(
         ...,
@@ -1654,9 +1652,7 @@ class RedisInstanceUpdateDeprecatedRequest(CoreApiModel):
     password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = Field(
         ..., title="Password"
     )
-    memory_limit: conint(ge=8, le=4096) = Field(
-        ..., description="In MB.", title="Memory Limit"
-    )
+    memory_limit: conint(ge=8) = Field(..., description="In MB.", title="Memory Limit")
     max_databases: int = Field(..., title="Max Databases")
     eviction_policy: RedisEvictionPolicyEnum = Field(
         ...,
@@ -1668,7 +1664,7 @@ class RedisInstanceUpdateRequest(CoreApiModel):
     password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     ] = Field(None, title="Password")
-    memory_limit: Optional[conint(ge=8, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=8)] = Field(
         None, description="In MB.", title="Memory Limit"
     )
     max_databases: Optional[int] = Field(None, title="Max Databases")
@@ -3917,6 +3913,25 @@ class MariaDBEncryptionKeyResource(CoreApiModel):
     includes: MariaDBEncryptionKeyIncludes
 
 
+class NodeGroupDependency(CoreApiModel):
+    is_dependency: bool = Field(
+        ...,
+        description="Will the service become unavailable when this node is unreachable?",
+        title="Is Dependency",
+    )
+    impact: Optional[str] = Field(
+        ...,
+        description="What impact will this node becoming unreachable have?",
+        title="Impact",
+    )
+    reason: str = Field(
+        ...,
+        description="Why will the node being unreachable have impact?",
+        title="Reason",
+    )
+    group: NodeGroupEnum
+
+
 class NodeGroupsProperties(CoreApiModel):
     Redis: Optional[NodeRedisGroupProperties]
     MariaDB: Optional[NodeMariaDBGroupProperties]
@@ -4161,9 +4176,7 @@ class RedisInstanceResource(CoreApiModel):
     password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = Field(
         ..., title="Password"
     )
-    memory_limit: conint(ge=8, le=4096) = Field(
-        ..., description="In MB.", title="Memory Limit"
-    )
+    memory_limit: conint(ge=8) = Field(..., description="In MB.", title="Memory Limit")
     max_databases: int = Field(..., title="Max Databases")
     eviction_policy: RedisEvictionPolicyEnum = Field(
         ...,
@@ -4564,7 +4577,7 @@ class CronResource(CoreApiModel):
         title="Locking Enabled",
     )
     is_active: bool = Field(..., title="Is Active")
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         ..., description="In MB.", title="Memory Limit"
     )
     cpu_limit: Optional[int] = Field(
@@ -4593,7 +4606,7 @@ class DaemonResource(CoreApiModel):
         ..., title="Command"
     )
     nodes_ids: List[int] = Field(..., min_items=1, title="Nodes Ids", unique_items=True)
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         ..., description="In MB.", title="Memory Limit"
     )
     cpu_limit: Optional[int] = Field(
@@ -4683,7 +4696,7 @@ class FPMPoolResource(CoreApiModel):
         description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
         title="Is Namespaced",
     )
-    memory_limit: Optional[conint(ge=256, le=4096)] = Field(
+    memory_limit: Optional[conint(ge=256)] = Field(
         ..., description="In MB.", title="Memory Limit"
     )
     includes: FPMPoolIncludes
@@ -4930,6 +4943,63 @@ class NodeCreateRequest(CoreApiModel):
         ...,
         description="Group-specific properties. Must be set to null for groups that the node does not have. Must be set to the correct value if the node has groups Redis, MariaDB, RabbitMQ.",
     )
+
+
+class NodeCronDependency(CoreApiModel):
+    is_dependency: bool = Field(
+        ...,
+        description="Will the service become unavailable when this node is unreachable?",
+        title="Is Dependency",
+    )
+    impact: Optional[str] = Field(
+        ...,
+        description="What impact will this node becoming unreachable have?",
+        title="Impact",
+    )
+    reason: str = Field(
+        ...,
+        description="Why will the node being unreachable have impact?",
+        title="Reason",
+    )
+    cron: CronResource
+
+
+class NodeDaemonDependency(CoreApiModel):
+    is_dependency: bool = Field(
+        ...,
+        description="Will the service become unavailable when this node is unreachable?",
+        title="Is Dependency",
+    )
+    impact: Optional[str] = Field(
+        ...,
+        description="What impact will this node becoming unreachable have?",
+        title="Impact",
+    )
+    reason: str = Field(
+        ...,
+        description="Why will the node being unreachable have impact?",
+        title="Reason",
+    )
+    daemon: DaemonResource
+
+
+class NodeHostsEntryDependency(CoreApiModel):
+    is_dependency: bool = Field(
+        ...,
+        description="Will the service become unavailable when this node is unreachable?",
+        title="Is Dependency",
+    )
+    impact: Optional[str] = Field(
+        ...,
+        description="What impact will this node becoming unreachable have?",
+        title="Impact",
+    )
+    reason: str = Field(
+        ...,
+        description="Why will the node being unreachable have impact?",
+        title="Reason",
+    )
+    hosts_entry: HostsEntryResource
 
 
 class PassengerAppIncludes(CoreApiModel):
@@ -5264,16 +5334,68 @@ class MailAliasResource(CoreApiModel):
     includes: MailAliasIncludes
 
 
+class NodeDomainRouterDependency(CoreApiModel):
+    is_dependency: bool = Field(
+        ...,
+        description="Will the service become unavailable when this node is unreachable?",
+        title="Is Dependency",
+    )
+    impact: Optional[str] = Field(
+        ...,
+        description="What impact will this node becoming unreachable have?",
+        title="Impact",
+    )
+    reason: str = Field(
+        ...,
+        description="Why will the node being unreachable have impact?",
+        title="Reason",
+    )
+    domain_router: DomainRouterResource
+
+
+class TombstoneDataCertificateIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataDaemonIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataDatabaseIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataFPMPoolIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataMailAccountIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataPassengerAppIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataRedisInstanceIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataUNIXUserIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataUNIXUserRabbitMQCredentialsIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataVirtualHostIncludes(BaseModel):
+    pass
+
+
 class TombstoneDataCertificate(CoreApiModel):
     data_type: Literal["certificate"] = Field(..., title="Data Type")
-
-
-class TombstoneDataCron(CoreApiModel):
-    data_type: Literal["cron"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    includes: TombstoneDataCertificateIncludes
 
 
 class TombstoneDataDaemon(CoreApiModel):
@@ -5281,6 +5403,7 @@ class TombstoneDataDaemon(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
+    includes: TombstoneDataDaemonIncludes
 
 
 class TombstoneDataFPMPool(CoreApiModel):
@@ -5289,6 +5412,7 @@ class TombstoneDataFPMPool(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
+    includes: TombstoneDataFPMPoolIncludes
 
 
 class TombstoneDataMailAccount(CoreApiModel):
@@ -5300,6 +5424,7 @@ class TombstoneDataMailAccount(CoreApiModel):
     )
     mail_domain_id: int = Field(..., title="Mail Domain Id")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataMailAccountIncludes
 
 
 class TombstoneDataPassengerApp(CoreApiModel):
@@ -5307,6 +5432,7 @@ class TombstoneDataPassengerApp(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
+    includes: TombstoneDataPassengerAppIncludes
 
 
 class TombstoneDataRedisInstance(CoreApiModel):
@@ -5315,12 +5441,30 @@ class TombstoneDataRedisInstance(CoreApiModel):
         ..., title="Name"
     )
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataRedisInstanceIncludes
 
 
 class TombstoneDataUNIXUser(CoreApiModel):
     data_type: Literal["unix_user"] = Field(..., title="Data Type")
     home_directory: str = Field(..., title="Home Directory")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataUNIXUserIncludes
+
+
+class TombstoneDataCronIncludes(BaseModel):
+    unix_user: Union[TombstoneDataUNIXUser, UNIXUserResource] = Field(
+        ..., title="Unix User"
+    )
+
+
+class TombstoneDataCron(CoreApiModel):
+    data_type: Literal["cron"] = Field(..., title="Data Type")
+    node_id: int = Field(..., title="Node Id")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+    unix_user_id: int = Field(..., title="Unix User Id")
+    includes: TombstoneDataCronIncludes
 
 
 class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
@@ -5328,12 +5472,14 @@ class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
     rabbitmq_virtual_host_name: constr(
         regex=r"^[a-z0-9-.]+$", min_length=1, max_length=32
     ) = Field(..., title="Rabbitmq Virtual Host Name")
+    includes: TombstoneDataUNIXUserRabbitMQCredentialsIncludes
 
 
 class TombstoneDataVirtualHost(CoreApiModel):
     data_type: Literal["virtual_host"] = Field(..., title="Data Type")
     domain_root: str = Field(..., title="Domain Root")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataVirtualHostIncludes
 
 
 class TombstoneIncludes(CoreApiModel):
@@ -5347,6 +5493,7 @@ class TombstoneDataDatabase(CoreApiModel):
     )
     server_software_name: DatabaseServerSoftwareNameEnum
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataDatabaseIncludes
 
 
 class TombstoneResource(CoreApiModel):
@@ -5370,6 +5517,16 @@ class TombstoneResource(CoreApiModel):
     object_model_name: ObjectModelNameEnum
     cluster_id: int = Field(..., title="Cluster Id")
     includes: TombstoneIncludes
+
+
+class NodeDependenciesResource(CoreApiModel):
+    groups: List[NodeGroupDependency] = Field(..., title="Groups")
+    domain_routers: List[NodeDomainRouterDependency] = Field(
+        ..., title="Domain Routers"
+    )
+    daemons: List[NodeDaemonDependency] = Field(..., title="Daemons")
+    crons: List[NodeCronDependency] = Field(..., title="Crons")
+    hosts_entries: List[NodeHostsEntryDependency] = Field(..., title="Hosts Entries")
 
 
 NestedPathsDict.update_forward_refs()
