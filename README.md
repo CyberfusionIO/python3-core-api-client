@@ -239,11 +239,11 @@ To raise `cyberfusion.CoreApiClient.exceptions.CallException` in case of an unex
 
 Auto-generate models as follows:
 
-    datamodel-codegen --input-file-type openapi --input $file --output src/cyberfusion/CoreApiClient/models.py --target-python-version 3.11
+    datamodel-codegen --input-file-type openapi --url http://127.0.0.1:22190/openapi.json --output temp_models.py --target-python-version 3.11
 
-Replace `$file` by the path to the OpenAPI spec (JSON).
+This adds models to `temp_models.py`. Merge it with `models.py`.
 
-Note: don't replace `models.py` in full - it contains customisations.
+To not use a local Core API instance, replace `--url` by `--input`. Pass the path to the OpenAPI spec (JSON).
 
 # Test strategy
 

@@ -77,3 +77,25 @@ class Daemons(Resource):
                 "DELETE", f"/api/v1/daemons/{id_}", data=None, query_parameters={}
             ).json
         )
+
+    def list_logs(
+        self,
+        *,
+        daemon_id: int,
+        timestamp: Optional[str] = None,
+        sort: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> list[models.DaemonLogResource]:
+        return [
+            models.DaemonLogResource.parse_obj(model)
+            for model in self.api_connector.send_or_fail(
+                "GET",
+                f"/api/v1/daemons/{daemon_id}/logs",
+                data=None,
+                query_parameters={
+                    "timestamp": timestamp,
+                    "sort": sort,
+                    "limit": limit,
+                },
+            ).json
+        ]

@@ -2,7 +2,10 @@ from cyberfusion.CoreApiClient import models
 from typing import Optional, List
 
 from cyberfusion.CoreApiClient.interfaces import Resource
-from cyberfusion.CoreApiClient.models import NodeDependenciesResource
+from cyberfusion.CoreApiClient.models import (
+    NodeDependenciesResource,
+    NodeSpecificationsResource,
+)
 
 
 class Clusters(Resource):
@@ -228,6 +231,17 @@ class Clusters(Resource):
             for model in self.api_connector.send_or_fail(
                 "GET",
                 f"/api/v1/clusters/{id_}/nodes-dependencies",
+                data=None,
+                query_parameters={},
+            ).json
+        ]
+
+    def get_nodes_specifications(self, *, id_: int) -> list[NodeSpecificationsResource]:
+        return [
+            models.NodeSpecificationsResource.parse_obj(model)
+            for model in self.api_connector.send_or_fail(
+                "GET",
+                f"/api/v1/clusters/{id_}/nodes-specifications",
                 data=None,
                 query_parameters={},
             ).json

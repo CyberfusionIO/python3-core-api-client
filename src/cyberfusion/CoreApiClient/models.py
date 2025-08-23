@@ -38,6 +38,28 @@ class RootModelCollectionMixin:
         return self.__root__.items()
 
 
+class ObjectLogTypeEnum(StrEnum):
+    Create = "Create"
+    Update = "Update"
+    Delete = "Delete"
+
+
+class CauserTypeEnum(StrEnum):
+    API_User = "API User"
+
+
+class HTTPMethod(StrEnum):
+    CONNECT = "CONNECT"
+    DELETE = "DELETE"
+    GET = "GET"
+    HEAD = "HEAD"
+    OPTIONS = "OPTIONS"
+    PATCH = "PATCH"
+    POST = "POST"
+    PUT = "PUT"
+    TRACE = "TRACE"
+
+
 class APIUserAuthenticationMethod(StrEnum):
     API_KEY = "API Key"
     JWT_TOKEN = "JWT Token"
@@ -608,6 +630,11 @@ class CronUpdateRequest(CoreApiModel):
         None,
         description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
         title="Cpu Limit",
+    )
+    node_id: Optional[int] = Field(
+        None,
+        description="The node this cron will run on.\n\nDefaults to node with Admin group.",
+        title="Node Id",
     )
 
 
@@ -1425,9 +1452,9 @@ class NodeAddOnProduct(CoreApiModel):
     name: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
-    ram: Optional[int] = Field(..., title="Ram")
-    cores: Optional[int] = Field(..., title="Cores")
-    disk: Optional[int] = Field(..., title="Disk")
+    memory_gib: Optional[int] = Field(..., title="Memory Gib")
+    cpu_cores: Optional[int] = Field(..., title="Cpu Cores")
+    disk_gib: Optional[int] = Field(..., title="Disk Gib")
     price: confloat(ge=0.0) = Field(..., title="Price")
     period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2) = Field(
         ..., title="Period"
@@ -1483,9 +1510,9 @@ class NodeProduct(CoreApiModel):
     name: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2) = Field(
         ..., title="Name"
     )
-    ram: int = Field(..., title="Ram")
-    cores: int = Field(..., title="Cores")
-    disk: int = Field(..., title="Disk")
+    memory_gib: int = Field(..., title="Memory Gib")
+    cpu_cores: int = Field(..., title="Cpu Cores")
+    disk_gib: int = Field(..., title="Disk Gib")
     allow_upgrade_to: List[constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)] = (
         Field(..., title="Allow Upgrade To")
     )
@@ -1577,6 +1604,7 @@ class PHPExtensionEnum(StrEnum):
     MAILPARSE = "mailparse"
     UV = "uv"
     AMQP = "amqp"
+    MONGODB = "mongodb"
 
 
 class PHPSettings(CoreApiModel):
@@ -3868,7 +3896,7 @@ class IPAddressProduct(CoreApiModel):
     )
 
 
-class LogAccessResource(CoreApiModel):
+class WebServerLogAccessResource(CoreApiModel):
     remote_address: str = Field(..., title="Remote Address")
     raw_message: constr(min_length=1, max_length=65535) = Field(
         ..., title="Raw Message"
@@ -3880,7 +3908,7 @@ class LogAccessResource(CoreApiModel):
     bytes_sent: conint(ge=0) = Field(..., title="Bytes Sent")
 
 
-class LogErrorResource(CoreApiModel):
+class WebServerLogErrorResource(CoreApiModel):
     remote_address: str = Field(..., title="Remote Address")
     raw_message: constr(min_length=1, max_length=65535) = Field(
         ..., title="Raw Message"
@@ -5369,10 +5397,6 @@ class TombstoneDataFPMPoolIncludes(BaseModel):
     pass
 
 
-class TombstoneDataMailAccountIncludes(BaseModel):
-    pass
-
-
 class TombstoneDataPassengerAppIncludes(BaseModel):
     pass
 
@@ -5393,6 +5417,98 @@ class TombstoneDataVirtualHostIncludes(BaseModel):
     pass
 
 
+class TombstoneDataDatabaseUserIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataDomainRouterIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataRootSSHKeyIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataSSHKeyIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataMailHostnameIncludes(BaseModel):
+    pass
+
+
+class TombstoneDataDatabaseUser(BaseModel):
+    data_type: Literal["database_user"] = Field(..., const=True, title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
+        ..., title="Name"
+    )
+    host: Optional[HostEnum]
+    server_software_name: DatabaseServerSoftwareNameEnum
+    includes: TombstoneDataDatabaseUserIncludes
+
+
+class TombstoneDataDatabase(CoreApiModel):
+    data_type: Literal["database"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
+        ..., title="Name"
+    )
+    server_software_name: DatabaseServerSoftwareNameEnum
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataDatabaseIncludes
+
+
+class TombstoneDataDatabaseUserGrantIncludes(BaseModel):
+    database: Union[DatabaseResource, TombstoneDataDatabase] = Field(
+        ..., title="Database"
+    )
+    database_user: Union[DatabaseUserResource, TombstoneDataDatabaseUser] = Field(
+        ..., title="Database User"
+    )
+
+
+class TombstoneDataDatabaseUserGrant(BaseModel):
+    data_type: Literal["database_user_grant"] = Field(
+        ..., const=True, title="Data Type"
+    )
+    table_name: Optional[
+        constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    ] = Field(..., title="Table Name")
+    privilege_name: MariaDBPrivilegeEnum
+    database_id: int = Field(..., title="Database Id")
+    database_user_id: int = Field(..., title="Database User Id")
+    includes: TombstoneDataDatabaseUserGrantIncludes
+
+
+class TombstoneDataDomainRouter(BaseModel):
+    data_type: Literal["domain_router"] = Field(..., const=True, title="Data Type")
+    domain: str = Field(..., title="Domain")
+    includes: TombstoneDataDomainRouterIncludes
+
+
+class TombstoneDataRootSSHKey(BaseModel):
+    data_type: Literal["root_ssh_key"] = Field(..., const=True, title="Data Type")
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+    is_private_key: bool = Field(..., title="Is Private Key")
+    includes: TombstoneDataRootSSHKeyIncludes
+
+
+class TombstoneDataSSHKey(BaseModel):
+    data_type: Literal["ssh_key"] = Field(..., const=True, title="Data Type")
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
+        ..., title="Name"
+    )
+    identity_file_path: Optional[str] = Field(..., title="Identity File Path")
+    includes: TombstoneDataSSHKeyIncludes
+
+
+class TombstoneDataMailHostname(BaseModel):
+    data_type: Literal["mail_hostname"] = Field(..., const=True, title="Data Type")
+    domain: str = Field(..., title="Domain")
+    includes: TombstoneDataMailHostnameIncludes
+
+
 class TombstoneDataCertificate(CoreApiModel):
     data_type: Literal["certificate"] = Field(..., title="Data Type")
     includes: TombstoneDataCertificateIncludes
@@ -5403,6 +5519,7 @@ class TombstoneDataDaemon(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
+    nodes_ids: List[int] = Field(..., min_items=1, title="Nodes Ids", unique_items=True)
     includes: TombstoneDataDaemonIncludes
 
 
@@ -5415,23 +5532,13 @@ class TombstoneDataFPMPool(CoreApiModel):
     includes: TombstoneDataFPMPoolIncludes
 
 
-class TombstoneDataMailAccount(CoreApiModel):
-    data_type: Literal["mail_account"] = Field(..., title="Data Type")
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail alias in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-    includes: TombstoneDataMailAccountIncludes
-
-
 class TombstoneDataPassengerApp(CoreApiModel):
     data_type: Literal["passenger_app"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
         ..., title="Name"
     )
+    app_root: str = Field(..., title="App Root")
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
     includes: TombstoneDataPassengerAppIncludes
 
 
@@ -5447,14 +5554,60 @@ class TombstoneDataRedisInstance(CoreApiModel):
 class TombstoneDataUNIXUser(CoreApiModel):
     data_type: Literal["unix_user"] = Field(..., title="Data Type")
     home_directory: str = Field(..., title="Home Directory")
+    mail_domains_directory: Optional[str] = Field(..., title="Mail Domains Directory")
     delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
     includes: TombstoneDataUNIXUserIncludes
 
 
 class TombstoneDataCronIncludes(BaseModel):
+    node: NodeResource
     unix_user: Union[TombstoneDataUNIXUser, UNIXUserResource] = Field(
         ..., title="Unix User"
     )
+
+
+class TombstoneDataHtpasswdFileIncludes(BaseModel):
+    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser] = Field(
+        ..., title="Unix User"
+    )
+
+
+class TombstoneDataHtpasswdFile(BaseModel):
+    data_type: Literal["htpasswd_file"] = Field(..., const=True, title="Data Type")
+    unix_user_id: int = Field(..., title="Unix User Id")
+    includes: TombstoneDataHtpasswdFileIncludes
+
+
+class TombstoneDataMailDomainIncludes(BaseModel):
+    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser] = Field(
+        ..., title="Unix User"
+    )
+
+
+class TombstoneDataMailDomain(BaseModel):
+    data_type: Literal["mail_domain"] = Field(..., const=True, title="Data Type")
+    domain: str = Field(..., title="Domain")
+    unix_user_id: int = Field(..., title="Unix User Id")
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataMailDomainIncludes
+
+
+class TombstoneDataMailAccountIncludes(BaseModel):
+    mail_domain: Union[MailDomainResource, TombstoneDataMailDomain] = Field(
+        ..., title="Mail Domain"
+    )
+
+
+class TombstoneDataMailAccount(CoreApiModel):
+    data_type: Literal["mail_account"] = Field(..., title="Data Type")
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
+        ...,
+        description="May not be in use by mail alias in the same mail domain.",
+        title="Local Part",
+    )
+    mail_domain_id: int = Field(..., title="Mail Domain Id")
+    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    includes: TombstoneDataMailAccountIncludes
 
 
 class TombstoneDataCron(CoreApiModel):
@@ -5486,16 +5639,6 @@ class TombstoneIncludes(CoreApiModel):
     cluster: ClusterResource
 
 
-class TombstoneDataDatabase(CoreApiModel):
-    data_type: Literal["database"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
-    server_software_name: DatabaseServerSoftwareNameEnum
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
-    includes: TombstoneDataDatabaseIncludes
-
-
 class TombstoneResource(CoreApiModel):
     id: int = Field(..., title="Id")
     created_at: datetime = Field(..., title="Created At")
@@ -5520,6 +5663,7 @@ class TombstoneResource(CoreApiModel):
 
 
 class NodeDependenciesResource(CoreApiModel):
+    hostname: str = Field(..., title="Hostname")
     groups: List[NodeGroupDependency] = Field(..., title="Groups")
     domain_routers: List[NodeDomainRouterDependency] = Field(
         ..., title="Domain Routers"
@@ -5527,6 +5671,69 @@ class NodeDependenciesResource(CoreApiModel):
     daemons: List[NodeDaemonDependency] = Field(..., title="Daemons")
     crons: List[NodeCronDependency] = Field(..., title="Crons")
     hosts_entries: List[NodeHostsEntryDependency] = Field(..., title="Hosts Entries")
+
+
+class DaemonLogResource(BaseModel):
+    application_name: constr(min_length=1, max_length=65535) = Field(
+        ..., title="Application Name"
+    )
+    priority: int = Field(..., title="Priority")
+    pid: int = Field(..., title="Pid")
+    message: constr(min_length=1, max_length=65535) = Field(..., title="Message")
+    node_hostname: str = Field(..., title="Node Hostname")
+    timestamp: datetime = Field(..., title="Timestamp")
+
+
+class NodeSpecificationsResource(BaseModel):
+    hostname: str = Field(..., title="Hostname")
+    memory_mib: int = Field(..., title="Memory Mib")
+    cpu_cores: int = Field(..., title="Cpu Cores")
+    disk_gib: int = Field(..., title="Disk Gib")
+    usable_cpu_cores: int = Field(..., title="Usable Cpu Cores")
+    usable_memory_mib: int = Field(..., title="Usable Memory Mib")
+    usable_disk_gib: int = Field(..., title="Usable Disk Gib")
+
+
+class RequestLogIncludes(BaseModel):
+    pass
+
+
+class RequestLogResource(BaseModel):
+    id: int = Field(..., title="Id")
+    created_at: datetime = Field(..., title="Created At")
+    updated_at: datetime = Field(..., title="Updated At")
+    ip_address: str = Field(..., title="Ip Address")
+    path: str = Field(..., title="Path")
+    method: HTTPMethod
+    query_parameters: Dict[str, str] = Field(..., title="Query Parameters")
+    body: Any = Field(
+        ...,
+        description="JSON body if specified and valid on request. Null if no JSON specified, or invalid.",
+        title="Body",
+    )
+    api_user_id: int = Field(..., title="Api User Id")
+    request_id: UUID4 = Field(..., title="Request Id")
+    includes: Optional[RequestLogIncludes] = None
+
+
+class ObjectLogIncludes(BaseModel):
+    customer: Optional[CustomerResource]
+
+
+class ObjectLogResource(BaseModel):
+    id: int = Field(..., title="Id")
+    created_at: datetime = Field(..., title="Created At")
+    updated_at: datetime = Field(..., title="Updated At")
+    object_id: int = Field(..., title="Object Id")
+    object_model_name: Optional[
+        constr(regex=r"^[a-zA-Z]+$", min_length=1, max_length=255)
+    ] = Field(..., title="Object Model Name")
+    request_id: Optional[UUID4] = Field(..., title="Request Id")
+    type: ObjectLogTypeEnum
+    causer_type: Optional[CauserTypeEnum]
+    causer_id: Optional[int] = Field(..., title="Causer Id")
+    customer_id: Optional[int] = Field(..., title="Customer Id")
+    includes: Optional[ObjectLogIncludes] = None
 
 
 NestedPathsDict.update_forward_refs()
