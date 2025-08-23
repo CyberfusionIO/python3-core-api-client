@@ -1,4 +1,4 @@
-datamodel-code-generator[http]==0.25.9
+datamodel-code-generator[http]==0.33.0
 mypy==1.17.1
 pre-commit==4.3.0
 ruff==0.12.10
