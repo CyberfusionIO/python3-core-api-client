@@ -1,8 +1,8 @@
-python3-core-api-client (1.1.0) UNRELEASED; urgency=low
+python3-core-api-client (1.1.0) unstable; urgency=low
 
-  - Update API to 1.248
+  - Update API to 1.249
 
- -- Mika Scheer <mscheer@cyberfusion.io>  Tue, 05 Aug 2025 12:16:00 +0200
+ -- William Edwards <wedwards@cyberfusion.nl>  Sat, 23 Aug 2025 12:15:00 +0200
 
 python3-core-api-client (1.0.6) unstable; urgency=low
 
