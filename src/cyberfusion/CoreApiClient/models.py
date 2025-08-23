@@ -5655,6 +5655,14 @@ class TombstoneResource(CoreApiModel):
         TombstoneDataMailAccount,
         TombstoneDataRedisInstance,
         TombstoneDataVirtualHost,
+        TombstoneDataDatabaseUser,
+        TombstoneDataDatabaseUserGrant,
+        TombstoneDataDomainRouter,
+        TombstoneDataHtpasswdFile,
+        TombstoneDataRootSSHKey,
+        TombstoneDataSSHKey,
+        TombstoneDataMailDomain,
+        TombstoneDataMailHostname,
     ] = Field(..., discriminator="data_type", title="Data")
     object_id: int = Field(..., title="Object Id")
     object_model_name: ObjectModelNameEnum
