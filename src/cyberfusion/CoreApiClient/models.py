@@ -1581,6 +1581,7 @@ class ObjectModelNameEnum(StrEnum):
     SITE_TO_CUSTOMER = "SiteToCustomer"
     SERVICE_ACCOUNT = "ServiceAccount"
     SERVICE_ACCOUNT_SERVER = "ServiceAccountServer"
+    CUSTOM_CONFIG = "CustomConfig"
 
 
 class PHPExtensionEnum(StrEnum):
@@ -4030,10 +4031,6 @@ class NodeUpdateDeprecatedRequest(CoreApiModel):
         description="When health-checking the primary group (key), check health of additional groups (value). Node must have specified primary group and additional groups. The following primary groups are supported: Apache, nginx, Fast Redirect. The following additional groups are supported: MariaDB, PostgreSQL.\n\nCommon use case: when web server uses local database server, when checking web server health, check database server health.",
         title="Load Balancer Health Checks Groups Pairs",
     )
-    groups_properties: NodeGroupsProperties = Field(
-        ...,
-        description="Group-specific properties. Must be set to null for groups that the node does not have. Must be set to the correct value if the node has groups Redis, MariaDB, RabbitMQ.",
-    )
 
 
 class NodeUpdateRequest(CoreApiModel):
@@ -4051,10 +4048,6 @@ class NodeUpdateRequest(CoreApiModel):
         None,
         description="When health-checking the primary group (key), check health of additional groups (value). Node must have specified primary group and additional groups. The following primary groups are supported: Apache, nginx, Fast Redirect. The following additional groups are supported: MariaDB, PostgreSQL.\n\nCommon use case: when web server uses local database server, when checking web server health, check database server health.",
         title="Load Balancer Health Checks Groups Pairs",
-    )
-    groups_properties: Optional[NodeGroupsProperties] = Field(
-        None,
-        description="Group-specific properties. Must be set to null for groups that the node does not have. Must be set to the correct value if the node has groups Redis, MariaDB, RabbitMQ.",
     )
 
 
@@ -4967,10 +4960,6 @@ class NodeCreateRequest(CoreApiModel):
         description="When health-checking the primary group (key), check health of additional groups (value). Node must have specified primary group and additional groups. The following primary groups are supported: Apache, nginx, Fast Redirect. The following additional groups are supported: MariaDB, PostgreSQL.\n\nCommon use case: when web server uses local database server, when checking web server health, check database server health.",
         title="Load Balancer Health Checks Groups Pairs",
     )
-    groups_properties: NodeGroupsProperties = Field(
-        ...,
-        description="Group-specific properties. Must be set to null for groups that the node does not have. Must be set to the correct value if the node has groups Redis, MariaDB, RabbitMQ.",
-    )
 
 
 class NodeCronDependency(CoreApiModel):
@@ -5437,6 +5426,10 @@ class TombstoneDataMailHostnameIncludes(BaseModel):
     pass
 
 
+class TombstoneDataCustomConfigIncludes(BaseModel):
+    pass
+
+
 class TombstoneDataDatabaseUser(BaseModel):
     data_type: Literal["database_user"] = Field(..., title="Data Type")
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
@@ -5633,6 +5626,14 @@ class TombstoneDataVirtualHost(CoreApiModel):
     includes: TombstoneDataVirtualHostIncludes
 
 
+class TombstoneDataCustomConfig(CoreApiModel):
+    data_type: Literal["custom_config"] = Field(..., title="Data Type")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
+        ..., title="Name"
+    )
+    includes: TombstoneDataCustomConfigIncludes
+
+
 class TombstoneIncludes(CoreApiModel):
     cluster: ClusterResource
 
@@ -5661,6 +5662,7 @@ class TombstoneResource(CoreApiModel):
         TombstoneDataSSHKey,
         TombstoneDataMailDomain,
         TombstoneDataMailHostname,
+        TombstoneDataCustomConfig,
     ] = Field(..., discriminator="data_type", title="Data")
     object_id: int = Field(..., title="Object Id")
     object_model_name: ObjectModelNameEnum
