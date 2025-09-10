@@ -131,6 +131,7 @@ class CoreApiClient:
             status_code=requests_response.status_code,
             body=requests_response.text,
             headers=requests_response.headers,
+            requests_response=requests_response,
         )
 
         return local_response

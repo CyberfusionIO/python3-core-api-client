@@ -1,4 +1,6 @@
 import json
+from http import HTTPStatus
+
 import pytest
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
 import faker
@@ -98,7 +100,7 @@ def test_authentication_headers_jwt(
             "token_type": "bearer",
             "expires_in": faker.pyint(),
         },
-        status_code=200,
+        status_code=HTTPStatus.OK,
     )
 
     username = faker.user_name()
@@ -138,7 +140,7 @@ def test_send_content_type_default(
     )
 
     noop_mock = requests_mock.get(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     api_connector = CoreApiConnector(
@@ -164,7 +166,7 @@ def test_send_content_type_custom(
     )
 
     noop_mock = requests_mock.get(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     api_connector = CoreApiConnector(
@@ -191,7 +193,7 @@ def test_send_json_dumped_when_content_type_json(
     )
 
     noop_mock = requests_mock.post(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     api_connector = CoreApiConnector(
@@ -221,7 +223,7 @@ def test_send_json_not_dumped_when_not_content_type_json(
     )
 
     noop_mock = requests_mock.post(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     api_connector = CoreApiConnector(
@@ -248,7 +250,7 @@ def test_send_json_datetime_serialised(
     )
 
     noop_mock = requests_mock.post(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     api_connector = CoreApiConnector(
@@ -278,7 +280,7 @@ def test_send_query_parameters_datetime_serialised(
     )
 
     noop_mock = requests_mock.post(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     api_connector = CoreApiConnector(

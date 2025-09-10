@@ -1,4 +1,4 @@
-# python3-core-api-client
+ # python3-core-api-client
 
 Python client for Core API.
 
@@ -58,7 +58,9 @@ connector = CoreApiConnector(
     api_key='api_key'
 )
 
-virtual_hosts = connector.virtual_hosts.list_virtual_hosts()
+response = connector.virtual_hosts.list_virtual_hosts()
+
+virtual_hosts = response.dto
 ```
 
 ## Authentication
@@ -157,7 +159,7 @@ for error in errors:
 
 ### Get model from response
 
-Calling an endpoint returns the resource model.
+Calling an endpoint returns a response model (`DtoResponse`) containing the resource model (in the `dto` variable).
 
 Code example:
 
@@ -170,7 +172,7 @@ connector = CoreApiConnector(
     username='username', password='password'
 )
 
-mail_domain_resource = connector.mail_domains.create_mail_domain(
+response = connector.mail_domains.create_mail_domain(
     MailDomainCreateRequest(
         domain='cyberfusion.io',
         unix_user_id=1,
@@ -178,7 +180,44 @@ mail_domain_resource = connector.mail_domains.create_mail_domain(
         catch_all_forward_email_addresses=[],
     )
 )
+
+mail_domain_resource = response.dto
 # mail_domain_resource is a model representing the API resource
+```
+
+### Get other information from response
+
+The response model also contains the response status code, body (in both string and JSON format), headers and a failed boolean.
+
+Need even more? Access the raw response object in `requests_response`.
+
+Code example:
+
+```python
+import requests_cache
+
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
+
+from cyberfusion.CoreApiClient.models import MailAliasCreateRequest
+
+connector = CoreApiConnector(
+    username='username', password='password', requests_session=requests_cache.CachedSession()
+)
+
+response = connector.mail_aliases.create_mail_alias(
+    MailAliasCreateRequest(
+        local_part='&^@$#^&@$#^&',
+        mail_domain_id=1,
+    )
+)
+
+if response.failed:
+    print("HTTP request failed with status code: ", response.status_code)
+
+if response.requests_response.from_cache:
+    print("Cached response body: ", response.body)
+
+    json_body = response.json
 ```
 
 ### Throw exception on failure
@@ -225,12 +264,6 @@ from cyberfusion.CoreApiClient.connector import CoreApiConnector
 connector = CoreApiConnector(...)
 
 response = connector.send(method='GET', path='/foobar', data={}, query_parameters={})
-
-response.status_code
-response.json
-response.body
-response.headers
-response.failed
 ```
 
 To raise `cyberfusion.CoreApiClient.exceptions.CallException` in case of an unexpected HTTP status code, use `send_or_fail` instead of `send`. It takes the same parameters.
