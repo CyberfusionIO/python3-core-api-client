@@ -1,6 +1,7 @@
 from cyberfusion.CoreApiClient import models
 from typing import Optional, List
 
+from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
 
@@ -8,14 +9,16 @@ class CertificateManagers(Resource):
     def create_certificate_manager(
         self,
         request: models.CertificateManagerCreateRequest,
-    ) -> models.CertificateManagerResource:
-        return models.CertificateManagerResource.parse_obj(
-            self.api_connector.send_or_fail(
-                "POST",
-                "/api/v1/certificate-managers",
-                data=request.dict(exclude_unset=True),
-                query_parameters={},
-            ).json
+    ) -> DtoResponse[models.CertificateManagerResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            "/api/v1/certificate-managers",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.CertificateManagerResource
         )
 
     def list_certificate_managers(
@@ -25,34 +28,37 @@ class CertificateManagers(Resource):
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
         sort: Optional[List[str]] = None,
-    ) -> list[models.CertificateManagerResource]:
-        return [
-            models.CertificateManagerResource.parse_obj(model)
-            for model in self.api_connector.send_or_fail(
-                "GET",
-                "/api/v1/certificate-managers",
-                data=None,
-                query_parameters={
-                    "skip": skip,
-                    "limit": limit,
-                    "filter": filter_,
-                    "sort": sort,
-                },
-            ).json
-        ]
+    ) -> DtoResponse[list[models.CertificateManagerResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            "/api/v1/certificate-managers",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.CertificateManagerResource
+        )
 
     def read_certificate_manager(
         self,
         *,
         id_: int,
-    ) -> models.CertificateManagerResource:
-        return models.CertificateManagerResource.parse_obj(
-            self.api_connector.send_or_fail(
-                "GET",
-                f"/api/v1/certificate-managers/{id_}",
-                data=None,
-                query_parameters={},
-            ).json
+    ) -> DtoResponse[models.CertificateManagerResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/certificate-managers/{id_}",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.CertificateManagerResource
         )
 
     def update_certificate_manager(
@@ -60,40 +66,42 @@ class CertificateManagers(Resource):
         request: models.CertificateManagerUpdateRequest,
         *,
         id_: int,
-    ) -> models.CertificateManagerResource:
-        return models.CertificateManagerResource.parse_obj(
-            self.api_connector.send_or_fail(
-                "PATCH",
-                f"/api/v1/certificate-managers/{id_}",
-                data=request.dict(exclude_unset=True),
-                query_parameters={},
-            ).json
+    ) -> DtoResponse[models.CertificateManagerResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/certificate-managers/{id_}",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.CertificateManagerResource
         )
 
     def delete_certificate_manager(
         self,
         *,
         id_: int,
-    ) -> models.DetailMessage:
-        return models.DetailMessage.parse_obj(
-            self.api_connector.send_or_fail(
-                "DELETE",
-                f"/api/v1/certificate-managers/{id_}",
-                data=None,
-                query_parameters={},
-            ).json
+    ) -> DtoResponse[models.DetailMessage]:
+        local_response = self.api_connector.send_or_fail(
+            "DELETE",
+            f"/api/v1/certificate-managers/{id_}",
+            data=None,
+            query_parameters={},
         )
+
+        return DtoResponse.from_response(local_response, models.DetailMessage)
 
     def request_certificate(
         self,
         *,
         id_: int,
-    ) -> models.TaskCollectionResource:
-        return models.TaskCollectionResource.parse_obj(
-            self.api_connector.send_or_fail(
-                "POST",
-                f"/api/v1/certificate-managers/{id_}/request",
-                data=None,
-                query_parameters={},
-            ).json
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/certificate-managers/{id_}/request",
+            data=None,
+            query_parameters={},
         )
+
+        return DtoResponse.from_response(local_response, models.TaskCollectionResource)

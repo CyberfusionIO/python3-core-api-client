@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 
 import requests
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
@@ -24,7 +25,7 @@ def test_initial_login(
             "token_type": "bearer",
             "expires_in": faker.pyint(),
         },
-        status_code=200,
+        status_code=HTTPStatus.OK,
     )
 
     requests_mock.get("".join([base_url, "/api/v1/noop"]), real_http=True)
@@ -66,11 +67,11 @@ def test_single_login(faker: faker.Faker, base_url: str, requests_mock: Mocker) 
             "token_type": "bearer",
             "expires_in": faker.pyint(),
         },
-        status_code=200,
+        status_code=HTTPStatus.OK,
     )
 
     noop_mock = requests_mock.get(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     username = faker.user_name()
@@ -103,7 +104,7 @@ def test_jwt_token_renewed(
             "token_type": "bearer",
             "expires_in": expires_in,
         },
-        status_code=200,
+        status_code=HTTPStatus.OK,
     )
 
     requests_mock.get("".join([base_url, "/api/v1/noop"]), real_http=True)
@@ -134,7 +135,7 @@ def test_authentication_exception(
     login_mock = requests_mock.post(
         "".join([base_url, "/api/v1/login/access-token"]),
         json={"detail": faker.word()},
-        status_code=403,
+        status_code=HTTPStatus.FORBIDDEN,
     )
 
     username = faker.user_name()
@@ -294,7 +295,7 @@ def test_custom_requests_session(
     )
 
     noop_mock = requests_mock.get(
-        "".join([base_url, "/api/v1/noop"]), json={}, status_code=200
+        "".join([base_url, "/api/v1/noop"]), json={}, status_code=HTTPStatus.OK
     )
 
     requests_session = requests.Session()
