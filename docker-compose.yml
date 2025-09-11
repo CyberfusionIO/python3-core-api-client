@@ -5,4 +5,4 @@ services:
     image: stoplight/prism:5.14.2
     ports:
       - "4411:4010"
-    command: [ "mock", "-h", "0.0.0.0", "https://core-api.cyberfusion.io/openapi.json" ]
+    command: [ "mock", "-h", "0.0.0.0", "http://host.docker.internal:22190/openapi.json" ]
