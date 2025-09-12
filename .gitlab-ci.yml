@@ -21,7 +21,7 @@ unit test and feature test:
   services:
     - name: stoplight/prism:5.14.2
       alias: prism
-      command: [ "mock", "-h", "0.0.0.0", "https://core-api.cyberfusion.io/openapi.json" ]
+      command: [ "mock", "-h", "0.0.0.0", "https://cluster-api-staging.cyberfusion.nl/openapi.json" ]
   script:
     - !reference [.add repositories, script]
     - pip install --no-cache-dir -r requirements/test.txt
