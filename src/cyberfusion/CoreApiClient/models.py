@@ -1205,7 +1205,7 @@ class CertificateManagerCreateRequest(CoreApiModel):
     request_callback_url: Optional[AnyUrl]
 
 
-class ClusterCreateRequest(BaseModel):
+class ClusterCreateRequest(CoreApiModel):
     customer_id: int
     site_id: int
     description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
@@ -1228,7 +1228,7 @@ class ClusterIncludes(CoreApiModel):
     customer: CustomerResource
 
 
-class ClusterResource(BaseModel):
+class ClusterResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1239,7 +1239,7 @@ class ClusterResource(BaseModel):
     includes: ClusterIncludes
 
 
-class ClusterUpdateRequest(BaseModel):
+class ClusterUpdateRequest(CoreApiModel):
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
     ] = None
@@ -2278,67 +2278,67 @@ class NodeDomainRouterDependency(CoreApiModel):
     domain_router: DomainRouterResource
 
 
-class TombstoneDataCertificateIncludes(BaseModel):
+class TombstoneDataCertificateIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataDaemonIncludes(BaseModel):
+class TombstoneDataDaemonIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataDatabaseIncludes(BaseModel):
+class TombstoneDataDatabaseIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataFPMPoolIncludes(BaseModel):
+class TombstoneDataFPMPoolIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataPassengerAppIncludes(BaseModel):
+class TombstoneDataPassengerAppIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataRedisInstanceIncludes(BaseModel):
+class TombstoneDataRedisInstanceIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataUNIXUserIncludes(BaseModel):
+class TombstoneDataUNIXUserIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataUNIXUserRabbitMQCredentialsIncludes(BaseModel):
+class TombstoneDataUNIXUserRabbitMQCredentialsIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataVirtualHostIncludes(BaseModel):
+class TombstoneDataVirtualHostIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataDatabaseUserIncludes(BaseModel):
+class TombstoneDataDatabaseUserIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataDomainRouterIncludes(BaseModel):
+class TombstoneDataDomainRouterIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataRootSSHKeyIncludes(BaseModel):
+class TombstoneDataRootSSHKeyIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataSSHKeyIncludes(BaseModel):
+class TombstoneDataSSHKeyIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataMailHostnameIncludes(BaseModel):
+class TombstoneDataMailHostnameIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataCustomConfigIncludes(BaseModel):
+class TombstoneDataCustomConfigIncludes(CoreApiModel):
     pass
 
 
-class TombstoneDataDatabaseUser(BaseModel):
+class TombstoneDataDatabaseUser(CoreApiModel):
     id: int
     data_type: Literal["database_user"]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
@@ -2356,13 +2356,13 @@ class TombstoneDataDatabase(CoreApiModel):
     includes: TombstoneDataDatabaseIncludes
 
 
-class TombstoneDataDatabaseUserGrantIncludes(BaseModel):
+class TombstoneDataDatabaseUserGrantIncludes(CoreApiModel):
     id: int
     database: Union[DatabaseResource, TombstoneDataDatabase]
     database_user: Union[DatabaseUserResource, TombstoneDataDatabaseUser]
 
 
-class TombstoneDataDatabaseUserGrant(BaseModel):
+class TombstoneDataDatabaseUserGrant(CoreApiModel):
     id: int
     data_type: Literal["database_user_grant"]
     table_name: Optional[constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)]
@@ -2372,14 +2372,14 @@ class TombstoneDataDatabaseUserGrant(BaseModel):
     includes: TombstoneDataDatabaseUserGrantIncludes
 
 
-class TombstoneDataDomainRouter(BaseModel):
+class TombstoneDataDomainRouter(CoreApiModel):
     id: int
     data_type: Literal["domain_router"]
     domain: str
     includes: TombstoneDataDomainRouterIncludes
 
 
-class TombstoneDataRootSSHKey(BaseModel):
+class TombstoneDataRootSSHKey(CoreApiModel):
     id: int
     data_type: Literal["root_ssh_key"]
     name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
@@ -2387,7 +2387,7 @@ class TombstoneDataRootSSHKey(BaseModel):
     includes: TombstoneDataRootSSHKeyIncludes
 
 
-class TombstoneDataSSHKey(BaseModel):
+class TombstoneDataSSHKey(CoreApiModel):
     id: int
     data_type: Literal["ssh_key"]
     name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
@@ -2395,7 +2395,7 @@ class TombstoneDataSSHKey(BaseModel):
     includes: TombstoneDataSSHKeyIncludes
 
 
-class TombstoneDataMailHostname(BaseModel):
+class TombstoneDataMailHostname(CoreApiModel):
     id: int
     data_type: Literal["mail_hostname"]
     domain: str
@@ -2450,27 +2450,27 @@ class TombstoneDataUNIXUser(CoreApiModel):
     includes: TombstoneDataUNIXUserIncludes
 
 
-class TombstoneDataCronIncludes(BaseModel):
+class TombstoneDataCronIncludes(CoreApiModel):
     node: NodeResource
     unix_user: Union[TombstoneDataUNIXUser, UNIXUserResource]
 
 
-class TombstoneDataHtpasswdFileIncludes(BaseModel):
+class TombstoneDataHtpasswdFileIncludes(CoreApiModel):
     unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser]
 
 
-class TombstoneDataHtpasswdFile(BaseModel):
+class TombstoneDataHtpasswdFile(CoreApiModel):
     id: int
     data_type: Literal["htpasswd_file"]
     unix_user_id: int
     includes: TombstoneDataHtpasswdFileIncludes
 
 
-class TombstoneDataMailDomainIncludes(BaseModel):
+class TombstoneDataMailDomainIncludes(CoreApiModel):
     unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser]
 
 
-class TombstoneDataMailDomain(BaseModel):
+class TombstoneDataMailDomain(CoreApiModel):
     id: int
     data_type: Literal["mail_domain"]
     domain: str
@@ -2479,7 +2479,7 @@ class TombstoneDataMailDomain(BaseModel):
     includes: TombstoneDataMailDomainIncludes
 
 
-class TombstoneDataMailAccountIncludes(BaseModel):
+class TombstoneDataMailAccountIncludes(CoreApiModel):
     mail_domain: Union[MailDomainResource, TombstoneDataMailDomain]
 
 
@@ -2573,7 +2573,7 @@ class NodeDependenciesResource(CoreApiModel):
     hosts_entries: List[NodeHostsEntryDependency]
 
 
-class DaemonLogResource(BaseModel):
+class DaemonLogResource(CoreApiModel):
     application_name: constr(min_length=1, max_length=65535)
     priority: int
     pid: int
@@ -2582,7 +2582,7 @@ class DaemonLogResource(BaseModel):
     timestamp: datetime
 
 
-class NodeSpecificationsResource(BaseModel):
+class NodeSpecificationsResource(CoreApiModel):
     hostname: str
     memory_mib: int
     cpu_cores: int
@@ -2592,11 +2592,11 @@ class NodeSpecificationsResource(BaseModel):
     usable_disk_gib: int
 
 
-class RequestLogIncludes(BaseModel):
+class RequestLogIncludes(CoreApiModel):
     pass
 
 
-class RequestLogResource(BaseModel):
+class RequestLogResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2610,11 +2610,11 @@ class RequestLogResource(BaseModel):
     includes: RequestLogIncludes
 
 
-class ObjectLogIncludes(BaseModel):
+class ObjectLogIncludes(CoreApiModel):
     customer: Optional[CustomerResource]
 
 
-class ObjectLogResource(BaseModel):
+class ObjectLogResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2634,17 +2634,17 @@ class SimpleSpecificationsResource(RootModelCollectionMixin, BaseModel):  # type
     __root__: List[str]
 
 
-class ConcreteSpecificationSatisfyResult(BaseModel):
+class ConcreteSpecificationSatisfyResult(CoreApiModel):
     satisfied: bool
     requirement: str
 
 
-class ConcreteSpecificationSatisfyResultResource(BaseModel):
+class ConcreteSpecificationSatisfyResultResource(CoreApiModel):
     satisfied: bool
     requirement: str
 
 
-class CompositeSpecificationSatisfyResult(BaseModel):
+class CompositeSpecificationSatisfyResult(CoreApiModel):
     name: str
     results: List[
         Union[ConcreteSpecificationSatisfyResult, "CompositeSpecificationSatisfyResult"]
@@ -2652,7 +2652,7 @@ class CompositeSpecificationSatisfyResult(BaseModel):
     mode: SpecificationMode
 
 
-class CompositeSpecificationSatisfyResultResource(BaseModel):
+class CompositeSpecificationSatisfyResultResource(CoreApiModel):
     name: str
     satisfied: bool
     results: List[
@@ -2664,15 +2664,15 @@ class CompositeSpecificationSatisfyResultResource(BaseModel):
     mode: SpecificationMode
 
 
-class ClusterBorgPropertiesCreateRequest(BaseModel):
+class ClusterBorgPropertiesCreateRequest(CoreApiModel):
     automatic_borg_repositories_prune_enabled: bool = True
 
 
-class ClusterBorgPropertiesIncludes(BaseModel):
+class ClusterBorgPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterBorgPropertiesResource(BaseModel):
+class ClusterBorgPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2681,22 +2681,22 @@ class ClusterBorgPropertiesResource(BaseModel):
     includes: ClusterBorgPropertiesIncludes
 
 
-class ClusterBorgPropertiesUpdateRequest(BaseModel):
+class ClusterBorgPropertiesUpdateRequest(CoreApiModel):
     automatic_borg_repositories_prune_enabled: Optional[bool] = None
 
 
-class ClusterElasticsearchPropertiesCreateRequest(BaseModel):
+class ClusterElasticsearchPropertiesCreateRequest(CoreApiModel):
     elasticsearch_default_users_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
     )
     kibana_domain: str
 
 
-class ClusterElasticsearchPropertiesIncludes(BaseModel):
+class ClusterElasticsearchPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterElasticsearchPropertiesResource(BaseModel):
+class ClusterElasticsearchPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2708,22 +2708,22 @@ class ClusterElasticsearchPropertiesResource(BaseModel):
     includes: ClusterElasticsearchPropertiesIncludes
 
 
-class ClusterElasticsearchPropertiesUpdateRequest(BaseModel):
+class ClusterElasticsearchPropertiesUpdateRequest(CoreApiModel):
     elasticsearch_default_users_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     ] = None
     kibana_domain: Optional[str] = None
 
 
-class ClusterFirewallPropertiesCreateRequest(BaseModel):
+class ClusterFirewallPropertiesCreateRequest(CoreApiModel):
     firewall_rules_external_providers_enabled: bool = False
 
 
-class ClusterFirewallPropertiesIncludes(BaseModel):
+class ClusterFirewallPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterFirewallPropertiesResource(BaseModel):
+class ClusterFirewallPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2732,19 +2732,19 @@ class ClusterFirewallPropertiesResource(BaseModel):
     includes: ClusterFirewallPropertiesIncludes
 
 
-class ClusterFirewallPropertiesUpdateRequest(BaseModel):
+class ClusterFirewallPropertiesUpdateRequest(CoreApiModel):
     firewall_rules_external_providers_enabled: Optional[bool] = None
 
 
-class ClusterGrafanaPropertiesCreateRequest(BaseModel):
+class ClusterGrafanaPropertiesCreateRequest(CoreApiModel):
     grafana_domain: str
 
 
-class ClusterGrafanaPropertiesIncludes(BaseModel):
+class ClusterGrafanaPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterGrafanaPropertiesResource(BaseModel):
+class ClusterGrafanaPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2753,21 +2753,21 @@ class ClusterGrafanaPropertiesResource(BaseModel):
     includes: ClusterGrafanaPropertiesIncludes
 
 
-class ClusterGrafanaPropertiesUpdateRequest(BaseModel):
+class ClusterGrafanaPropertiesUpdateRequest(CoreApiModel):
     grafana_domain: Optional[str] = None
 
 
-class ClusterKernelcarePropertiesCreateRequest(BaseModel):
+class ClusterKernelcarePropertiesCreateRequest(CoreApiModel):
     kernelcare_license_key: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16
     )
 
 
-class ClusterKernelcarePropertiesIncludes(BaseModel):
+class ClusterKernelcarePropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterKernelcarePropertiesResource(BaseModel):
+class ClusterKernelcarePropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2778,27 +2778,27 @@ class ClusterKernelcarePropertiesResource(BaseModel):
     includes: ClusterKernelcarePropertiesIncludes
 
 
-class ClusterKernelcarePropertiesUpdateRequest(BaseModel):
+class ClusterKernelcarePropertiesUpdateRequest(CoreApiModel):
     kernelcare_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16)
     ] = None
 
 
-class ClusterLoadBalancingPropertiesIncludes(BaseModel):
+class ClusterLoadBalancingPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterMariadbPropertiesCreateRequest(BaseModel):
+class ClusterMariadbPropertiesCreateRequest(CoreApiModel):
     mariadb_version: str
     mariadb_backup_interval: conint(ge=1, le=24) = 24
     mariadb_backup_local_retention: conint(ge=1, le=24) = 3
 
 
-class ClusterMariadbPropertiesIncludes(BaseModel):
+class ClusterMariadbPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterMariadbPropertiesResource(BaseModel):
+class ClusterMariadbPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2810,24 +2810,24 @@ class ClusterMariadbPropertiesResource(BaseModel):
     includes: ClusterMariadbPropertiesIncludes
 
 
-class ClusterMariadbPropertiesUpdateRequest(BaseModel):
+class ClusterMariadbPropertiesUpdateRequest(CoreApiModel):
     mariadb_backup_interval: Optional[conint(ge=1, le=24)] = None
     mariadb_backup_local_retention: Optional[conint(ge=1, le=24)] = None
 
 
-class ClusterMeilisearchPropertiesIncludes(BaseModel):
+class ClusterMeilisearchPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterMetabasePropertiesCreateRequest(BaseModel):
+class ClusterMetabasePropertiesCreateRequest(CoreApiModel):
     metabase_domain: str
 
 
-class ClusterMetabasePropertiesIncludes(BaseModel):
+class ClusterMetabasePropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterMetabasePropertiesResource(BaseModel):
+class ClusterMetabasePropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2837,14 +2837,14 @@ class ClusterMetabasePropertiesResource(BaseModel):
     includes: ClusterMetabasePropertiesIncludes
 
 
-class ClusterMetabasePropertiesUpdateRequest(BaseModel):
+class ClusterMetabasePropertiesUpdateRequest(CoreApiModel):
     metabase_domain: Optional[str] = None
     metabase_database_password: Optional[
         constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     ] = None
 
 
-class ClusterNewRelicPropertiesCreateRequest(BaseModel):
+class ClusterNewRelicPropertiesCreateRequest(CoreApiModel):
     new_relic_apm_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
     ] = None
@@ -2853,11 +2853,11 @@ class ClusterNewRelicPropertiesCreateRequest(BaseModel):
     ] = None
 
 
-class ClusterNewRelicPropertiesIncludes(BaseModel):
+class ClusterNewRelicPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterNewRelicPropertiesResource(BaseModel):
+class ClusterNewRelicPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2872,7 +2872,7 @@ class ClusterNewRelicPropertiesResource(BaseModel):
     includes: ClusterNewRelicPropertiesIncludes
 
 
-class ClusterNewRelicPropertiesUpdateRequest(BaseModel):
+class ClusterNewRelicPropertiesUpdateRequest(CoreApiModel):
     new_relic_mariadb_password: Optional[
         constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     ] = None
@@ -2884,7 +2884,7 @@ class ClusterNewRelicPropertiesUpdateRequest(BaseModel):
     ] = None
 
 
-class ClusterNodejsPropertiesCreateRequest(BaseModel):
+class ClusterNodejsPropertiesCreateRequest(CoreApiModel):
     nodejs_versions: List[str] = Field(
         ...,
         unique_items=True,
@@ -2892,11 +2892,11 @@ class ClusterNodejsPropertiesCreateRequest(BaseModel):
     nodejs_version: Optional[int] = None
 
 
-class ClusterNodejsPropertiesIncludes(BaseModel):
+class ClusterNodejsPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterNodejsPropertiesResource(BaseModel):
+class ClusterNodejsPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2909,19 +2909,19 @@ class ClusterNodejsPropertiesResource(BaseModel):
     includes: ClusterNodejsPropertiesIncludes
 
 
-class ClusterNodejsPropertiesUpdateRequest(BaseModel):
+class ClusterNodejsPropertiesUpdateRequest(CoreApiModel):
     nodejs_versions: Optional[List[str]] = None
 
 
-class ClusterOsPropertiesCreateRequest(BaseModel):
+class ClusterOsPropertiesCreateRequest(CoreApiModel):
     automatic_upgrades_enabled: bool = False
 
 
-class ClusterOsPropertiesIncludes(BaseModel):
+class ClusterOsPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterOsPropertiesResource(BaseModel):
+class ClusterOsPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2930,25 +2930,25 @@ class ClusterOsPropertiesResource(BaseModel):
     includes: ClusterOsPropertiesIncludes
 
 
-class ClusterOsPropertiesUpdateRequest(BaseModel):
+class ClusterOsPropertiesUpdateRequest(CoreApiModel):
     automatic_upgrades_enabled: Optional[bool] = None
 
 
-class ClusterPhpPropertiesIncludes(BaseModel):
+class ClusterPhpPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterPostgresqlPropertiesCreateRequest(BaseModel):
+class ClusterPostgresqlPropertiesCreateRequest(CoreApiModel):
     postgresql_version: int
     postgresql_backup_local_retention: conint(ge=1, le=24) = 3
     postgresql_backup_interval: conint(ge=1, le=24) = 24
 
 
-class ClusterPostgresqlPropertiesIncludes(BaseModel):
+class ClusterPostgresqlPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterPostgresqlPropertiesResource(BaseModel):
+class ClusterPostgresqlPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2959,23 +2959,23 @@ class ClusterPostgresqlPropertiesResource(BaseModel):
     includes: ClusterPostgresqlPropertiesIncludes
 
 
-class ClusterPostgresqlPropertiesUpdateRequest(BaseModel):
+class ClusterPostgresqlPropertiesUpdateRequest(CoreApiModel):
     postgresql_backup_local_retention: Optional[conint(ge=1, le=24)] = None
     postgresql_backup_interval: Optional[conint(ge=1, le=24)] = None
 
 
-class ClusterRabbitmqPropertiesCreateRequest(BaseModel):
+class ClusterRabbitmqPropertiesCreateRequest(CoreApiModel):
     rabbitmq_admin_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
     )
     rabbitmq_management_domain: str
 
 
-class ClusterRabbitmqPropertiesIncludes(BaseModel):
+class ClusterRabbitmqPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterRabbitmqPropertiesResource(BaseModel):
+class ClusterRabbitmqPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2988,23 +2988,23 @@ class ClusterRabbitmqPropertiesResource(BaseModel):
     includes: ClusterRabbitmqPropertiesIncludes
 
 
-class ClusterRabbitmqPropertiesUpdateRequest(BaseModel):
+class ClusterRabbitmqPropertiesUpdateRequest(CoreApiModel):
     rabbitmq_admin_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     ] = None
     rabbitmq_management_domain: Optional[str] = None
 
 
-class ClusterRedisPropertiesCreateRequest(BaseModel):
+class ClusterRedisPropertiesCreateRequest(CoreApiModel):
     redis_password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     redis_memory_limit: int
 
 
-class ClusterRedisPropertiesIncludes(BaseModel):
+class ClusterRedisPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterRedisPropertiesResource(BaseModel):
+class ClusterRedisPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -3014,14 +3014,14 @@ class ClusterRedisPropertiesResource(BaseModel):
     includes: ClusterRedisPropertiesIncludes
 
 
-class ClusterRedisPropertiesUpdateRequest(BaseModel):
+class ClusterRedisPropertiesUpdateRequest(CoreApiModel):
     redis_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     ] = None
     redis_memory_limit: Optional[int] = None
 
 
-class ClusterSinglestorePropertiesCreateRequest(BaseModel):
+class ClusterSinglestorePropertiesCreateRequest(CoreApiModel):
     singlestore_studio_domain: str
     singlestore_api_domain: str
     singlestore_license_key: constr(regex=r"^[ -~]+$", min_length=144, max_length=144)
@@ -3030,11 +3030,11 @@ class ClusterSinglestorePropertiesCreateRequest(BaseModel):
     )
 
 
-class ClusterSinglestorePropertiesIncludes(BaseModel):
+class ClusterSinglestorePropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterSinglestorePropertiesResource(BaseModel):
+class ClusterSinglestorePropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -3048,7 +3048,7 @@ class ClusterSinglestorePropertiesResource(BaseModel):
     includes: ClusterSinglestorePropertiesIncludes
 
 
-class ClusterSinglestorePropertiesUpdateRequest(BaseModel):
+class ClusterSinglestorePropertiesUpdateRequest(CoreApiModel):
     singlestore_studio_domain: Optional[str] = None
     singlestore_api_domain: Optional[str] = None
     singlestore_license_key: Optional[
@@ -3059,18 +3059,18 @@ class ClusterSinglestorePropertiesUpdateRequest(BaseModel):
     ] = None
 
 
-class ClusterUnixUsersPropertiesIncludes(BaseModel):
+class ClusterUnixUsersPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterLoadBalancingPropertiesCreateRequest(BaseModel):
+class ClusterLoadBalancingPropertiesCreateRequest(CoreApiModel):
     http_retry_properties: HTTPRetryProperties = Field(
         default_factory=lambda: HTTPRetryProperties.parse_obj({"conditions": []})
     )
     load_balancing_method: LoadBalancingMethodEnum = LoadBalancingMethodEnum.ROUND_ROBIN
 
 
-class ClusterLoadBalancingPropertiesResource(BaseModel):
+class ClusterLoadBalancingPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -3080,12 +3080,12 @@ class ClusterLoadBalancingPropertiesResource(BaseModel):
     includes: ClusterLoadBalancingPropertiesIncludes
 
 
-class ClusterLoadBalancingPropertiesUpdateRequest(BaseModel):
+class ClusterLoadBalancingPropertiesUpdateRequest(CoreApiModel):
     http_retry_properties: Optional[HTTPRetryProperties] = None
     load_balancing_method: Optional[LoadBalancingMethodEnum] = None
 
 
-class ClusterMeilisearchPropertiesCreateRequest(BaseModel):
+class ClusterMeilisearchPropertiesCreateRequest(CoreApiModel):
     meilisearch_backup_local_retention: conint(ge=1, le=24) = 3
     meilisearch_master_key: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=24
@@ -3094,7 +3094,7 @@ class ClusterMeilisearchPropertiesCreateRequest(BaseModel):
     meilisearch_backup_interval: conint(ge=1, le=24) = 24
 
 
-class ClusterMeilisearchPropertiesResource(BaseModel):
+class ClusterMeilisearchPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -3108,7 +3108,7 @@ class ClusterMeilisearchPropertiesResource(BaseModel):
     includes: ClusterMeilisearchPropertiesIncludes
 
 
-class ClusterMeilisearchPropertiesUpdateRequest(BaseModel):
+class ClusterMeilisearchPropertiesUpdateRequest(CoreApiModel):
     meilisearch_backup_local_retention: Optional[conint(ge=1, le=24)] = None
     meilisearch_master_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=24)
@@ -3117,7 +3117,7 @@ class ClusterMeilisearchPropertiesUpdateRequest(BaseModel):
     meilisearch_backup_interval: Optional[conint(ge=1, le=24)] = None
 
 
-class ClusterPhpPropertiesCreateRequest(BaseModel):
+class ClusterPhpPropertiesCreateRequest(CoreApiModel):
     php_versions: List[str] = Field(
         ...,
         unique_items=True,
@@ -3131,7 +3131,7 @@ class ClusterPhpPropertiesCreateRequest(BaseModel):
     php_sessions_spread_enabled: bool = True
 
 
-class ClusterPhpPropertiesResource(BaseModel):
+class ClusterPhpPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -3150,7 +3150,7 @@ class ClusterPhpPropertiesResource(BaseModel):
     includes: ClusterPhpPropertiesIncludes
 
 
-class ClusterPhpPropertiesUpdateRequest(BaseModel):
+class ClusterPhpPropertiesUpdateRequest(CoreApiModel):
     php_versions: Optional[List[str]] = None
     custom_php_modules_names: Optional[List[PHPExtensionEnum]] = None
     php_settings: Optional[PHPSettings] = None
@@ -3158,13 +3158,13 @@ class ClusterPhpPropertiesUpdateRequest(BaseModel):
     php_sessions_spread_enabled: Optional[bool] = None
 
 
-class ClusterUnixUsersPropertiesCreateRequest(BaseModel):
+class ClusterUnixUsersPropertiesCreateRequest(CoreApiModel):
     unix_users_home_directory: UNIXUserHomeDirectoryEnum = (
         UNIXUserHomeDirectoryEnum.HOME
     )
 
 
-class ClusterUnixUsersPropertiesResource(BaseModel):
+class ClusterUnixUsersPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
