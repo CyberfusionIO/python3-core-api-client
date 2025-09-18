@@ -3,7 +3,7 @@ python3-core-api-client (2.1.0) unstable; urgency=low
   - Update API to 1.251
   - Remove descriptions + titles
 
- -- William Edwards <wedwards@cyberfusion.nl>  Wed, 10 Sep 2025 15:40:00 +0200
+ -- William Edwards <wedwards@cyberfusion.nl>  Thu, 18 Sep 2025 14:24:00 +0200
 
 python3-core-api-client (2.0) unstable; urgency=low
 
