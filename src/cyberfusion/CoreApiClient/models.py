@@ -71,14 +71,12 @@ class APIUserAuthenticationMethodEnum(StrEnum):
 
 
 class APIUserInfo(CoreApiModel):
-    id: int = Field(..., title="Id")
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Username"
-    )
-    is_active: bool = Field(..., title="Is Active")
-    is_superuser: bool = Field(..., title="Is Superuser")
-    clusters: List[int] = Field(..., title="Clusters", unique_items=True)
-    customer_id: Optional[int] = Field(..., title="Customer Id")
+    id: int
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    is_active: bool
+    is_superuser: bool
+    clusters: List[int] = Field(..., unique_items=True)
+    customer_id: Optional[int]
     authentication_method: APIUserAuthenticationMethodEnum
 
 
@@ -101,44 +99,26 @@ class AllowOverrideOptionDirectiveEnum(StrEnum):
 
 
 class BasicAuthenticationRealmCreateRequest(CoreApiModel):
-    directory_path: Optional[str] = Field(
-        ...,
-        description="Specify null for entire virtual host document root. If the specified virtual host uses the server software Apache, must be in its domain root (`domain_root`).",
-        title="Directory Path",
-    )
-    virtual_host_id: int = Field(
-        ...,
-        description="Must have same UNIX user as specified htpasswd file.",
-        title="Virtual Host Id",
-    )
-    name: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    htpasswd_file_id: int = Field(
-        ...,
-        description="Must have same UNIX user as specified virtual host.",
-        title="Htpasswd File Id",
-    )
+    directory_path: Optional[str]
+    virtual_host_id: int
+    name: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64)
+    htpasswd_file_id: int
 
 
 class BasicAuthenticationRealmUpdateRequest(CoreApiModel):
     name: Optional[constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64)] = (
-        Field(None, title="Name")
+        None
     )
-    htpasswd_file_id: Optional[int] = Field(
-        None,
-        description="Must have same UNIX user as specified virtual host.",
-        title="Htpasswd File Id",
-    )
+    htpasswd_file_id: Optional[int] = None
 
 
 class BodyLoginAccessToken(CoreApiModel):
-    grant_type: Optional[constr(regex=r"^password$")] = Field(None, title="Grant Type")
-    username: str = Field(..., title="Username")
-    password: str = Field(..., title="Password")
-    scope: Optional[str] = Field("", title="Scope")
-    client_id: Optional[str] = Field(None, title="Client Id")
-    client_secret: Optional[str] = Field(None, title="Client Secret")
+    grant_type: Optional[constr(regex=r"^password$")] = None
+    username: str
+    password: str
+    scope: Optional[str] = ""
+    client_id: Optional[str] = None
+    client_secret: Optional[str] = None
 
 
 class BorgArchiveContentObjectTypeEnum(StrEnum):
@@ -148,175 +128,85 @@ class BorgArchiveContentObjectTypeEnum(StrEnum):
 
 
 class BorgArchiveCreateDatabaseRequest(CoreApiModel):
-    borg_repository_id: int = Field(..., title="Borg Repository Id")
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    database_id: int = Field(..., title="Database Id")
+    borg_repository_id: int
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    database_id: int
 
 
 class BorgArchiveCreateUNIXUserRequest(CoreApiModel):
-    borg_repository_id: int = Field(..., title="Borg Repository Id")
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    borg_repository_id: int
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    unix_user_id: int
 
 
 class BorgArchiveMetadata(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    borg_archive_id: int = Field(..., title="Borg Archive Id")
-    exists_on_server: bool = Field(..., title="Exists On Server")
-    contents_path: Optional[str] = Field(..., title="Contents Path")
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    borg_archive_id: int
+    exists_on_server: bool
+    contents_path: Optional[str]
 
 
 class BorgRepositoryCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Passphrase"
-    )
-    remote_host: str = Field(..., title="Remote Host")
-    remote_path: str = Field(..., title="Remote Path")
-    remote_username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = (
-        Field(..., title="Remote Username")
-    )
-    unix_user_id: Optional[int] = Field(
-        ...,
-        description="If you want to use a Borg repository to create Borg archives of a UNIX user, set this to the ID of that UNIX user. If this is set, the Borg repository cannot be used for Borg archives of databases.",
-        title="Unix User Id",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    keep_hourly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Hourly",
-    )
-    keep_daily: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Daily",
-    )
-    keep_weekly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Weekly",
-    )
-    keep_monthly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Monthly",
-    )
-    keep_yearly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Yearly",
-    )
-    identity_file_path: Optional[str] = Field(
-        ...,
-        description="Must be set when UNIX user (`unix_user_id`) is set. May not be set otherwise.",
-        title="Identity File Path",
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    remote_host: str
+    remote_path: str
+    remote_username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    unix_user_id: Optional[int]
+    cluster_id: int
+    keep_hourly: Optional[int]
+    keep_daily: Optional[int]
+    keep_weekly: Optional[int]
+    keep_monthly: Optional[int]
+    keep_yearly: Optional[int]
+    identity_file_path: Optional[str]
 
 
 class BorgRepositoryUpdateRequest(CoreApiModel):
-    keep_hourly: Optional[int] = Field(
-        None,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Hourly",
-    )
-    keep_daily: Optional[int] = Field(
-        None,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Daily",
-    )
-    keep_weekly: Optional[int] = Field(
-        None,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Weekly",
-    )
-    keep_monthly: Optional[int] = Field(
-        None,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Monthly",
-    )
-    keep_yearly: Optional[int] = Field(
-        None,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Yearly",
-    )
-    identity_file_path: Optional[str] = Field(
-        None,
-        description="Must be set when UNIX user (`unix_user_id`) is set. May not be set otherwise.",
-        title="Identity File Path",
-    )
+    keep_hourly: Optional[int] = None
+    keep_daily: Optional[int] = None
+    keep_weekly: Optional[int] = None
+    keep_monthly: Optional[int] = None
+    keep_yearly: Optional[int] = None
+    identity_file_path: Optional[str] = None
 
 
 class CMSConfigurationConstant(CoreApiModel):
-    value: Union[str, int, float, bool] = Field(..., title="Value")
-    index: Optional[conint(ge=0)] = Field(None, title="Index")
-    name: constr(regex=r"^[a-zA-Z0-9_]+$", min_length=1) = Field(..., title="Name")
+    value: Union[str, int, float, bool]
+    index: Optional[conint(ge=0)] = None
+    name: constr(regex=r"^[a-zA-Z0-9_]+$", min_length=1)
 
 
 class CMSConfigurationConstantUpdateRequest(CoreApiModel):
-    value: Union[str, int, float, bool] = Field(..., title="Value")
-    index: Optional[conint(ge=0)] = Field(None, title="Index")
+    value: Union[str, int, float, bool]
+    index: Optional[conint(ge=0)] = None
 
 
 class CMSInstallNextCloudRequest(CoreApiModel):
-    database_name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63) = (
-        Field(..., title="Database Name")
-    )
-    database_user_name: constr(
-        regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63
-    ) = Field(..., title="Database User Name")
-    database_user_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255) = (
-        Field(..., title="Database User Password")
-    )
-    database_host: str = Field(..., title="Database Host")
-    admin_username: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60) = (
-        Field(..., title="Admin Username")
-    )
-    admin_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Admin Password"
-    )
+    database_name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
+    database_user_name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
+    database_user_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    database_host: str
+    admin_username: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60)
+    admin_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
 
 
 class CMSInstallWordPressRequest(CoreApiModel):
-    database_name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63) = (
-        Field(..., title="Database Name")
-    )
-    database_user_name: constr(
-        regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63
-    ) = Field(..., title="Database User Name")
-    database_user_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255) = (
-        Field(..., title="Database User Password")
-    )
-    database_host: str = Field(..., title="Database Host")
-    admin_username: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60) = (
-        Field(..., title="Admin Username")
-    )
-    admin_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Admin Password"
-    )
-    site_title: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=253) = (
-        Field(..., title="Site Title")
-    )
-    site_url: AnyUrl = Field(..., title="Site Url")
-    locale: constr(regex=r"^[a-zA-Z_]+$", min_length=1, max_length=15) = Field(
-        ..., title="Locale"
-    )
-    version: constr(regex=r"^[0-9.]+$", min_length=1, max_length=6) = Field(
-        ..., title="Version"
-    )
-    admin_email_address: EmailStr = Field(..., title="Admin Email Address")
+    database_name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
+    database_user_name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
+    database_user_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    database_host: str
+    admin_username: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60)
+    admin_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    site_title: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=253)
+    site_url: AnyUrl
+    locale: constr(regex=r"^[a-zA-Z_]+$", min_length=1, max_length=15)
+    version: constr(regex=r"^[0-9.]+$", min_length=1, max_length=6)
+    admin_email_address: EmailStr
 
 
 class CMSOneTimeLogin(CoreApiModel):
-    url: AnyUrl = Field(..., title="Url")
+    url: AnyUrl
 
 
 class CMSOptionNameEnum(StrEnum):
@@ -324,18 +214,14 @@ class CMSOptionNameEnum(StrEnum):
 
 
 class CMSOptionUpdateRequest(CoreApiModel):
-    value: conint(ge=0, le=1) = Field(..., title="Value")
+    value: conint(ge=0, le=1)
 
 
 class CMSPlugin(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9_]+$", min_length=1) = Field(..., title="Name")
-    current_version: constr(regex=r"^[a-z0-9.-]+$", min_length=1) = Field(
-        ..., title="Current Version"
-    )
-    available_version: Optional[constr(regex=r"^[a-z0-9.-]+$", min_length=1)] = Field(
-        ..., title="Available Version"
-    )
-    is_enabled: bool = Field(..., title="Is Enabled")
+    name: constr(regex=r"^[a-zA-Z0-9_]+$", min_length=1)
+    current_version: constr(regex=r"^[a-z0-9.-]+$", min_length=1)
+    available_version: Optional[constr(regex=r"^[a-z0-9.-]+$", min_length=1)]
+    is_enabled: bool
 
 
 class CMSSoftwareNameEnum(StrEnum):
@@ -344,43 +230,31 @@ class CMSSoftwareNameEnum(StrEnum):
 
 
 class CMSThemeInstallFromRepositoryRequest(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60) = Field(
-        ..., title="Name"
-    )
-    version: Optional[constr(regex=r"^[0-9.]+$", min_length=1, max_length=6)] = Field(
-        ..., title="Version"
-    )
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60)
+    version: Optional[constr(regex=r"^[0-9.]+$", min_length=1, max_length=6)]
 
 
 class CMSThemeInstallFromURLRequest(CoreApiModel):
-    url: AnyUrl = Field(..., title="Url")
+    url: AnyUrl
 
 
 class CMSUserCredentialsUpdateRequest(CoreApiModel):
-    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Password"
-    )
+    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
 
 
 class CertificateCreateRequest(CoreApiModel):
     certificate: constr(
         regex=r"^[a-zA-Z0-9-_\+\/=\n ]+$", min_length=1, max_length=65535
-    ) = Field(
-        ...,
-        description="Certificate must have a common name.\n\nMust end with line feed.",
-        title="Certificate",
     )
-    ca_chain: constr(
-        regex=r"^[a-zA-Z0-9-_\+\/=\n ]+$", min_length=1, max_length=65535
-    ) = Field(..., description="Must end with line feed.", title="Ca Chain")
+    ca_chain: constr(regex=r"^[a-zA-Z0-9-_\+\/=\n ]+$", min_length=1, max_length=65535)
     private_key: constr(
         regex=r"^[a-zA-Z0-9-_\+\/=\n ]+$", min_length=1, max_length=65535
-    ) = Field(..., description="Must end with line feed.", title="Private Key")
-    cluster_id: int = Field(..., title="Cluster Id")
+    )
+    cluster_id: int
 
 
 class CertificateManagerUpdateRequest(CoreApiModel):
-    request_callback_url: Optional[AnyUrl] = Field(None, title="Request Callback Url")
+    request_callback_url: Optional[AnyUrl] = None
 
 
 class CertificateProviderNameEnum(StrEnum):
@@ -388,7 +262,7 @@ class CertificateProviderNameEnum(StrEnum):
 
 
 class ClusterBorgSSHKey(CoreApiModel):
-    public_key: str = Field(..., title="Public Key")
+    public_key: str
 
 
 class NodejsVersion(CoreApiModel):
@@ -398,9 +272,9 @@ class NodejsVersion(CoreApiModel):
 
 
 class ClusterIPAddress(CoreApiModel):
-    ip_address: Union[IPv6Address, IPv4Address] = Field(..., title="Ip Address")
-    dns_name: Optional[str] = Field(..., title="Dns Name")
-    l3_ddos_protection_enabled: bool = Field(..., title="L3 Ddos Protection Enabled")
+    ip_address: Union[IPv6Address, IPv4Address]
+    dns_name: Optional[str]
+    l3_ddos_protection_enabled: bool
 
 
 class ClusterIPAddresses(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
@@ -408,109 +282,33 @@ class ClusterIPAddresses(RootModelCollectionMixin, CoreApiModel):  # type: ignor
 
 
 class CronCreateRequest(CoreApiModel):
-    node_id: Optional[int] = Field(
-        ...,
-        description="The node this cron will run on.\n\nDefaults to node with Admin group.",
-        title="Node Id",
-    )
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ...,
-        description="Use the variable `$CYBERFUSION_DEFAULT_PHP_VERSION_BINARY` to use the UNIX user default PHP version (`default_php_version`). For more information, see 'Differences between PHP versions'.\n\nThe command may not call `exit`.",
-        title="Command",
-    )
-    email_address: Optional[EmailStr] = Field(
-        ...,
-        description="Emails about failed cron runs are sent to this email address. If the value is null, emails are sent to Cyberfusion.\n\nThis email contains the return code and output.\n\nA cron run has failed when the command exits with a return code other than 0.\n\nIf the cron fails over 10 times consecutively, no more emails are sent.",
-        title="Email Address",
-    )
-    schedule: str = Field(..., title="Schedule")
-    error_count: int = Field(
-        ...,
-        description="Send email after N failed cron runs.\n\nThe counter is reset after a successful cron run.\n\nIf you don't know what to set, set to `1`, so an email is sent after 1 failed cron run. This ensures an email is sent for _every_ failed cron run.",
-        title="Error Count",
-    )
-    random_delay_max_seconds: int = Field(
-        ...,
-        description="Randomly delay cron run.\n\nUse to avoid overloading a node when many crons run on the same schedule.\n\nIf you don't know what to set, set to `10`.",
-        title="Random Delay Max Seconds",
-    )
-    timeout_seconds: Optional[int] = Field(
-        ...,
-        description="Cron will be automatically killed after this time. Such a timeout is usually used as a failsafe, so that when the command unexpectedly takes too long (e.g. due to an external API call by a script), the cron isn't stuck (or locked if `locking_enabled` is `true`) for a long or indefinite time.",
-        title="Timeout Seconds",
-    )
-    locking_enabled: bool = Field(
-        ...,
-        description="When enabled, multiple instances of the cron may not run simultaneously. This can prevent multiple crons from manipulating the same data, or prevent a node from being overloaded when a long-running cron is using many resources.\n\nDisable for crons that handle locking themselves (such as Laravel's `withoutOverlapping`.)",
-        title="Locking Enabled",
-    )
-    is_active: bool = Field(..., title="Is Active")
-    memory_limit: Optional[conint(ge=256)] = Field(
-        None,
-        description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
-        title="Memory Limit",
-    )
-    cpu_limit: Optional[int] = Field(
-        None,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
-        title="Cpu Limit",
-    )
+    node_id: Optional[int]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    unix_user_id: int
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    email_address: Optional[EmailStr]
+    schedule: str
+    error_count: int
+    random_delay_max_seconds: int
+    timeout_seconds: Optional[int]
+    locking_enabled: bool
+    is_active: bool
+    memory_limit: Optional[conint(ge=256)] = None
+    cpu_limit: Optional[int] = None
 
 
 class CronUpdateRequest(CoreApiModel):
-    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = (
-        Field(
-            None,
-            description="Use the variable `$CYBERFUSION_DEFAULT_PHP_VERSION_BINARY` to use the UNIX user default PHP version (`default_php_version`). For more information, see 'Differences between PHP versions'.\n\nThe command may not call `exit`.",
-            title="Command",
-        )
-    )
-    email_address: Optional[EmailStr] = Field(
-        None,
-        description="Emails about failed cron runs are sent to this email address. If the value is null, emails are sent to Cyberfusion.\n\nThis email contains the return code and output.\n\nA cron run has failed when the command exits with a return code other than 0.\n\nIf the cron fails over 10 times consecutively, no more emails are sent.",
-        title="Email Address",
-    )
-    schedule: Optional[str] = Field(None, title="Schedule")
-    error_count: Optional[int] = Field(
-        None,
-        description="Send email after N failed cron runs.\n\nThe counter is reset after a successful cron run.\n\nIf you don't know what to set, set to `1`, so an email is sent after 1 failed cron run. This ensures an email is sent for _every_ failed cron run.",
-        title="Error Count",
-    )
-    random_delay_max_seconds: Optional[int] = Field(
-        None,
-        description="Randomly delay cron run.\n\nUse to avoid overloading a node when many crons run on the same schedule.\n\nIf you don't know what to set, set to `10`.",
-        title="Random Delay Max Seconds",
-    )
-    timeout_seconds: Optional[int] = Field(
-        None,
-        description="Cron will be automatically killed after this time. Such a timeout is usually used as a failsafe, so that when the command unexpectedly takes too long (e.g. due to an external API call by a script), the cron isn't stuck (or locked if `locking_enabled` is `true`) for a long or indefinite time.",
-        title="Timeout Seconds",
-    )
-    locking_enabled: Optional[bool] = Field(
-        None,
-        description="When enabled, multiple instances of the cron may not run simultaneously. This can prevent multiple crons from manipulating the same data, or prevent a node from being overloaded when a long-running cron is using many resources.\n\nDisable for crons that handle locking themselves (such as Laravel's `withoutOverlapping`.)",
-        title="Locking Enabled",
-    )
-    is_active: Optional[bool] = Field(None, title="Is Active")
-    memory_limit: Optional[conint(ge=256)] = Field(
-        None,
-        description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
-        title="Memory Limit",
-    )
-    cpu_limit: Optional[int] = Field(
-        None,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
-        title="Cpu Limit",
-    )
-    node_id: Optional[int] = Field(
-        None,
-        description="The node this cron will run on.\n\nDefaults to node with Admin group.",
-        title="Node Id",
-    )
+    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = None
+    email_address: Optional[EmailStr] = None
+    schedule: Optional[str] = None
+    error_count: Optional[int] = None
+    random_delay_max_seconds: Optional[int] = None
+    timeout_seconds: Optional[int] = None
+    locking_enabled: Optional[bool] = None
+    is_active: Optional[bool] = None
+    memory_limit: Optional[conint(ge=256)] = None
+    cpu_limit: Optional[int] = None
+    node_id: Optional[int] = None
 
 
 class CustomConfigServerSoftwareNameEnum(StrEnum):
@@ -524,28 +322,20 @@ class CustomConfigSnippetTemplateNameEnum(StrEnum):
 
 class CustomConfigSnippetUpdateRequest(CoreApiModel):
     contents: Optional[constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)] = (
-        Field(None, title="Contents")
+        None
     )
-    is_default: Optional[bool] = Field(
-        None,
-        description="Automatically include in all virtual hosts custom configs.",
-        title="Is Default",
-    )
+    is_default: Optional[bool] = None
 
 
 class CustomConfigUpdateRequest(CoreApiModel):
     contents: Optional[constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)] = (
-        Field(
-            None,
-            description="Include custom config snippets using the syntax `{{ custom_config_snippets.name }}`.\n\nReplace `name` with the name of the custom config snippet.",
-            title="Contents",
-        )
+        None
     )
 
 
 class CustomerIPAddressDatabase(CoreApiModel):
-    ip_address: Union[IPv6Address, IPv4Address] = Field(..., title="Ip Address")
-    dns_name: Optional[str] = Field(..., title="Dns Name")
+    ip_address: Union[IPv6Address, IPv4Address]
+    dns_name: Optional[str]
 
 
 class CustomerIPAddresses(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
@@ -557,56 +347,30 @@ class CustomerIncludes(CoreApiModel):
 
 
 class CustomerResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    identifier: constr(regex=r"^[a-z0-9]+$", min_length=2, max_length=4) = Field(
-        ..., title="Identifier"
-    )
-    dns_subdomain: str = Field(..., title="Dns Subdomain")
-    is_internal: bool = Field(..., title="Is Internal")
-    team_code: constr(regex=r"^[A-Z0-9]+$", min_length=4, max_length=6) = Field(
-        ..., title="Team Code"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    identifier: constr(regex=r"^[a-z0-9]+$", min_length=2, max_length=4)
+    dns_subdomain: str
+    is_internal: bool
+    team_code: constr(regex=r"^[A-Z0-9]+$", min_length=4, max_length=6)
     includes: CustomerIncludes
 
 
 class DaemonCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Command"
-    )
-    nodes_ids: List[int] = Field(..., min_items=1, title="Nodes Ids", unique_items=True)
-    memory_limit: Optional[conint(ge=256)] = Field(
-        None,
-        description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
-        title="Memory Limit",
-    )
-    cpu_limit: Optional[int] = Field(
-        None,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
-        title="Cpu Limit",
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    unix_user_id: int
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
+    memory_limit: Optional[conint(ge=256)] = None
+    cpu_limit: Optional[int] = None
 
 
 class DaemonUpdateRequest(CoreApiModel):
-    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = (
-        Field(None, title="Command")
-    )
-    nodes_ids: Optional[List[int]] = Field(None, title="Nodes Ids")
-    memory_limit: Optional[conint(ge=256)] = Field(
-        None,
-        description="In MB.\n\nWhen the memory limit is reached, the daemon is restarted.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
-        title="Memory Limit",
-    )
-    cpu_limit: Optional[int] = Field(
-        None,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent a daemon from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
-        title="Cpu Limit",
-    )
+    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = None
+    nodes_ids: Optional[List[int]] = None
+    memory_limit: Optional[conint(ge=256)] = None
+    cpu_limit: Optional[int] = None
 
 
 class IdenticalTablesName(CoreApiModel):
@@ -626,18 +390,12 @@ class OnlyRightTablesName(CoreApiModel):
 
 
 class DatabaseComparison(CoreApiModel):
-    identical_tables_names: List[IdenticalTablesName] = Field(
-        ..., title="Identical Tables Names", unique_items=True
-    )
+    identical_tables_names: List[IdenticalTablesName] = Field(..., unique_items=True)
     not_identical_tables_names: List[NotIdenticalTablesName] = Field(
-        ..., title="Not Identical Tables Names", unique_items=True
+        ..., unique_items=True
     )
-    only_left_tables_names: List[OnlyLeftTablesName] = Field(
-        ..., title="Only Left Tables Names", unique_items=True
-    )
-    only_right_tables_names: List[OnlyRightTablesName] = Field(
-        ..., title="Only Right Tables Names", unique_items=True
-    )
+    only_left_tables_names: List[OnlyLeftTablesName] = Field(..., unique_items=True)
+    only_right_tables_names: List[OnlyRightTablesName] = Field(..., unique_items=True)
 
 
 class DatabaseServerSoftwareNameEnum(StrEnum):
@@ -646,16 +404,8 @@ class DatabaseServerSoftwareNameEnum(StrEnum):
 
 
 class DatabaseUpdateRequest(CoreApiModel):
-    optimizing_enabled: Optional[bool] = Field(
-        None,
-        description="Periodically automatically run `OPTIMIZE` on database.\n\nEnabling is only supported for MariaDB server software.",
-        title="Optimizing Enabled",
-    )
-    backups_enabled: Optional[bool] = Field(
-        None,
-        description="Periodically automatically create backup of database.\n\nDisabling is only supported for MariaDB server software.",
-        title="Backups Enabled",
-    )
+    optimizing_enabled: Optional[bool] = None
+    backups_enabled: Optional[bool] = None
 
 
 class DatabaseUsageIncludes(CoreApiModel):
@@ -663,27 +413,19 @@ class DatabaseUsageIncludes(CoreApiModel):
 
 
 class DatabaseUsageResource(CoreApiModel):
-    database_id: int = Field(..., title="Database Id")
-    usage: confloat(ge=0.0) = Field(..., title="Usage")
-    timestamp: datetime = Field(..., title="Timestamp")
+    database_id: int
+    usage: confloat(ge=0.0)
+    timestamp: datetime
     includes: DatabaseUsageIncludes
 
 
 class DatabaseUserUpdateRequest(CoreApiModel):
-    phpmyadmin_firewall_groups_ids: Optional[List[int]] = Field(
-        None,
-        description="Only IP networks in the specified firewall groups may access phpMyAdmin.\n\nIf this is null, all IP networks may.",
-        title="Phpmyadmin Firewall Groups Ids",
-    )
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = (
-        Field(None, description="Passwords are deleted after 7 days.", title="Password")
-    )
+    phpmyadmin_firewall_groups_ids: Optional[List[int]] = None
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = None
 
 
 class DetailMessage(CoreApiModel):
-    detail: constr(regex=r"^[ -~]+$", min_length=1, max_length=255) = Field(
-        ..., title="Detail"
-    )
+    detail: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
 
 
 class DocumentRootFileSuffixEnum(StrEnum):
@@ -702,19 +444,11 @@ class DomainRouterCategoryEnum(StrEnum):
 
 
 class DomainRouterUpdateRequest(CoreApiModel):
-    node_id: Optional[int] = Field(
-        None,
-        description="\nWhen set, traffic is routed to the specified node rather than load-balanced over all available nodes (default). This prevents resources (such as FPM pools) from being active on multiple nodes, which can decrease costs.\n\nIf the node is unavailable, traffic is failed over to another node.\n\nIf a node with the Admin group also has group(s) that are load-balanced (such as Apache or nginx), the node is not used for domain routers for which it is not explicitly configured by being set as `node_id`.\nThis allows you to use the Admin node for specific domain routers, e.g. second-tier applications such as serving assets to a CDN, while it is not used for regular traffic.\n",
-        title="Node Id",
-    )
-    certificate_id: Optional[int] = Field(None, title="Certificate Id")
-    security_txt_policy_id: Optional[int] = Field(None, title="Security Txt Policy Id")
-    firewall_groups_ids: Optional[List[int]] = Field(
-        None,
-        description="Only IP networks in the specified firewall groups may access this domain router.\n\nIf this is null, all IP networks may.\n\nIf this domain router has a wildcard domain (e.g. `*.example.com`), and more specific domain routers exist (e.g. `test.example.com`), the more specific domain router uses the same firewall groups. If the more specific domain router has its own firewall groups, those on the wildcard domain router are ignored.`",
-        title="Firewall Groups Ids",
-    )
-    force_ssl: Optional[bool] = Field(None, title="Force Ssl")
+    node_id: Optional[int] = None
+    certificate_id: Optional[int] = None
+    security_txt_policy_id: Optional[int] = None
+    firewall_groups_ids: Optional[List[int]] = None
+    force_ssl: Optional[bool] = None
 
 
 class EncryptionTypeEnum(StrEnum):
@@ -724,138 +458,52 @@ class EncryptionTypeEnum(StrEnum):
 
 
 class FPMPoolCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="We recommend adding the version to the name (e.g. `dropflix83`). As `version` cannot be changed, when wanting to change the version, a new FPM pool must be created. By adding the version to the name, the old and new FPM pools can exist simultaneously without name conflicts (as `name` is unique).",
-        title="Name",
-    )
-    version: str = Field(
-        ...,
-        description="Must be installed on cluster (`php_versions`).\n\nThis value cannot be changed as it is FPM pool specific. When wanting to change the version, create a new FPM pool, and update it on the virtual host(s) that use the current FPM pool. Or use the CLI command `corectl fpm-pools update-version` which does this for you.",
-        title="Version",
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    max_children: int = Field(
-        ...,
-        description="The maximum amount of concurrent PHP-FPM processes (also known as workers). For example, to handle 10 requests simultaneously, set this value to 10.\n\nIf you don't know what to set, set to `5`.",
-        title="Max Children",
-    )
-    max_requests: int = Field(
-        ...,
-        description="Each PHP-FPM process will restart after N requests. This can prevent memory leaks.\n\nIf you don't know what to set, set to `20`.",
-        title="Max Requests",
-    )
-    process_idle_timeout: int = Field(
-        ...,
-        description="Each PHP-FPM process will be stopped after it has not received requests after N seconds. This can decrease memory usage when a busy PHP-FPM pool (that started many PHP-FPM processes) is no longer busy. However, if all PHP-FPM processes are stopped, the first request takes longer as one must be started first.\n\nIf you don't know what to set, set to `10`.",
-        title="Process Idle Timeout",
-    )
-    cpu_limit: Optional[int] = Field(
-        ...,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent an FPM pool from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
-        title="Cpu Limit",
-    )
-    log_slow_requests_threshold: Optional[int] = Field(
-        ...,
-        description="Minimum amount of seconds a request must take to be logged to the PHP-FPM slow log.\n\nTo retrieve the results, contact Cyberfusion.",
-        title="Log Slow Requests Threshold",
-    )
-    is_namespaced: bool = Field(
-        ...,
-        description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
-        title="Is Namespaced",
-    )
-    memory_limit: Optional[conint(ge=256)] = Field(
-        None,
-        description="In MB.\n\nWhen the memory limit is reached, the FPM pool is restarted.\n\nUse this to prevent an FPM pool from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
-        title="Memory Limit",
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    version: str
+    unix_user_id: int
+    max_children: int
+    max_requests: int
+    process_idle_timeout: int
+    cpu_limit: Optional[int]
+    log_slow_requests_threshold: Optional[int]
+    is_namespaced: bool
+    memory_limit: Optional[conint(ge=256)] = None
 
 
 class FPMPoolUpdateRequest(CoreApiModel):
-    max_children: Optional[int] = Field(
-        None,
-        description="The maximum amount of concurrent PHP-FPM processes (also known as workers). For example, to handle 10 requests simultaneously, set this value to 10.\n\nIf you don't know what to set, set to `5`.",
-        title="Max Children",
-    )
-    max_requests: Optional[int] = Field(
-        None,
-        description="Each PHP-FPM process will restart after N requests. This can prevent memory leaks.\n\nIf you don't know what to set, set to `20`.",
-        title="Max Requests",
-    )
-    process_idle_timeout: Optional[int] = Field(
-        None,
-        description="Each PHP-FPM process will be stopped after it has not received requests after N seconds. This can decrease memory usage when a busy PHP-FPM pool (that started many PHP-FPM processes) is no longer busy. However, if all PHP-FPM processes are stopped, the first request takes longer as one must be started first.\n\nIf you don't know what to set, set to `10`.",
-        title="Process Idle Timeout",
-    )
-    cpu_limit: Optional[int] = Field(
-        None,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.\n\nUse this to prevent an FPM pool from overloading an entire cluster ('noisy neighbour effect'). Also see `memory_limit`.",
-        title="Cpu Limit",
-    )
-    log_slow_requests_threshold: Optional[int] = Field(
-        None,
-        description="Minimum amount of seconds a request must take to be logged to the PHP-FPM slow log.\n\nTo retrieve the results, contact Cyberfusion.",
-        title="Log Slow Requests Threshold",
-    )
-    is_namespaced: Optional[bool] = Field(
-        None,
-        description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
-        title="Is Namespaced",
-    )
-    memory_limit: Optional[conint(ge=256)] = Field(
-        None,
-        description="In MB.\n\nWhen the memory limit is reached, the FPM pool is restarted.\n\nUse this to prevent an FPM pool from overloading an entire cluster ('noisy neighbour effect'). Also see `cpu_limit`.",
-        title="Memory Limit",
-    )
+    max_children: Optional[int] = None
+    max_requests: Optional[int] = None
+    process_idle_timeout: Optional[int] = None
+    cpu_limit: Optional[int] = None
+    log_slow_requests_threshold: Optional[int] = None
+    is_namespaced: Optional[bool] = None
+    memory_limit: Optional[conint(ge=256)] = None
 
 
 class FTPUserCreateRequest(CoreApiModel):
-    username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32) = Field(
-        ..., title="Username"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Password"
-    )
-    directory_path: str = Field(
-        ...,
-        description="The directory path must start with the UNIX user home directory. The path may end there, or it can end with custom path elements under it.",
-        title="Directory Path",
-    )
+    username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
+    unix_user_id: int
+    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    directory_path: str
 
 
 class FTPUserUpdateRequest(CoreApiModel):
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = (
-        Field(None, title="Password")
-    )
-    directory_path: Optional[str] = Field(
-        None,
-        description="The directory path must start with the UNIX user home directory. The path may end there, or it can end with custom path elements under it.",
-        title="Directory Path",
-    )
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = None
+    directory_path: Optional[str] = None
 
 
 class FirewallGroupCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    name: constr(regex=r"^[a-z0-9_]+$", min_length=1, max_length=32)
+    cluster_id: int
     ip_networks: List[str] = Field(
         ...,
-        description="To specify a single IP address, use the /128 (IPv6) or /32 (IPv4) CIDR.\n\nFor example: `2001:0db8:8aa:bc:111:abcd:aa11:8991/128` or `192.0.2.6/32`.",
         min_items=1,
-        title="Ip Networks",
         unique_items=True,
     )
 
 
 class FirewallGroupUpdateRequest(CoreApiModel):
-    ip_networks: Optional[List[str]] = Field(
-        None,
-        description="To specify a single IP address, use the /128 (IPv6) or /32 (IPv4) CIDR.\n\nFor example: `2001:0db8:8aa:bc:111:abcd:aa11:8991/128` or `192.0.2.6/32`.",
-        title="Ip Networks",
-    )
+    ip_networks: Optional[List[str]] = None
 
 
 class FirewallRuleExternalProviderNameEnum(StrEnum):
@@ -873,10 +521,8 @@ class FirewallRuleServiceNameEnum(StrEnum):
 
 
 class HAProxyListenToNodeCreateRequest(CoreApiModel):
-    haproxy_listen_id: int = Field(..., title="Haproxy Listen Id")
-    node_id: int = Field(
-        ..., description="Node must have HAProxy group.", title="Node Id"
-    )
+    haproxy_listen_id: int
+    node_id: int
 
 
 class HTTPRetryConditionEnum(StrEnum):
@@ -898,13 +544,9 @@ class HTTPRetryConditionEnum(StrEnum):
 
 
 class HTTPRetryProperties(CoreApiModel):
-    tries_amount: Optional[conint(ge=1, le=3)] = Field(..., title="Tries Amount")
-    tries_failover_amount: Optional[conint(ge=1, le=3)] = Field(
-        ..., title="Tries Failover Amount"
-    )
-    conditions: List[HTTPRetryConditionEnum] = Field(
-        ..., title="Conditions", unique_items=True
-    )
+    tries_amount: Optional[conint(ge=1, le=3)]
+    tries_failover_amount: Optional[conint(ge=1, le=3)]
+    conditions: List[HTTPRetryConditionEnum] = Field(..., unique_items=True)
 
 
 class HealthStatusEnum(StrEnum):
@@ -918,33 +560,23 @@ class HostEnum(StrEnum):
 
 
 class HostsEntryCreateRequest(CoreApiModel):
-    node_id: int = Field(
-        ...,
-        description="Route lookups for hostname to specified node.",
-        title="Node Id",
-    )
-    host_name: str = Field(..., title="Host Name")
-    cluster_id: int = Field(..., title="Cluster Id")
+    node_id: int
+    host_name: str
+    cluster_id: int
 
 
 class HtpasswdFileCreateRequest(CoreApiModel):
-    unix_user_id: int = Field(..., title="Unix User Id")
+    unix_user_id: int
 
 
 class HtpasswdUserCreateRequest(CoreApiModel):
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255) = Field(
-        ..., title="Username"
-    )
-    htpasswd_file_id: int = Field(..., title="Htpasswd File Id")
-    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Password"
-    )
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255)
+    htpasswd_file_id: int
+    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
 
 
 class HtpasswdUserUpdateRequest(CoreApiModel):
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = (
-        Field(None, title="Password")
-    )
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = None
 
 
 class IPAddressFamilyEnum(StrEnum):
@@ -983,31 +615,15 @@ class LogSortOrderEnum(StrEnum):
 
 
 class MailAccountCreateRequest(CoreApiModel):
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail alias in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    password: constr(regex=r"^[ -~]+$", min_length=6, max_length=255) = Field(
-        ..., title="Password"
-    )
-    quota: Optional[int] = Field(
-        ...,
-        description="When the quota has been reached, emails will be bounced.\n\nIn MB.",
-        title="Quota",
-    )
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
+    mail_domain_id: int
+    password: constr(regex=r"^[ -~]+$", min_length=6, max_length=255)
+    quota: Optional[int]
 
 
 class MailAccountUpdateRequest(CoreApiModel):
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=6, max_length=255)] = Field(
-        None, title="Password"
-    )
-    quota: Optional[int] = Field(
-        None,
-        description="When the quota has been reached, emails will be bounced.\n\nIn MB.",
-        title="Quota",
-    )
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=6, max_length=255)] = None
+    quota: Optional[int] = None
 
 
 class MailAccountUsageIncludes(CoreApiModel):
@@ -1015,66 +631,46 @@ class MailAccountUsageIncludes(CoreApiModel):
 
 
 class MailAccountUsageResource(CoreApiModel):
-    mail_account_id: int = Field(..., title="Mail Account Id")
-    usage: confloat(ge=0.0) = Field(..., title="Usage")
-    timestamp: datetime = Field(..., title="Timestamp")
+    mail_account_id: int
+    usage: confloat(ge=0.0)
+    timestamp: datetime
     includes: MailAccountUsageIncludes
 
 
 class MailAliasCreateRequest(CoreApiModel):
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail account in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    forward_email_addresses: List[EmailStr] = Field(
-        ..., min_items=1, title="Forward Email Addresses", unique_items=True
-    )
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
+    mail_domain_id: int
+    forward_email_addresses: List[EmailStr] = Field(..., min_items=1, unique_items=True)
 
 
 class MailAliasUpdateRequest(CoreApiModel):
-    forward_email_addresses: Optional[List[EmailStr]] = Field(
-        None, title="Forward Email Addresses"
-    )
+    forward_email_addresses: Optional[List[EmailStr]] = None
 
 
 class MailDomainCreateRequest(CoreApiModel):
-    domain: str = Field(..., title="Domain")
-    unix_user_id: int = Field(..., title="Unix User Id")
-    catch_all_forward_email_addresses: List[EmailStr] = Field(
-        ..., title="Catch All Forward Email Addresses", unique_items=True
-    )
-    is_local: bool = Field(
-        ...,
-        description="Set to `true` when MX records point to cluster. Set to `false` when mail domain exists on cluster, but MX records point elsewhere.\n\nWhen this value is `false`, emails sent from other mail accounts on the same cluster will not be delivered locally, but sent to the MX records.",
-        title="Is Local",
-    )
+    domain: str
+    unix_user_id: int
+    catch_all_forward_email_addresses: List[EmailStr] = Field(..., unique_items=True)
+    is_local: bool
 
 
 class MailDomainUpdateRequest(CoreApiModel):
-    catch_all_forward_email_addresses: Optional[List[EmailStr]] = Field(
-        None, title="Catch All Forward Email Addresses"
-    )
-    is_local: Optional[bool] = Field(
-        None,
-        description="Set to `true` when MX records point to cluster. Set to `false` when mail domain exists on cluster, but MX records point elsewhere.\n\nWhen this value is `false`, emails sent from other mail accounts on the same cluster will not be delivered locally, but sent to the MX records.",
-        title="Is Local",
-    )
+    catch_all_forward_email_addresses: Optional[List[EmailStr]] = None
+    is_local: Optional[bool] = None
 
 
 class MailHostnameCreateRequest(CoreApiModel):
-    domain: str = Field(..., title="Domain")
-    cluster_id: int = Field(..., title="Cluster Id")
-    certificate_id: int = Field(..., title="Certificate Id")
+    domain: str
+    cluster_id: int
+    certificate_id: int
 
 
 class MailHostnameUpdateRequest(CoreApiModel):
-    certificate_id: Optional[int] = Field(None, title="Certificate Id")
+    certificate_id: Optional[int] = None
 
 
 class MariaDBEncryptionKeyCreateRequest(CoreApiModel):
-    cluster_id: int = Field(..., title="Cluster Id")
+    cluster_id: int
 
 
 class MariaDBPrivilegeEnum(StrEnum):
@@ -1092,30 +688,20 @@ class NestedPathsDict(RootModelCollectionMixin, CoreApiModel):  # type: ignore[m
 
 
 class NodeAddOnCreateRequest(CoreApiModel):
-    node_id: int = Field(..., title="Node Id")
-    product: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="Get available products with `GET /node-add-ons/products`.",
-        title="Product",
-    )
-    quantity: int = Field(..., title="Quantity")
+    node_id: int
+    product: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
+    quantity: int
 
 
 class NodeAddOnProduct(CoreApiModel):
-    uuid: UUID4 = Field(..., title="Uuid")
-    name: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    memory_gib: Optional[int] = Field(..., title="Memory Gib")
-    cpu_cores: Optional[int] = Field(..., title="Cpu Cores")
-    disk_gib: Optional[int] = Field(..., title="Disk Gib")
-    price: confloat(ge=0.0) = Field(..., title="Price")
-    period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2) = Field(
-        ..., title="Period"
-    )
-    currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3) = Field(
-        ..., title="Currency"
-    )
+    uuid: UUID4
+    name: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
+    memory_gib: Optional[int]
+    cpu_cores: Optional[int]
+    disk_gib: Optional[int]
+    price: confloat(ge=0.0)
+    period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2)
+    currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3)
 
 
 class NodeGroupEnum(StrEnum):
@@ -1156,38 +742,28 @@ class NodeGroupEnum(StrEnum):
 
 
 class NodeMariaDBGroupProperties(CoreApiModel):
-    is_master: bool = Field(..., title="Is Master")
+    is_master: bool
 
 
 class NodeProduct(CoreApiModel):
-    uuid: UUID4 = Field(..., title="Uuid")
-    name: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2) = Field(
-        ..., title="Name"
-    )
-    memory_gib: int = Field(..., title="Memory Gib")
-    cpu_cores: int = Field(..., title="Cpu Cores")
-    disk_gib: int = Field(..., title="Disk Gib")
-    allow_upgrade_to: List[constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)] = (
-        Field(..., title="Allow Upgrade To")
-    )
-    allow_downgrade_to: List[constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)] = (
-        Field(..., title="Allow Downgrade To")
-    )
-    price: confloat(ge=0.0) = Field(..., title="Price")
-    period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2) = Field(
-        ..., title="Period"
-    )
-    currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3) = Field(
-        ..., title="Currency"
-    )
+    uuid: UUID4
+    name: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)
+    memory_gib: int
+    cpu_cores: int
+    disk_gib: int
+    allow_upgrade_to: List[constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)]
+    allow_downgrade_to: List[constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)]
+    price: confloat(ge=0.0)
+    period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2)
+    currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3)
 
 
 class NodeRabbitMQGroupProperties(CoreApiModel):
-    is_master: bool = Field(..., title="Is Master")
+    is_master: bool
 
 
 class NodeRedisGroupProperties(CoreApiModel):
-    is_master: bool = Field(..., title="Is Master")
+    is_master: bool
 
 
 class ObjectModelNameEnum(StrEnum):
@@ -1281,30 +857,26 @@ class PHPExtensionEnum(StrEnum):
 
 
 class PHPSettings(CoreApiModel):
-    apc_enable_cli: bool = Field(False, title="Apc Enable Cli")
-    opcache_file_cache: bool = Field(False, title="Opcache File Cache")
-    opcache_validate_timestamps: bool = Field(True, title="Opcache Validate Timestamps")
-    short_open_tag: bool = Field(False, title="Short Open Tag")
+    apc_enable_cli: bool = False
+    opcache_file_cache: bool = False
+    opcache_validate_timestamps: bool = True
+    short_open_tag: bool = False
     error_reporting: constr(regex=r"^[A-Z&~_ ]+$", min_length=1, max_length=255) = (
-        Field("E_ALL & ~E_DEPRECATED & ~E_STRICT", title="Error Reporting")
+        Field(
+            "E_ALL & ~E_DEPRECATED & ~E_STRICT",
+        )
     )
-    opcache_memory_consumption: conint(ge=192, le=1024) = Field(
-        192, title="Opcache Memory Consumption"
-    )
-    max_execution_time: conint(ge=30, le=120) = Field(120, title="Max Execution Time")
-    max_file_uploads: conint(ge=100, le=1000) = Field(100, title="Max File Uploads")
-    memory_limit: conint(ge=256, le=4096) = Field(256, title="Memory Limit")
-    post_max_size: conint(ge=32, le=256) = Field(32, title="Post Max Size")
-    upload_max_filesize: conint(ge=32, le=256) = Field(32, title="Upload Max Filesize")
+    opcache_memory_consumption: conint(ge=192, le=1024) = 192
+    max_execution_time: conint(ge=30, le=120) = 120
+    max_file_uploads: conint(ge=100, le=1000) = 100
+    memory_limit: conint(ge=256, le=4096) = 256
+    post_max_size: conint(ge=32, le=256) = 32
+    upload_max_filesize: conint(ge=32, le=256) = 32
     tideways_api_key: Optional[
         constr(regex=r"^[a-zA-Z0-9_]+$", min_length=16, max_length=32)
-    ] = Field(None, title="Tideways Api Key")
-    tideways_sample_rate: Optional[conint(ge=1, le=100)] = Field(
-        None, title="Tideways Sample Rate"
-    )
-    newrelic_browser_monitoring_auto_instrument: bool = Field(
-        True, title="Newrelic Browser Monitoring Auto Instrument"
-    )
+    ] = None
+    tideways_sample_rate: Optional[conint(ge=1, le=100)] = None
+    newrelic_browser_monitoring_auto_instrument: bool = True
 
 
 class PassengerAppTypeEnum(StrEnum):
@@ -1328,128 +900,74 @@ class RedisEvictionPolicyEnum(StrEnum):
 
 
 class RedisInstanceCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = Field(
-        ..., title="Password"
-    )
-    memory_limit: conint(ge=8) = Field(..., description="In MB.", title="Memory Limit")
-    max_databases: int = Field(..., title="Max Databases")
-    eviction_policy: RedisEvictionPolicyEnum = Field(
-        ...,
-        description="See [Redis documentation](https://redis.io/docs/reference/eviction/#eviction-policies).\n\nIf you don't know what to set, set to `volatile-lru`.",
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
+    memory_limit: conint(ge=8)
+    max_databases: int
+    eviction_policy: RedisEvictionPolicyEnum
 
 
 class RedisInstanceUpdateRequest(CoreApiModel):
     password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
-    ] = Field(None, title="Password")
-    memory_limit: Optional[conint(ge=8)] = Field(
-        None, description="In MB.", title="Memory Limit"
-    )
-    max_databases: Optional[int] = Field(None, title="Max Databases")
-    eviction_policy: Optional[RedisEvictionPolicyEnum] = Field(
-        None,
-        description="See [Redis documentation](https://redis.io/docs/reference/eviction/#eviction-policies).\n\nIf you don't know what to set, set to `volatile-lru`.",
-    )
+    ] = None
+    memory_limit: Optional[conint(ge=8)] = None
+    max_databases: Optional[int] = None
+    eviction_policy: Optional[RedisEvictionPolicyEnum] = None
 
 
 class RootSSHKeyCreatePrivateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    private_key: str = Field(
-        ..., description="Must end with line feed.", title="Private Key"
-    )
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    private_key: str
 
 
 class RootSSHKeyCreatePublicRequest(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    public_key: str = Field(
-        ..., description="Must end with line feed.", title="Public Key"
-    )
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    public_key: str
 
 
 class SSHKeyCreatePrivateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    private_key: str = Field(
-        ...,
-        description="May only be set when cluster has Web group.\n\nMust end with line feed.",
-        title="Private Key",
-    )
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
+    unix_user_id: int
+    private_key: str
 
 
 class SSHKeyCreatePublicRequest(CoreApiModel):
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    public_key: str = Field(
-        ..., description="Must end with line feed.", title="Public Key"
-    )
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
+    unix_user_id: int
+    public_key: str
 
 
 class SecurityTXTPolicyCreateRequest(CoreApiModel):
-    cluster_id: int = Field(..., title="Cluster Id")
-    expires_timestamp: datetime = Field(..., title="Expires Timestamp")
+    cluster_id: int
+    expires_timestamp: datetime
     email_contacts: List[EmailStr] = Field(
         ...,
-        description="At least `url_contacts` or `email_contacts` must be set.",
-        title="Email Contacts",
         unique_items=True,
     )
     url_contacts: List[AnyUrl] = Field(
         ...,
-        description="At least `url_contacts` or `email_contacts` must be set.",
-        title="Url Contacts",
         unique_items=True,
     )
-    encryption_key_urls: List[AnyUrl] = Field(
-        ..., title="Encryption Key Urls", unique_items=True
-    )
-    acknowledgment_urls: List[AnyUrl] = Field(
-        ..., title="Acknowledgment Urls", unique_items=True
-    )
-    policy_urls: List[AnyUrl] = Field(..., title="Policy Urls", unique_items=True)
-    opening_urls: List[AnyUrl] = Field(..., title="Opening Urls", unique_items=True)
-    preferred_languages: List[LanguageCodeEnum] = Field(
-        ..., title="Preferred Languages", unique_items=True
-    )
+    encryption_key_urls: List[AnyUrl] = Field(..., unique_items=True)
+    acknowledgment_urls: List[AnyUrl] = Field(..., unique_items=True)
+    policy_urls: List[AnyUrl] = Field(..., unique_items=True)
+    opening_urls: List[AnyUrl] = Field(..., unique_items=True)
+    preferred_languages: List[LanguageCodeEnum] = Field(..., unique_items=True)
 
 
 class SecurityTXTPolicyUpdateRequest(CoreApiModel):
-    expires_timestamp: Optional[datetime] = Field(None, title="Expires Timestamp")
-    email_contacts: Optional[List[EmailStr]] = Field(
-        None,
-        description="At least `url_contacts` or `email_contacts` must be set.",
-        title="Email Contacts",
-    )
-    url_contacts: Optional[List[AnyUrl]] = Field(
-        None,
-        description="At least `url_contacts` or `email_contacts` must be set.",
-        title="Url Contacts",
-    )
-    encryption_key_urls: Optional[List[AnyUrl]] = Field(
-        None, title="Encryption Key Urls"
-    )
-    acknowledgment_urls: Optional[List[AnyUrl]] = Field(
-        None, title="Acknowledgment Urls"
-    )
-    policy_urls: Optional[List[AnyUrl]] = Field(None, title="Policy Urls")
-    opening_urls: Optional[List[AnyUrl]] = Field(None, title="Opening Urls")
-    preferred_languages: Optional[List[LanguageCodeEnum]] = Field(
-        None, title="Preferred Languages"
-    )
+    expires_timestamp: Optional[datetime] = None
+    email_contacts: Optional[List[EmailStr]] = None
+    url_contacts: Optional[List[AnyUrl]] = None
+    encryption_key_urls: Optional[List[AnyUrl]] = None
+    acknowledgment_urls: Optional[List[AnyUrl]] = None
+    policy_urls: Optional[List[AnyUrl]] = None
+    opening_urls: Optional[List[AnyUrl]] = None
+    preferred_languages: Optional[List[LanguageCodeEnum]] = None
 
 
 class ServiceAccountGroupEnum(StrEnum):
@@ -1473,10 +991,8 @@ class SiteIncludes(CoreApiModel):
 
 
 class SiteResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    name: constr(regex=r"^[A-Z0-9-]+$", min_length=1, max_length=32) = Field(
-        ..., title="Name"
-    )
+    id: int
+    name: constr(regex=r"^[A-Z0-9-]+$", min_length=1, max_length=32)
     includes: SiteIncludes
 
 
@@ -1489,8 +1005,8 @@ class StatusCodeEnum(IntEnum):
 
 
 class TaskCollectionCallback(CoreApiModel):
-    task_collection_uuid: UUID4 = Field(..., title="Task Collection Uuid")
-    success: bool = Field(..., title="Success")
+    task_collection_uuid: UUID4
+    success: bool
 
 
 class TaskCollectionTypeEnum(StrEnum):
@@ -1507,18 +1023,14 @@ class TaskStateEnum(StrEnum):
 
 
 class TemporaryFTPUserCreateRequest(CoreApiModel):
-    unix_user_id: int = Field(..., title="Unix User Id")
-    node_id: int = Field(..., description="Must have ProFTPD group.", title="Node Id")
+    unix_user_id: int
+    node_id: int
 
 
 class TemporaryFTPUserResource(CoreApiModel):
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Username"
-    )
-    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Password"
-    )
-    file_manager_url: AnyUrl = Field(..., title="File Manager Url")
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    file_manager_url: AnyUrl
 
 
 class TimeUnitEnum(StrEnum):
@@ -1541,54 +1053,19 @@ class UNIXUserComparison(CoreApiModel):
 
 
 class UNIXUserCreateRequest(CoreApiModel):
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Username"
-    )
-    virtual_hosts_directory: Optional[str] = Field(
-        ...,
-        description="Must be set when cluster has Web group. May not be set otherwise.\n\nThe virtual hosts directory must start with the cluster UNIX user home directory + the UNIX user username. The path may end there, or it can end with **one** custom path element such as `virtual-hosts`.",
-        title="Virtual Hosts Directory",
-    )
-    mail_domains_directory: Optional[str] = Field(
-        ...,
-        description="Must be set when cluster has Mail group. May not be set otherwise.\n\nThe mail domains directory must start with the cluster UNIX user home directory + the UNIX user username. The path may end there, or it can end with **one** custom path element such as `mail-domains`.",
-        title="Mail Domains Directory",
-    )
-    borg_repositories_directory: Optional[str] = Field(
-        ...,
-        description="Must be set when cluster has Borg Server group. May not be set otherwise.\n\nThe Borg repositories directory must start with the cluster UNIX user home directory + the UNIX user username. The path may end there, or it can end with **one** custom path element such as `borg-repositories`.",
-        title="Borg Repositories Directory",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = (
-        Field(
-            ...,
-            description="If set to null, only SSH key authentication is allowed.",
-            title="Password",
-        )
-    )
-    shell_path: ShellPathEnum = Field(
-        ...,
-        description="When set to `/usr/local/bin/jailshell`, Bubblewrap Toolkit must be enabled on the cluster (`bubblewrap_toolkit_enabled`).\n\nWhen set to `/usr/local/bin/jailshell`, multiple security measures are applied, most notably the inability to see other UNIX user's processes. Recommended for shared environments in which users are not trusted.",
-    )
-    record_usage_files: bool = Field(
-        ...,
-        description="May only be set to `true` when cluster has Web group.\n\nWhen enabled, UNIX user usages objects contain a list of largest files (`files`).",
-        title="Record Usage Files",
-    )
-    default_php_version: Optional[str] = Field(
-        ...,
-        description="When set, the `php` command is aliased to the specified PHP version. Otherwise, the system default is used.\n\nMust be installed on cluster (`php_versions`).",
-        title="Default Php Version",
-    )
-    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = Field(
-        ...,
-        description="When set, the following commands are activated to the specified NodeJS version: `corepack`, `npm`, `npx`, `node`. Otherwise, these commands are not available.\n\nMust be installed on cluster (`nodejs_versions`).\n\nRequires shell path (`shell_path`) to be set to `/usr/local/bin/jailshell`.",
-        title="Default Nodejs Version",
-    )
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    virtual_hosts_directory: Optional[str]
+    mail_domains_directory: Optional[str]
+    borg_repositories_directory: Optional[str]
+    cluster_id: int
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)]
+    shell_path: ShellPathEnum
+    record_usage_files: bool
+    default_php_version: Optional[str]
+    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Description")
+    ]
 
 
 class UNIXUserHomeDirectoryEnum(StrEnum):
@@ -1600,40 +1077,19 @@ class UNIXUserHomeDirectoryEnum(StrEnum):
 
 
 class UNIXUserUpdateRequest(CoreApiModel):
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = (
-        Field(
-            None,
-            description="If set to null, only SSH key authentication is allowed.",
-            title="Password",
-        )
-    )
-    shell_path: Optional[ShellPathEnum] = Field(
-        None,
-        description="When set to `/usr/local/bin/jailshell`, Bubblewrap Toolkit must be enabled on the cluster (`bubblewrap_toolkit_enabled`).\n\nWhen set to `/usr/local/bin/jailshell`, multiple security measures are applied, most notably the inability to see other UNIX user's processes. Recommended for shared environments in which users are not trusted.",
-    )
-    record_usage_files: Optional[bool] = Field(
-        None,
-        description="May only be set to `true` when cluster has Web group.\n\nWhen enabled, UNIX user usages objects contain a list of largest files (`files`).",
-        title="Record Usage Files",
-    )
-    default_php_version: Optional[str] = Field(
-        None,
-        description="When set, the `php` command is aliased to the specified PHP version. Otherwise, the system default is used.\n\nMust be installed on cluster (`php_versions`).",
-        title="Default Php Version",
-    )
-    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = Field(
-        None,
-        description="When set, the following commands are activated to the specified NodeJS version: `corepack`, `npm`, `npx`, `node`. Otherwise, these commands are not available.\n\nMust be installed on cluster (`nodejs_versions`).\n\nRequires shell path (`shell_path`) to be set to `/usr/local/bin/jailshell`.",
-        title="Default Nodejs Version",
-    )
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = None
+    shell_path: Optional[ShellPathEnum] = None
+    record_usage_files: Optional[bool] = None
+    default_php_version: Optional[str] = None
+    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = None
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(None, title="Description")
+    ] = None
 
 
 class UNIXUserUsageFile(CoreApiModel):
-    path: str = Field(..., title="Path")
-    size: confloat(ge=0.0) = Field(..., title="Size")
+    path: str
+    size: confloat(ge=0.0)
 
 
 class UNIXUserUsageIncludes(CoreApiModel):
@@ -1641,14 +1097,10 @@ class UNIXUserUsageIncludes(CoreApiModel):
 
 
 class UNIXUserUsageResource(CoreApiModel):
-    unix_user_id: int = Field(..., title="Unix User Id")
-    usage: confloat(ge=0.0) = Field(..., title="Usage")
-    files: Optional[List[UNIXUserUsageFile]] = Field(
-        ...,
-        description="List of largest files.\n\nRequires `record_usage_files` to be set to `true` on UNIX user.",
-        title="Files",
-    )
-    timestamp: datetime = Field(..., title="Timestamp")
+    unix_user_id: int
+    usage: confloat(ge=0.0)
+    files: Optional[List[UNIXUserUsageFile]]
+    timestamp: datetime
     includes: UNIXUserUsageIncludes
 
 
@@ -1657,73 +1109,47 @@ class UNIXUsersHomeDirectoryUsageIncludes(CoreApiModel):
 
 
 class UNIXUsersHomeDirectoryUsageResource(CoreApiModel):
-    cluster_id: int = Field(..., title="Cluster Id")
-    usage: confloat(ge=0.0) = Field(..., title="Usage")
-    timestamp: datetime = Field(..., title="Timestamp")
+    cluster_id: int
+    usage: confloat(ge=0.0)
+    timestamp: datetime
     includes: UNIXUsersHomeDirectoryUsageIncludes
 
 
 class URLRedirectCreateRequest(CoreApiModel):
-    domain: str = Field(
-        ...,
-        description="Unique across all virtual hosts and URL redirects. May not be the same as hostname of any node.\n\nA domain router is created for the domain.",
-        title="Domain",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    domain: str
+    cluster_id: int
     server_aliases: List[str] = Field(
         ...,
-        description="May not contain `domain`.\n\nEach server alias is unique across all virtual hosts and URL redirects.\n\nA domain router is created for every server alias.",
-        title="Server Aliases",
         unique_items=True,
     )
-    destination_url: AnyUrl = Field(..., title="Destination Url")
+    destination_url: AnyUrl
     status_code: StatusCodeEnum
-    keep_query_parameters: bool = Field(
-        ...,
-        description="Append query parameters from original URL to destination URL. For example, when `true`, a URL redirect from `dropflix.io` to `https://www.dropflix.io` will redirect from `dropflix.io?a=b` to `https://www.dropflix.io?a=b`.",
-        title="Keep Query Parameters",
-    )
-    keep_path: bool = Field(
-        ...,
-        description="Append path from original URL to destination URL. For example, when `true`, a URL redirect from `dropflix.io` to `https://www.dropflix.io` will redirect from `dropflix.io/a` to `https://www.dropflix.io/a`.",
-        title="Keep Path",
-    )
+    keep_query_parameters: bool
+    keep_path: bool
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Description")
+    ]
 
 
 class URLRedirectUpdateRequest(CoreApiModel):
-    server_aliases: Optional[List[str]] = Field(
-        None,
-        description="May not contain `domain`.\n\nEach server alias is unique across all virtual hosts and URL redirects.\n\nA domain router is created for every server alias.",
-        title="Server Aliases",
-    )
-    destination_url: Optional[AnyUrl] = Field(None, title="Destination Url")
+    server_aliases: Optional[List[str]] = None
+    destination_url: Optional[AnyUrl] = None
     status_code: Optional[StatusCodeEnum] = None
-    keep_query_parameters: Optional[bool] = Field(
-        None,
-        description="Append query parameters from original URL to destination URL. For example, when `true`, a URL redirect from `dropflix.io` to `https://www.dropflix.io` will redirect from `dropflix.io?a=b` to `https://www.dropflix.io?a=b`.",
-        title="Keep Query Parameters",
-    )
-    keep_path: Optional[bool] = Field(
-        None,
-        description="Append path from original URL to destination URL. For example, when `true`, a URL redirect from `dropflix.io` to `https://www.dropflix.io` will redirect from `dropflix.io/a` to `https://www.dropflix.io/a`.",
-        title="Keep Path",
-    )
+    keep_query_parameters: Optional[bool] = None
+    keep_path: Optional[bool] = None
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(None, title="Description")
+    ] = None
 
 
 class ValidationError(CoreApiModel):
-    loc: List[Union[str, int]] = Field(..., title="Location")
-    msg: str = Field(..., title="Message")
-    type: str = Field(..., title="Error Type")
+    loc: List[Union[str, int]]
+    msg: str
+    type: str
 
 
 class VirtualHostDocumentRoot(CoreApiModel):
-    contains_files: Dict[str, bool] = Field(..., title="Contains Files")
+    contains_files: Dict[str, bool]
 
 
 class VirtualHostServerSoftwareNameEnum(StrEnum):
@@ -1732,118 +1158,68 @@ class VirtualHostServerSoftwareNameEnum(StrEnum):
 
 
 class VirtualHostUpdateRequest(CoreApiModel):
-    server_aliases: Optional[List[str]] = Field(
-        None,
-        description="May not contain `domain`.\n\nEach server alias is unique across all virtual hosts and URL redirects.\n\nA domain router is created for every server alias.",
-        title="Server Aliases",
-    )
-    document_root: Optional[str] = Field(
-        None,
-        description="When receiving an HTTP request, files will be loaded from this directory.",
-        title="Document Root",
-    )
-    fpm_pool_id: Optional[int] = Field(
-        None,
-        description="Let the specified FPM pool handle requests to PHP files.\n\nMay not be set when Passenger app (`passenger_app_id`) is set.",
-        title="Fpm Pool Id",
-    )
-    passenger_app_id: Optional[int] = Field(
-        None,
-        description="Let the specified Passenger app handle requests.\n\nMay only be set when server software is set to nginx (`server_software_name`).\n\nMay not be set when FPM pool (`fpm_pool_id`) is set.",
-        title="Passenger App Id",
-    )
+    server_aliases: Optional[List[str]] = None
+    document_root: Optional[str] = None
+    fpm_pool_id: Optional[int] = None
+    passenger_app_id: Optional[int] = None
     custom_config: Optional[
         constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
-    ] = Field(
-        None,
-        description="Include custom config snippets using the syntax `{{ custom_config_snippets.name }}`.\n\nReplace `name` with the name of the custom config snippet.\n\nDefault custom config snippets (`is_default`) are inserted after the virtual host specific custom config. To place a default custom config snippet earlier, include it manually in the virtual host specific custom config.\n\nWhen the server software nginx is used, custom configs are added to the `server` context.\n\nIf the virtual host has basic authentication realms, the `auth_basic` and `auth_basic_user_file` directives may not be set in the default context.\n",
-        title="Custom Config",
-    )
-    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]] = Field(
-        None, title="Allow Override Directives"
-    )
+    ] = None
+    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]] = None
     allow_override_option_directives: Optional[
         List[AllowOverrideOptionDirectiveEnum]
-    ] = Field(None, title="Allow Override Option Directives")
+    ] = None
     server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = None
 
 
 class BorgArchiveContent(CoreApiModel):
     object_type: BorgArchiveContentObjectTypeEnum
-    symbolic_mode: constr(regex=r"^[rwx\+\-dlsStT]+$", min_length=10, max_length=10) = (
-        Field(..., title="Symbolic Mode")
-    )
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Username"
-    )
-    group_name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Group Name"
-    )
-    path: str = Field(..., title="Path")
-    link_target: Optional[str] = Field(..., title="Link Target")
-    modification_time: datetime = Field(..., title="Modification Time")
-    size: Optional[conint(ge=0)] = Field(..., title="Size")
+    symbolic_mode: constr(regex=r"^[rwx\+\-dlsStT]+$", min_length=10, max_length=10)
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    group_name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    path: str
+    link_target: Optional[str]
+    modification_time: datetime
+    size: Optional[conint(ge=0)]
 
 
 class CMSCreateRequest(CoreApiModel):
     software_name: CMSSoftwareNameEnum
-    is_manually_created: bool = Field(
-        ...,
-        description="Value is `false` when CMS was detected automatically. Must be set to `true` in other cases.",
-        title="Is Manually Created",
-    )
-    virtual_host_id: int = Field(..., title="Virtual Host Id")
+    is_manually_created: bool
+    virtual_host_id: int
 
 
 class CMSOption(CoreApiModel):
-    value: conint(ge=0, le=1) = Field(..., title="Value")
+    value: conint(ge=0, le=1)
     name: CMSOptionNameEnum
 
 
 class CertificateManagerCreateRequest(CoreApiModel):
     common_names: List[str] = Field(
         ...,
-        description="May not contain wildcard domains.\n\nEach common name is unique across all certificate managers.",
         min_items=1,
-        title="Common Names",
         unique_items=True,
     )
     provider_name: CertificateProviderNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    request_callback_url: Optional[AnyUrl] = Field(..., title="Request Callback Url")
+    cluster_id: int
+    request_callback_url: Optional[AnyUrl]
 
 
 class ClusterCreateRequest(BaseModel):
-    customer_id: int = Field(
-        ...,
-        description="Specify your customer ID.\n\nIt can be found on your API user. Retrieve it with `POST /api/v1/login/test-token`.",
-        title="Customer Id",
-    )
-    site_id: int = Field(
-        ...,
-        description="Locations to create cluster in.\n\nGet available sites with `GET /sites`.",
-        title="Site Id",
-    )
-    description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255) = (
-        Field(..., title="Description")
-    )
+    customer_id: int
+    site_id: int
+    description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
 
 
 class ClusterDeploymentTaskResult(CoreApiModel):
-    description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Description"
-    )
-    message: Optional[str] = Field(..., title="Message")
+    description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    message: Optional[str]
     state: TaskStateEnum
 
 
 class ClusterIPAddressCreateRequest(CoreApiModel):
-    service_account_name: str = Field(
-        ...,
-        description="Must be service account with group 'Load Balancer'.\n\nRetrieve service accounts with `GET /api/v1/clusters/{id}/ip-addresses`.",
-        title="Service Account Name",
-    )
-    dns_name: str = Field(..., description="Reverse DNS.", title="Dns Name")
+    service_account_name: str
+    dns_name: str
     address_family: IPAddressFamilyEnum
 
 
@@ -1853,91 +1229,40 @@ class ClusterIncludes(CoreApiModel):
 
 
 class ClusterResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    customer_id: int = Field(
-        ...,
-        description="Specify your customer ID.\n\nIt can be found on your API user. Retrieve it with `POST /api/v1/login/test-token`.",
-        title="Customer Id",
-    )
-    site_id: int = Field(
-        ...,
-        description="Locations to create cluster in.\n\nGet available sites with `GET /sites`.",
-        title="Site Id",
-    )
-    description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255) = (
-        Field(..., title="Description")
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
+    customer_id: int
+    site_id: int
+    description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
     includes: ClusterIncludes
 
 
 class ClusterUpdateRequest(BaseModel):
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
-    ] = Field(None, title="Description")
+    ] = None
 
 
 class ClustersCommonProperties(CoreApiModel):
-    imap_hostname: str = Field(
-        ...,
-        description="Use these details if you do not have mail hostnames.",
-        title="Imap Hostname",
-    )
-    imap_port: int = Field(
-        ...,
-        description="Use these details if you do not have mail hostnames.",
-        title="Imap Port",
-    )
-    imap_encryption: EncryptionTypeEnum = Field(
-        ..., description="Use these details if you do not have mail hostnames."
-    )
-    smtp_hostname: str = Field(
-        ...,
-        description="Use these details if you do not have mail hostnames.",
-        title="Smtp Hostname",
-    )
-    smtp_port: int = Field(
-        ...,
-        description="Use these details if you do not have mail hostnames.",
-        title="Smtp Port",
-    )
-    smtp_encryption: EncryptionTypeEnum = Field(
-        ..., description="Use these details if you do not have mail hostnames."
-    )
-    pop3_hostname: str = Field(
-        ...,
-        description="Use these details if you do not have mail hostnames.",
-        title="Pop3 Hostname",
-    )
-    pop3_port: int = Field(
-        ...,
-        description="Use these details if you do not have mail hostnames.",
-        title="Pop3 Port",
-    )
-    pop3_encryption: EncryptionTypeEnum = Field(
-        ..., description="Use these details if you do not have mail hostnames."
-    )
-    phpmyadmin_url: AnyUrl = Field(..., title="Phpmyadmin Url")
+    imap_hostname: str
+    imap_port: int
+    imap_encryption: EncryptionTypeEnum
+    smtp_hostname: str
+    smtp_port: int
+    smtp_encryption: EncryptionTypeEnum
+    pop3_hostname: str
+    pop3_port: int
+    pop3_encryption: EncryptionTypeEnum
+    phpmyadmin_url: AnyUrl
 
 
 class CustomConfigCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
-    server_software_name: CustomConfigServerSoftwareNameEnum = Field(
-        ...,
-        description="When the server software nginx is used, custom configs are added to the `global` context.",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535) = Field(
-        ...,
-        description="Include custom config snippets using the syntax `{{ custom_config_snippets.name }}`.\n\nReplace `name` with the name of the custom config snippet.",
-        title="Contents",
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
+    server_software_name: CustomConfigServerSoftwareNameEnum
+    cluster_id: int
+    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
 
 
 class CustomConfigIncludes(CoreApiModel):
@@ -1945,53 +1270,30 @@ class CustomConfigIncludes(CoreApiModel):
 
 
 class CustomConfigResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535) = Field(
-        ...,
-        description="Include custom config snippets using the syntax `{{ custom_config_snippets.name }}`.\n\nReplace `name` with the name of the custom config snippet.",
-        title="Contents",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
+    cluster_id: int
+    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
     server_software_name: CustomConfigServerSoftwareNameEnum
     includes: CustomConfigIncludes
 
 
 class CustomConfigSnippetCreateFromContentsRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
     server_software_name: VirtualHostServerSoftwareNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    is_default: bool = Field(
-        ...,
-        description="Automatically include in all virtual hosts custom configs.",
-        title="Is Default",
-    )
-    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Contents"
-    )
+    cluster_id: int
+    is_default: bool
+    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
 
 
 class CustomConfigSnippetCreateFromTemplateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
     server_software_name: VirtualHostServerSoftwareNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    is_default: bool = Field(
-        ...,
-        description="Automatically include in all virtual hosts custom configs.",
-        title="Is Default",
-    )
-    template_name: CustomConfigSnippetTemplateNameEnum = Field(
-        ...,
-        description="The following templates are compatible with the following server software:\n\n* Laravel: nginx (for Apache, simply use the `.htaccess` included with Laravel)\n* Compression: nginx (for Apache, enabled by default)",
-    )
+    cluster_id: int
+    is_default: bool
+    template_name: CustomConfigSnippetTemplateNameEnum
 
 
 class CustomConfigSnippetIncludes(CoreApiModel):
@@ -1999,51 +1301,29 @@ class CustomConfigSnippetIncludes(CoreApiModel):
 
 
 class CustomConfigSnippetResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
     server_software_name: VirtualHostServerSoftwareNameEnum
-    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Contents"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    is_default: bool = Field(
-        ...,
-        description="Automatically include in all virtual hosts custom configs.",
-        title="Is Default",
-    )
+    contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
+    cluster_id: int
+    is_default: bool
     includes: CustomConfigSnippetIncludes
 
 
 class CustomerIPAddressCreateRequest(CoreApiModel):
-    service_account_name: str = Field(
-        ...,
-        description="Must be service account with group 'Internet Router'.\n\nRetrieve service accounts with `GET /api/v1/customers/{id}/ip-addresses`.",
-        title="Service Account Name",
-    )
-    dns_name: str = Field(..., description="Reverse DNS.", title="Dns Name")
+    service_account_name: str
+    dns_name: str
     address_family: IPAddressFamilyEnum
 
 
 class DatabaseCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    optimizing_enabled: bool = Field(
-        ...,
-        description="Periodically automatically run `OPTIMIZE` on database.\n\nEnabling is only supported for MariaDB server software.",
-        title="Optimizing Enabled",
-    )
-    backups_enabled: bool = Field(
-        ...,
-        description="Periodically automatically create backup of database.\n\nDisabling is only supported for MariaDB server software.",
-        title="Backups Enabled",
-    )
+    cluster_id: int
+    optimizing_enabled: bool
+    backups_enabled: bool
 
 
 class DatabaseIncludes(CoreApiModel):
@@ -2051,63 +1331,30 @@ class DatabaseIncludes(CoreApiModel):
 
 
 class DatabaseResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    optimizing_enabled: bool = Field(
-        ...,
-        description="Periodically automatically run `OPTIMIZE` on database.\n\nEnabling is only supported for MariaDB server software.",
-        title="Optimizing Enabled",
-    )
-    backups_enabled: bool = Field(
-        ...,
-        description="Periodically automatically create backup of database.\n\nDisabling is only supported for MariaDB server software.",
-        title="Backups Enabled",
-    )
+    cluster_id: int
+    optimizing_enabled: bool
+    backups_enabled: bool
     includes: DatabaseIncludes
 
 
 class DatabaseUserCreateRequest(CoreApiModel):
-    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ...,
-        description="Specify unhashed password. Hashed password is returned. Hashed password is purged after several days.",
-        title="Password",
-    )
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
+    password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    host: Optional[HostEnum] = Field(
-        ...,
-        description="Must be set when server software is MariaDB (`server_software_name`). May not be set otherwise.",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    phpmyadmin_firewall_groups_ids: Optional[List[int]] = Field(
-        ...,
-        description="Only IP networks in the specified firewall groups may access phpMyAdmin.\n\nIf this is null, all IP networks may.",
-        title="Phpmyadmin Firewall Groups Ids",
-    )
+    host: Optional[HostEnum]
+    cluster_id: int
+    phpmyadmin_firewall_groups_ids: Optional[List[int]]
 
 
 class DatabaseUserGrantCreateRequest(CoreApiModel):
-    database_id: int = Field(
-        ...,
-        description="Must belong to same cluster as database user.\n\nMust have MariaDB server software (`server_software_name`).",
-        title="Database Id",
-    )
-    database_user_id: int = Field(
-        ...,
-        description="Must belong to same cluster as database.\n\nMust have MariaDB server software (`server_software_name`).",
-        title="Database User Id",
-    )
-    table_name: Optional[
-        constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    ] = Field(..., description="Specify null for all tables.", title="Table Name")
+    database_id: int
+    database_user_id: int
+    table_name: Optional[constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)]
     privilege_name: MariaDBPrivilegeEnum
 
 
@@ -2116,26 +1363,15 @@ class DatabaseUserIncludes(CoreApiModel):
 
 
 class DatabaseUserResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)] = Field(
-        ..., description="Passwords are deleted after 7 days.", title="Password"
-    )
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    host: Optional[HostEnum] = Field(
-        ...,
-        description="Must be set when server software is MariaDB (`server_software_name`). May not be set otherwise.",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    phpmyadmin_firewall_groups_ids: Optional[List[int]] = Field(
-        ...,
-        description="Only IP networks in the specified firewall groups may access phpMyAdmin.\n\nIf this is null, all IP networks may.",
-        title="Phpmyadmin Firewall Groups Ids",
-    )
+    host: Optional[HostEnum]
+    cluster_id: int
+    phpmyadmin_firewall_groups_ids: Optional[List[int]]
     includes: DatabaseUserIncludes
 
 
@@ -2144,83 +1380,39 @@ class FirewallGroupIncludes(CoreApiModel):
 
 
 class FirewallGroupResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z0-9_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z0-9_]+$", min_length=1, max_length=32)
+    cluster_id: int
     ip_networks: List[str] = Field(
         ...,
-        description="To specify a single IP address, use the /128 (IPv6) or /32 (IPv4) CIDR.\n\nFor example: `2001:0db8:8aa:bc:111:abcd:aa11:8991/128` or `192.0.2.6/32`.",
         min_items=1,
-        title="Ip Networks",
         unique_items=True,
     )
     includes: FirewallGroupIncludes
 
 
 class FirewallRuleCreateRequest(CoreApiModel):
-    node_id: int = Field(..., description="Must have Admin group.", title="Node Id")
-    firewall_group_id: Optional[int] = Field(
-        ...,
-        description="Allow access from firewall group.\n\nEither 'firewall_group_id' or 'external_provider_name' may not both be set (allow all), or only one.",
-        title="Firewall Group Id",
-    )
-    external_provider_name: Optional[FirewallRuleExternalProviderNameEnum] = Field(
-        ...,
-        description="Allow access from external provider.\n\nEither 'firewall_group_id' or 'external_provider_name' may not both be set (allow all), or only one.\n\nRequires `firewall_rules_external_providers_enabled` to be set to `true` on the cluster.\n\nWhen using Atlassian, for 'Bitbucket Pipelines build environments' with a smaller size than '4x', AWS must be whitelisted as well. See https://support.atlassian.com/bitbucket-cloud/docs/what-are-the-bitbucket-cloud-ip-addresses-i-should-use-to-configure-my-corporate-firewall/#Valid-IP-addresses-for-Bitbucket-Pipelines-build-environments",
-    )
-    service_name: Optional[FirewallRuleServiceNameEnum] = Field(
-        ...,
-        description="Protect service.\n\nEither 'service_name', 'haproxy_listen_id' or 'port' must be set.",
-    )
-    haproxy_listen_id: Optional[int] = Field(
-        ...,
-        description="Protect port of HAProxy listen.\n\nEither 'service_name', 'haproxy_listen_id' or 'port' must be set.",
-        title="Haproxy Listen Id",
-    )
-    port: Optional[int] = Field(
-        ...,
-        description="Protect port.\n\nEither 'service_name', 'haproxy_listen_id' or 'port' must be set.",
-        title="Port",
-    )
+    node_id: int
+    firewall_group_id: Optional[int]
+    external_provider_name: Optional[FirewallRuleExternalProviderNameEnum]
+    service_name: Optional[FirewallRuleServiceNameEnum]
+    haproxy_listen_id: Optional[int]
+    port: Optional[int]
 
 
 class HAProxyListenCreateRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    nodes_group: NodeGroupEnum = Field(
-        ...,
-        description="Proxy to nodes with the specified group.\n\nThe following nodes groups are supported: MariaDB, PostgreSQL, Meilisearch, SingleStore, RabbitMQ.",
-    )
-    nodes_ids: Optional[List[int]] = Field(
-        None,
-        description="Proxy only to nodes with the specified IDs. these nodes must have the group specified in `nodes_group`.",
-        title="Nodes Ids",
-    )
-    port: Optional[conint(ge=3306, le=7700)] = Field(
-        ...,
-        description="Listen on port.\n\nEither `port` or `socket_path` must be set.",
-        title="Port",
-    )
-    socket_path: Optional[str] = Field(
-        ...,
-        description="Listen on socket.\n\nEither `port` or `socket_path` must be set.\n\nMust be under subdirectory of /run/.",
-        title="Socket Path",
-    )
+    name: constr(regex=r"^[a-z_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    nodes_group: NodeGroupEnum
+    nodes_ids: Optional[List[int]] = None
+    port: Optional[conint(ge=3306, le=7700)]
+    socket_path: Optional[str]
     load_balancing_method: LoadBalancingMethodEnum = Field(
         LoadBalancingMethodEnum.SOURCE_IP_ADDRESS,
-        description="When set to 'Round Robin', requests are routed to the least busy node. This is the most efficient load balancing method, but can cause issues with deadlocks on databases.\n\nWhen set to 'Source IP Address', the initial request by a specific IP address is routed to the least busy node. All follow-up requests are sent to that node. This causes load to be distributed less efficiently than with the 'Round Robin' method, but cannot cause issues with deadlocks on databases.\n\nIf the specified nodes group has only one node, this option has no effect.",
     )
-    destination_cluster_id: int = Field(
-        ...,
-        description="Proxy to nodes in the specified cluster.",
-        title="Destination Cluster Id",
-    )
+    destination_cluster_id: int
 
 
 class HAProxyListenIncludes(CoreApiModel):
@@ -2229,45 +1421,24 @@ class HAProxyListenIncludes(CoreApiModel):
 
 
 class HAProxyListenResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    nodes_group: NodeGroupEnum = Field(
-        ...,
-        description="Proxy to nodes with the specified group.\n\nThe following nodes groups are supported: MariaDB, PostgreSQL, Meilisearch, SingleStore, RabbitMQ.",
-    )
-    nodes_ids: Optional[List[int]] = Field(
-        ...,
-        description="Proxy only to nodes with the specified IDs. these nodes must have the group specified in `nodes_group`.",
-        title="Nodes Ids",
-    )
-    port: Optional[conint(ge=3306, le=7700)] = Field(
-        ...,
-        description="Listen on port.\n\nEither `port` or `socket_path` must be set.",
-        title="Port",
-    )
-    socket_path: Optional[str] = Field(
-        ...,
-        description="Listen on socket.\n\nEither `port` or `socket_path` must be set.\n\nMust be under subdirectory of /run/.",
-        title="Socket Path",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    nodes_group: NodeGroupEnum
+    nodes_ids: Optional[List[int]]
+    port: Optional[conint(ge=3306, le=7700)]
+    socket_path: Optional[str]
     load_balancing_method: Optional[LoadBalancingMethodEnum] = (
         LoadBalancingMethodEnum.SOURCE_IP_ADDRESS
     )
-    destination_cluster_id: int = Field(
-        ...,
-        description="Proxy to nodes in the specified cluster.",
-        title="Destination Cluster Id",
-    )
+    destination_cluster_id: int
     includes: HAProxyListenIncludes
 
 
 class HTTPValidationError(CoreApiModel):
-    detail: Optional[List[ValidationError]] = Field(None, title="Detail")
+    detail: Optional[List[ValidationError]] = None
 
 
 class HealthResource(CoreApiModel):
@@ -2275,43 +1446,31 @@ class HealthResource(CoreApiModel):
 
 
 class IPAddressProduct(CoreApiModel):
-    uuid: UUID4 = Field(..., title="Uuid")
-    name: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
+    uuid: UUID4
+    name: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
     type: IPAddressProductTypeEnum
-    price: confloat(ge=0.0) = Field(..., title="Price")
-    period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2) = Field(
-        ..., title="Period"
-    )
-    currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3) = Field(
-        ..., title="Currency"
-    )
+    price: confloat(ge=0.0)
+    period: constr(regex=r"^[A-Z0-9]+$", min_length=2, max_length=2)
+    currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3)
 
 
 class WebServerLogAccessResource(CoreApiModel):
-    remote_address: str = Field(..., title="Remote Address")
-    raw_message: constr(min_length=1, max_length=65535) = Field(
-        ..., title="Raw Message"
-    )
+    remote_address: str
+    raw_message: constr(min_length=1, max_length=65535)
     method: Optional[LogMethodEnum] = None
-    uri: Optional[constr(min_length=1, max_length=65535)] = Field(None, title="Uri")
-    timestamp: datetime = Field(..., title="Timestamp")
-    status_code: int = Field(..., title="Status Code")
-    bytes_sent: conint(ge=0) = Field(..., title="Bytes Sent")
+    uri: Optional[constr(min_length=1, max_length=65535)] = None
+    timestamp: datetime
+    status_code: int
+    bytes_sent: conint(ge=0)
 
 
 class WebServerLogErrorResource(CoreApiModel):
-    remote_address: str = Field(..., title="Remote Address")
-    raw_message: constr(min_length=1, max_length=65535) = Field(
-        ..., title="Raw Message"
-    )
+    remote_address: str
+    raw_message: constr(min_length=1, max_length=65535)
     method: Optional[LogMethodEnum] = None
-    uri: Optional[constr(min_length=1, max_length=65535)] = Field(None, title="Uri")
-    timestamp: datetime = Field(..., title="Timestamp")
-    error_message: constr(min_length=1, max_length=65535) = Field(
-        ..., title="Error Message"
-    )
+    uri: Optional[constr(min_length=1, max_length=65535)] = None
+    timestamp: datetime
+    error_message: constr(min_length=1, max_length=65535)
 
 
 class MariaDBEncryptionKeyIncludes(CoreApiModel):
@@ -2319,37 +1478,19 @@ class MariaDBEncryptionKeyIncludes(CoreApiModel):
 
 
 class MariaDBEncryptionKeyResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    identifier: int = Field(
-        ...,
-        description="Identifier specified as `ENCRYPTION_KEY_ID` table option.\n\nFor more information, see: https://mariadb.com/kb/en/innodb-encryption-overview/#creating-encrypted-tables",
-        title="Identifier",
-    )
-    key: constr(regex=r"^[a-z0-9]+$", min_length=64, max_length=64) = Field(
-        ..., title="Key"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    identifier: int
+    key: constr(regex=r"^[a-z0-9]+$", min_length=64, max_length=64)
+    cluster_id: int
     includes: MariaDBEncryptionKeyIncludes
 
 
 class NodeGroupDependency(CoreApiModel):
-    is_dependency: bool = Field(
-        ...,
-        description="Will the service become unavailable when this node is unreachable?",
-        title="Is Dependency",
-    )
-    impact: Optional[str] = Field(
-        ...,
-        description="What impact will this node becoming unreachable have?",
-        title="Impact",
-    )
-    reason: str = Field(
-        ...,
-        description="Why will the node being unreachable have impact?",
-        title="Reason",
-    )
+    is_dependency: bool
+    impact: Optional[str]
+    reason: str
     group: NodeGroupEnum
 
 
@@ -2364,139 +1505,62 @@ class NodeIncludes(CoreApiModel):
 
 
 class NodeResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    hostname: str = Field(..., title="Hostname")
-    product: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2) = Field(
-        ...,
-        description="Get available products with `GET /nodes/products`.",
-        title="Product",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    hostname: str
+    product: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)
+    cluster_id: int
     groups: List[NodeGroupEnum] = Field(
         ...,
-        description="Only one node in any cluster may have these groups:\n\n* Borg\n* Elasticsearch\n* SingleStore\n* Meilisearch\n* maldet\n* Admin\n* PostgreSQL\n* Meilisearch\n\nThe following groups do not require any cluster group:\n\n* HAProxy\n* KernelCare\n* New Relic\n* Docker\n* Admin\n\nThe following groups may only be used on clusters with the Borg Client group:\n\n* Borg\n\nThe following groups may only be used on clusters with the Borg Server group:\n\n* Borg\n\nThe following groups may only be used on clusters with the Database group:\n\n* MariaDB\n* Meilisearch\n* PostgreSQL\n* Redis\n* Grafana\n* SingleStore\n* Metabase\n* Elasticsearch\n* RabbitMQ\n\nThe following groups may only be used on clusters with the Mail group:\n\n* Dovecot\n* Admin\n\nThe following groups may only be used on clusters with the Redirect group:\n\n* Fast Redirect\n\nThe following groups may only be used on clusters with the Web group:\n\n* Apache\n* nginx\n* PHP\n* Passenger\n* ProFTPD\n* Composer\n* WP-CLI\n* ImageMagick\n* wkhtmltopdf\n* GNU Mailutils\n* Puppeteer\n* LibreOffice\n* Ghostscript\n* FFmpeg\n* maldet\n* NodeJS\n* ClamAV\n\nThe groups Composer and WP-CLI require the PHP group.\n\nThe group Puppeteer requires the NodeJS group. This group only installs the dependencies for Puppeteer; you must install the NodeJS module within your application(s).\n\nThe group KernelCare requires a KernelCare license key to be set on the cluster (`kernelcare_license_key`).\n\nFor the group ClamAV, clamd listens on port 3310. clamd can be accessed from any node in the cluster; it does not have any form of authentication.\nFind the implications on https://github.com/Cisco-Talos/clamav/issues/1169\n\nIf a node with the Admin group also has group(s) that are load-balanced (such as Apache or nginx), the node is not used for domain routers for which it is not explicitly configured by being set as `node_id` (see [Domain Routers](#tag/Domain-Routers)).\nThis allows you to use the Admin node for specific domain routers, e.g. second-tier applications such as serving assets to a CDN, while it is not used for regular traffic.\n\nFor the group Docker, to manage Docker, log in to SSH as the `docker` user using a [Root SSH Key](#tag/Root-SSH-Keys).\n",
-        title="Groups",
         unique_items=True,
     )
-    comment: Optional[
-        constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Comment")
-    load_balancer_health_checks_groups_pairs: Dict[
-        NodeGroupEnum, List[NodeGroupEnum]
-    ] = Field(
-        ...,
-        description="When health-checking the primary group (key), check health of additional groups (value). Node must have specified primary group and additional groups. The following primary groups are supported: Apache, nginx, Fast Redirect. The following additional groups are supported: MariaDB, PostgreSQL.\n\nCommon use case: when web server uses local database server, when checking web server health, check database server health.",
-        title="Load Balancer Health Checks Groups Pairs",
-    )
-    groups_properties: NodeGroupsProperties = Field(
-        ...,
-        description="Group-specific properties. Must be set to null for groups that the node does not have. Must be set to the correct value if the node has groups Redis, MariaDB, RabbitMQ.",
-    )
-    is_ready: bool = Field(..., title="Is Ready")
+    comment: Optional[constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)]
+    load_balancer_health_checks_groups_pairs: Dict[NodeGroupEnum, List[NodeGroupEnum]]
+    groups_properties: NodeGroupsProperties
+    is_ready: bool
     includes: NodeIncludes
 
 
 class NodeUpdateRequest(CoreApiModel):
-    groups: Optional[List[NodeGroupEnum]] = Field(
-        None,
-        description="Software on this node. If multiple nodes in the same cluster have the same software (groups), that software is redundant / highly-available.\n\nOnly one node in any cluster may have these groups:\n\n* Borg\n* Elasticsearch\n* SingleStore\n* Meilisearch\n* maldet\n* Admin\n* PostgreSQL\n* Meilisearch\n\nThe following groups do not require any cluster group:\n\n* HAProxy\n* KernelCare\n* New Relic\n\nThe following groups may only be used on clusters with the Borg Client group:\n\n* Borg\n\nThe following groups may only be used on clusters with the Borg Server group:\n\n* Borg\n\nThe following groups may only be used on clusters with the Database group:\n\n* MariaDB\n* Meilisearch\n* PostgreSQL\n* Redis\n* Grafana\n* SingleStore\n* Metabase\n* Elasticsearch\n* RabbitMQ\n\nThe following groups may only be used on clusters with the Mail group:\n\n* Dovecot\n* Admin\n\nThe following groups may only be used on clusters with the Redirect group:\n\n* Fast Redirect\n\nThe following groups may only be used on clusters with the Web group:\n\n* Apache\n* Admin\n* nginx\n* PHP\n* Passenger\n* ProFTPD\n* Composer\n* WP-CLI\n* ImageMagick\n* wkhtmltopdf\n* GNU Mailutils\n* Puppeteer\n* LibreOffice\n* Ghostscript\n* FFmpeg\n* Docker\n* maldet\n* NodeJS\n* ClamAV\n\nThe groups Composer and WP-CLI require the PHP group.\n\nThe group Puppeteer requires the NodeJS group. This group only installs the dependencies for Puppeteer; you must install the NodeJS module within your application(s).\n\nThe group KernelCare requires a KernelCare license key to be set on the cluster (`kernelcare_license_key`).\n\nFor the group ClamAV, clamd listens on port 3310. clamd can be accessed from any node in the cluster; it does not have any form of authentication.\nFind the implications on https://github.com/Cisco-Talos/clamav/issues/1169\n\nIf a node with the Admin group also has group(s) that are load-balanced (such as Apache or nginx), the node is not used for domain routers for which it is not explicitly configured by being set as `node_id` (see [Domain Routers](#tag/Domain-Routers)).\nThis allows you to use the Admin node for specific domain routers, e.g. second-tier applications such as serving assets to a CDN, while it is not used for regular traffic.\n",
-        title="Groups",
-    )
+    groups: Optional[List[NodeGroupEnum]] = None
     comment: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(None, title="Comment")
+    ] = None
     load_balancer_health_checks_groups_pairs: Optional[
         Dict[NodeGroupEnum, List[NodeGroupEnum]]
-    ] = Field(
-        None,
-        description="When health-checking the primary group (key), check health of additional groups (value). Node must have specified primary group and additional groups. The following primary groups are supported: Apache, nginx, Fast Redirect. The following additional groups are supported: MariaDB, PostgreSQL.\n\nCommon use case: when web server uses local database server, when checking web server health, check database server health.",
-        title="Load Balancer Health Checks Groups Pairs",
-    )
+    ] = None
 
 
 class PassengerAppCreateNodeJSRequest(CoreApiModel):
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    app_root: str = Field(
-        ..., description="Must be in UNIX user home directory.", title="App Root"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    app_root: str
+    unix_user_id: int
     environment: PassengerEnvironmentEnum
     environment_variables: Dict[
         constr(regex=r"^[A-Za-z_]+$"), constr(regex=r"^[ -~]+$")
-    ] = Field(
-        ...,
-        description="Do not store secrets in them in environment variables; they are stored in plain text.",
-        title="Environment Variables",
-    )
-    max_pool_size: int = Field(
-        ...,
-        description="The maximum amount of concurrent processes (also known as workers). For example, to handle 10 requests simultaneously, set this value to 10.\n\nIf you don't know what to set, set to `10`.",
-        title="Max Pool Size",
-    )
-    max_requests: int = Field(
-        ...,
-        description="Each process will restart after N requests. This can prevent memory leaks.\n\nIf you don't know what to set, set to `2000`.",
-        title="Max Requests",
-    )
-    pool_idle_time: int = Field(
-        ...,
-        description="Each process will be stopped after it has not received requests after N seconds. This can decrease memory usage when a busy pool (that started many processes) is no longer busy. However, if all processes are stopped, the first request takes longer as one must be started first.\n\nIf you don't know what to set, set to `10`.",
-        title="Pool Idle Time",
-    )
-    is_namespaced: bool = Field(
-        ...,
-        description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
-        title="Is Namespaced",
-    )
-    cpu_limit: Optional[int] = Field(..., title="Cpu Limit")
-    nodejs_version: constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$") = Field(
-        ...,
-        description="Must be installed on cluster (`nodejs_versions`).",
-        title="Nodejs Version",
-    )
-    startup_file: str = Field(..., title="Startup File")
+    ]
+    max_pool_size: int
+    max_requests: int
+    pool_idle_time: int
+    is_namespaced: bool
+    cpu_limit: Optional[int]
+    nodejs_version: constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")
+    startup_file: str
 
 
 class PassengerAppUpdateRequest(CoreApiModel):
     environment: Optional[PassengerEnvironmentEnum] = None
     environment_variables: Optional[
         Dict[constr(regex=r"^[A-Za-z_]+$"), constr(regex=r"^[ -~]+$")]
-    ] = Field(
-        None,
-        description="Do not store secrets in them in environment variables; they are stored in plain text.",
-        title="Environment Variables",
-    )
-    max_pool_size: Optional[int] = Field(
-        None,
-        description="The maximum amount of concurrent processes (also known as workers). For example, to handle 10 requests simultaneously, set this value to 10.\n\nIf you don't know what to set, set to `10`.",
-        title="Max Pool Size",
-    )
-    max_requests: Optional[int] = Field(
-        None,
-        description="Each process will restart after N requests. This can prevent memory leaks.\n\nIf you don't know what to set, set to `2000`.",
-        title="Max Requests",
-    )
-    pool_idle_time: Optional[int] = Field(
-        None,
-        description="Each process will be stopped after it has not received requests after N seconds. This can decrease memory usage when a busy pool (that started many processes) is no longer busy. However, if all processes are stopped, the first request takes longer as one must be started first.\n\nIf you don't know what to set, set to `10`.",
-        title="Pool Idle Time",
-    )
-    is_namespaced: Optional[bool] = Field(
-        None,
-        description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
-        title="Is Namespaced",
-    )
-    cpu_limit: Optional[int] = Field(None, title="Cpu Limit")
-    nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = Field(
-        None,
-        description="Must be installed on cluster (`nodejs_versions`).",
-        title="Nodejs Version",
-    )
-    startup_file: Optional[str] = Field(None, title="Startup File")
+    ] = None
+    max_pool_size: Optional[int] = None
+    max_requests: Optional[int] = None
+    pool_idle_time: Optional[int] = None
+    is_namespaced: Optional[bool] = None
+    cpu_limit: Optional[int] = None
+    nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = None
+    startup_file: Optional[str] = None
 
 
 class RedisInstanceIncludes(CoreApiModel):
@@ -2504,23 +1568,16 @@ class RedisInstanceIncludes(CoreApiModel):
 
 
 class RedisInstanceResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    port: int = Field(..., title="Port")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = Field(
-        ..., title="Password"
-    )
-    memory_limit: conint(ge=8) = Field(..., description="In MB.", title="Memory Limit")
-    max_databases: int = Field(..., title="Max Databases")
-    eviction_policy: RedisEvictionPolicyEnum = Field(
-        ...,
-        description="See [Redis documentation](https://redis.io/docs/reference/eviction/#eviction-policies).\n\nIf you don't know what to set, set to `volatile-lru`.",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    port: int
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
+    memory_limit: conint(ge=8)
+    max_databases: int
+    eviction_policy: RedisEvictionPolicyEnum
     includes: RedisInstanceIncludes
 
 
@@ -2529,15 +1586,13 @@ class RootSSHKeyIncludes(CoreApiModel):
 
 
 class RootSSHKeyResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    public_key: Optional[str] = Field(..., title="Public Key")
-    private_key: Optional[str] = Field(..., title="Private Key")
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    public_key: Optional[str]
+    private_key: Optional[str]
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     includes: RootSSHKeyIncludes
 
 
@@ -2546,34 +1601,24 @@ class SecurityTXTPolicyIncludes(CoreApiModel):
 
 
 class SecurityTXTPolicyResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    expires_timestamp: datetime = Field(..., title="Expires Timestamp")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    expires_timestamp: datetime
     email_contacts: List[EmailStr] = Field(
         ...,
-        description="At least `url_contacts` or `email_contacts` must be set.",
-        title="Email Contacts",
         unique_items=True,
     )
     url_contacts: List[AnyUrl] = Field(
         ...,
-        description="At least `url_contacts` or `email_contacts` must be set.",
-        title="Url Contacts",
         unique_items=True,
     )
-    encryption_key_urls: List[AnyUrl] = Field(
-        ..., title="Encryption Key Urls", unique_items=True
-    )
-    acknowledgment_urls: List[AnyUrl] = Field(
-        ..., title="Acknowledgment Urls", unique_items=True
-    )
-    policy_urls: List[AnyUrl] = Field(..., title="Policy Urls", unique_items=True)
-    opening_urls: List[AnyUrl] = Field(..., title="Opening Urls", unique_items=True)
-    preferred_languages: List[LanguageCodeEnum] = Field(
-        ..., title="Preferred Languages", unique_items=True
-    )
+    encryption_key_urls: List[AnyUrl] = Field(..., unique_items=True)
+    acknowledgment_urls: List[AnyUrl] = Field(..., unique_items=True)
+    policy_urls: List[AnyUrl] = Field(..., unique_items=True)
+    opening_urls: List[AnyUrl] = Field(..., unique_items=True)
+    preferred_languages: List[LanguageCodeEnum] = Field(..., unique_items=True)
     includes: SecurityTXTPolicyIncludes
 
 
@@ -2582,39 +1627,31 @@ class TaskCollectionIncludes(CoreApiModel):
 
 
 class TaskCollectionResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    object_id: Optional[int] = Field(..., title="Object Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    object_id: Optional[int]
     object_model_name: ObjectModelNameEnum
-    uuid: UUID4 = Field(..., title="Uuid")
-    description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Description"
-    )
+    uuid: UUID4
+    description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
     collection_type: TaskCollectionTypeEnum
-    cluster_id: Optional[int] = Field(..., title="Cluster Id")
-    reference: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255) = Field(
-        ..., description="Free-form reference.", title="Reference"
-    )
+    cluster_id: Optional[int]
+    reference: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     includes: TaskCollectionIncludes
 
 
 class TaskResult(CoreApiModel):
-    description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Description"
-    )
-    uuid: UUID4 = Field(..., title="Uuid")
-    message: Optional[str] = Field(..., title="Message")
+    description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    uuid: UUID4
+    message: Optional[str]
     state: TaskStateEnum
-    retries: conint(ge=0) = Field(..., title="Retries")
+    retries: conint(ge=0)
 
 
 class TokenResource(CoreApiModel):
-    access_token: constr(regex=r"^[ -~]+$", min_length=1) = Field(
-        ..., title="Access Token"
-    )
+    access_token: constr(regex=r"^[ -~]+$", min_length=1)
     token_type: TokenTypeEnum
-    expires_in: int = Field(..., title="Expires In")
+    expires_in: int
 
 
 class UNIXUserIncludes(CoreApiModel):
@@ -2622,62 +1659,25 @@ class UNIXUserIncludes(CoreApiModel):
 
 
 class UNIXUserResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)] = Field(
-        ...,
-        description="If set to null, only SSH key authentication is allowed.",
-        title="Password",
-    )
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = Field(
-        ..., title="Username"
-    )
-    unix_id: int = Field(..., title="Unix Id")
-    home_directory: str = Field(
-        ...,
-        description="Cluster UNIX users home directory (`unix_users_home_directory`) + UNIX user username (`username`).",
-        title="Home Directory",
-    )
-    ssh_directory: str = Field(..., title="Ssh Directory")
-    virtual_hosts_directory: Optional[str] = Field(
-        ...,
-        description="Must be set when cluster has Web group. May not be set otherwise.\n\nThe virtual hosts directory must start with the cluster UNIX user home directory + the UNIX user username. The path may end there, or it can end with **one** custom path element such as `virtual-hosts`.",
-        title="Virtual Hosts Directory",
-    )
-    mail_domains_directory: Optional[str] = Field(
-        ...,
-        description="Must be set when cluster has Mail group. May not be set otherwise.\n\nThe mail domains directory must start with the cluster UNIX user home directory + the UNIX user username. The path may end there, or it can end with **one** custom path element such as `mail-domains`.",
-        title="Mail Domains Directory",
-    )
-    borg_repositories_directory: Optional[str] = Field(
-        ...,
-        description="Must be set when cluster has Borg Server group. May not be set otherwise.\n\nThe Borg repositories directory must start with the cluster UNIX user home directory + the UNIX user username. The path may end there, or it can end with **one** custom path element such as `borg-repositories`.",
-        title="Borg Repositories Directory",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    shell_path: ShellPathEnum = Field(
-        ...,
-        description="When set to `/usr/local/bin/jailshell`, Bubblewrap Toolkit must be enabled on the cluster (`bubblewrap_toolkit_enabled`).\n\nWhen set to `/usr/local/bin/jailshell`, multiple security measures are applied, most notably the inability to see other UNIX user's processes. Recommended for shared environments in which users are not trusted.",
-    )
-    record_usage_files: bool = Field(
-        ...,
-        description="May only be set to `true` when cluster has Web group.\n\nWhen enabled, UNIX user usages objects contain a list of largest files (`files`).",
-        title="Record Usage Files",
-    )
-    default_php_version: Optional[str] = Field(
-        ...,
-        description="When set, the `php` command is aliased to the specified PHP version. Otherwise, the system default is used.\n\nMust be installed on cluster (`php_versions`).",
-        title="Default Php Version",
-    )
-    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = Field(
-        ...,
-        description="When set, the following commands are activated to the specified NodeJS version: `corepack`, `npm`, `npx`, `node`. Otherwise, these commands are not available.\n\nMust be installed on cluster (`nodejs_versions`).\n\nRequires shell path (`shell_path`) to be set to `/usr/local/bin/jailshell`.",
-        title="Default Nodejs Version",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    unix_id: int
+    home_directory: str
+    ssh_directory: str
+    virtual_hosts_directory: Optional[str]
+    mail_domains_directory: Optional[str]
+    borg_repositories_directory: Optional[str]
+    cluster_id: int
+    shell_path: ShellPathEnum
+    record_usage_files: bool
+    default_php_version: Optional[str]
+    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Description")
+    ]
     includes: UNIXUserIncludes
 
 
@@ -2686,94 +1686,40 @@ class URLRedirectIncludes(CoreApiModel):
 
 
 class URLRedirectResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    domain: str = Field(
-        ...,
-        description="Unique across all virtual hosts and URL redirects. May not be the same as hostname of any node.\n\nA domain router is created for the domain.",
-        title="Domain",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    domain: str
+    cluster_id: int
     server_aliases: List[str] = Field(
         ...,
-        description="May not contain `domain`.\n\nEach server alias is unique across all virtual hosts and URL redirects.\n\nA domain router is created for every server alias.",
-        title="Server Aliases",
         unique_items=True,
     )
-    destination_url: AnyUrl = Field(..., title="Destination Url")
+    destination_url: AnyUrl
     status_code: StatusCodeEnum
-    keep_query_parameters: bool = Field(
-        ...,
-        description="Append query parameters from original URL to destination URL. For example, when `true`, a URL redirect from `dropflix.io` to `https://www.dropflix.io` will redirect from `dropflix.io?a=b` to `https://www.dropflix.io?a=b`.",
-        title="Keep Query Parameters",
-    )
-    keep_path: bool = Field(
-        ...,
-        description="Append path from original URL to destination URL. For example, when `true`, a URL redirect from `dropflix.io` to `https://www.dropflix.io` will redirect from `dropflix.io/a` to `https://www.dropflix.io/a`.",
-        title="Keep Path",
-    )
+    keep_query_parameters: bool
+    keep_path: bool
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Description")
+    ]
     includes: URLRedirectIncludes
 
 
 class VirtualHostCreateRequest(CoreApiModel):
-    server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = Field(
-        ..., description="Set to first found server software by default."
-    )
-    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]] = Field(
-        ...,
-        description="Must be set when Apache server software is used (`server_software_name`). May not be set otherwise.\n\nOptions that may be set in `.htaccess` files. This is usually limited as some options pose security risks. For more information, see: https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride\n\nIf you don't know what to set, set to `['AuthConfig', 'FileInfo', 'Indexes', 'Limit']`. This suffices for almost all CMSes/systems, including WordPress, Joomla! and Laravel.",
-        title="Allow Override Directives",
-    )
-    allow_override_option_directives: Optional[
-        List[AllowOverrideOptionDirectiveEnum]
-    ] = Field(
-        ...,
-        description="Must be set when Apache server software is used (`server_software_name`). May not be set otherwise.\n\nOption directives that may be set in `.htaccess` files. This is usually limited as some option directives pose security risks. For more information, see: https://httpd.apache.org/docs/2.4/mod/core.html#options\n\nIf you don't know what to set, set to `['Indexes', 'MultiViews', 'None', 'SymLinksIfOwnerMatch']`. This suffices for almost all CMSes/systems, including WordPress, Joomla! and Laravel.",
-        title="Allow Override Option Directives",
-    )
-    domain: str = Field(
-        ...,
-        description="Unique across all virtual hosts and URL redirects. May not be the same as hostname of any node.\n\nA domain router is created for the domain.",
-        title="Domain",
-    )
-    public_root: str = Field(
-        ...,
-        description="This directory is created automatically. It is also periodically scanned for CMSes which will be added to the API.\n\nThis is what you should set to a custom value for systems such as Laravel. Often to a subdirectory such as `public`.\n\nDo not confuse with document root (`document_root`), which is the directory that files will be loaded from when receiving an HTTP request.\n\nMust be inside UNIX user virtual hosts directory + specified domain (e.g. `/home/dropflix/dropflix.io/htdocs`).",
-        title="Public Root",
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    server_software_name: Optional[VirtualHostServerSoftwareNameEnum]
+    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]]
+    allow_override_option_directives: Optional[List[AllowOverrideOptionDirectiveEnum]]
+    domain: str
+    public_root: str
+    unix_user_id: int
     server_aliases: List[str] = Field(
         ...,
-        description="May not contain `domain`.\n\nEach server alias is unique across all virtual hosts and URL redirects.\n\nA domain router is created for every server alias.",
-        title="Server Aliases",
         unique_items=True,
     )
-    document_root: str = Field(
-        ...,
-        description="When receiving an HTTP request, files will be loaded from this directory.",
-        title="Document Root",
-    )
-    fpm_pool_id: Optional[int] = Field(
-        ...,
-        description="Let the specified FPM pool handle requests to PHP files.\n\nMay not be set when Passenger app (`passenger_app_id`) is set.",
-        title="Fpm Pool Id",
-    )
-    passenger_app_id: Optional[int] = Field(
-        ...,
-        description="Let the specified Passenger app handle requests.\n\nMay only be set when server software is set to nginx (`server_software_name`).\n\nMay not be set when FPM pool (`fpm_pool_id`) is set.",
-        title="Passenger App Id",
-    )
-    custom_config: Optional[
-        constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
-    ] = Field(
-        ...,
-        description="Include custom config snippets using the syntax `{{ custom_config_snippets.name }}`.\n\nReplace `name` with the name of the custom config snippet.\n\nDefault custom config snippets (`is_default`) are inserted after the virtual host specific custom config. To place a default custom config snippet earlier, include it manually in the virtual host specific custom config.\n\nWhen the server software nginx is used, custom configs are added to the `server` context.\n\nIf the virtual host has basic authentication realms, the `auth_basic` and `auth_basic_user_file` directives may not be set in the default context.\n",
-        title="Custom Config",
-    )
+    document_root: str
+    fpm_pool_id: Optional[int]
+    passenger_app_id: Optional[int]
+    custom_config: Optional[constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)]
 
 
 class BorgRepositoryIncludes(CoreApiModel):
@@ -2782,52 +1728,22 @@ class BorgRepositoryIncludes(CoreApiModel):
 
 
 class BorgRepositoryResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255) = Field(
-        ..., title="Passphrase"
-    )
-    remote_host: str = Field(..., title="Remote Host")
-    remote_path: str = Field(..., title="Remote Path")
-    remote_username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32) = (
-        Field(..., title="Remote Username")
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    keep_hourly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Hourly",
-    )
-    keep_daily: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Daily",
-    )
-    keep_weekly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Weekly",
-    )
-    keep_monthly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Monthly",
-    )
-    keep_yearly: Optional[int] = Field(
-        ...,
-        description="At least one keep attribute must be set.\n\nFor more information, see: https://github.com/borgbackup/borg/blob/master/docs/misc/prune-example.txt",
-        title="Keep Yearly",
-    )
-    identity_file_path: Optional[str] = Field(
-        ...,
-        description="Must be set when UNIX user (`unix_user_id`) is set. May not be set otherwise.",
-        title="Identity File Path",
-    )
-    unix_user_id: Optional[int] = Field(..., title="Unix User Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    remote_host: str
+    remote_path: str
+    remote_username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    cluster_id: int
+    keep_hourly: Optional[int]
+    keep_daily: Optional[int]
+    keep_weekly: Optional[int]
+    keep_monthly: Optional[int]
+    keep_yearly: Optional[int]
+    identity_file_path: Optional[str]
+    unix_user_id: Optional[int]
     includes: BorgRepositoryIncludes
 
 
@@ -2836,36 +1752,28 @@ class CertificateIncludes(CoreApiModel):
 
 
 class CertificateResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    main_common_name: str = Field(..., title="Main Common Name")
-    common_names: List[str] = Field(
-        ..., min_items=1, title="Common Names", unique_items=True
-    )
-    expires_at: datetime = Field(
-        ..., description="Timestamp is in UTC.", title="Expires At"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    main_common_name: str
+    common_names: List[str] = Field(..., min_items=1, unique_items=True)
+    expires_at: datetime
     certificate: constr(
         regex=r"^[a-zA-Z0-9-_\+\/=\n\\ ]+$", min_length=1, max_length=65535
-    ) = Field(
-        ...,
-        description="Certificate must have a common name.\n\nMust end with line feed.",
-        title="Certificate",
     )
     ca_chain: constr(
         regex=r"^[a-zA-Z0-9-_\+\/=\n\\ ]+$", min_length=1, max_length=65535
-    ) = Field(..., description="Must end with line feed.", title="Ca Chain")
+    )
     private_key: constr(
         regex=r"^[a-zA-Z0-9-_\+\/=\n\\ ]+$", min_length=1, max_length=65535
-    ) = Field(..., description="Must end with line feed.", title="Private Key")
-    cluster_id: int = Field(..., title="Cluster Id")
+    )
+    cluster_id: int
     includes: CertificateIncludes
 
 
 class ClusterDeploymentResults(CoreApiModel):
-    created_at: datetime = Field(..., title="Created At")
-    tasks_results: List[ClusterDeploymentTaskResult] = Field(..., title="Tasks Results")
+    created_at: datetime
+    tasks_results: List[ClusterDeploymentTaskResult]
 
 
 class CronIncludes(CoreApiModel):
@@ -2875,55 +1783,23 @@ class CronIncludes(CoreApiModel):
 
 
 class CronResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    node_id: int = Field(..., title="Node Id")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ...,
-        description="Use the variable `$CYBERFUSION_DEFAULT_PHP_VERSION_BINARY` to use the UNIX user default PHP version (`default_php_version`). For more information, see 'Differences between PHP versions'.\n\nThe command may not call `exit`.",
-        title="Command",
-    )
-    email_address: Optional[EmailStr] = Field(
-        ...,
-        description="Emails about failed cron runs are sent to this email address. If the value is null, emails are sent to Cyberfusion.\n\nThis email contains the return code and output.\n\nA cron run has failed when the command exits with a return code other than 0.\n\nIf the cron fails over 10 times consecutively, no more emails are sent.",
-        title="Email Address",
-    )
-    schedule: str = Field(..., title="Schedule")
-    error_count: int = Field(
-        ...,
-        description="Send email after N failed cron runs.\n\nThe counter is reset after a successful cron run.\n\nIf you don't know what to set, set to `1`, so an email is sent after 1 failed cron run. This ensures an email is sent for _every_ failed cron run.",
-        title="Error Count",
-    )
-    random_delay_max_seconds: int = Field(
-        ...,
-        description="Randomly delay cron run.\n\nUse to avoid overloading a node when many crons run on the same schedule.\n\nIf you don't know what to set, set to `10`.",
-        title="Random Delay Max Seconds",
-    )
-    timeout_seconds: Optional[int] = Field(
-        ...,
-        description="Cron will be automatically killed after this time. Such a timeout is usually used as a failsafe, so that when the command unexpectedly takes too long (e.g. due to an external API call by a script), the cron isn't stuck (or locked if `locking_enabled` is `true`) for a long or indefinite time.",
-        title="Timeout Seconds",
-    )
-    locking_enabled: bool = Field(
-        ...,
-        description="When enabled, multiple instances of the cron may not run simultaneously. This can prevent multiple crons from manipulating the same data, or prevent a node from being overloaded when a long-running cron is using many resources.\n\nDisable for crons that handle locking themselves (such as Laravel's `withoutOverlapping`.)",
-        title="Locking Enabled",
-    )
-    is_active: bool = Field(..., title="Is Active")
-    memory_limit: Optional[conint(ge=256)] = Field(
-        ..., description="In MB.", title="Memory Limit"
-    )
-    cpu_limit: Optional[int] = Field(
-        ...,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.",
-        title="Cpu Limit",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    node_id: int
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    unix_user_id: int
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    email_address: Optional[EmailStr]
+    schedule: str
+    error_count: int
+    random_delay_max_seconds: int
+    timeout_seconds: Optional[int]
+    locking_enabled: bool
+    is_active: bool
+    memory_limit: Optional[conint(ge=256)]
+    cpu_limit: Optional[int]
     includes: CronIncludes
 
 
@@ -2933,26 +1809,16 @@ class DaemonIncludes(CoreApiModel):
 
 
 class DaemonResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535) = Field(
-        ..., title="Command"
-    )
-    nodes_ids: List[int] = Field(..., min_items=1, title="Nodes Ids", unique_items=True)
-    memory_limit: Optional[conint(ge=256)] = Field(
-        ..., description="In MB.", title="Memory Limit"
-    )
-    cpu_limit: Optional[int] = Field(
-        ...,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.",
-        title="Cpu Limit",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    unix_user_id: int
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
+    memory_limit: Optional[conint(ge=256)]
+    cpu_limit: Optional[int]
     includes: DaemonIncludes
 
 
@@ -2963,23 +1829,13 @@ class DatabaseUserGrantIncludes(CoreApiModel):
 
 
 class DatabaseUserGrantResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    database_id: int = Field(
-        ...,
-        description="Must belong to same cluster as database user.\n\nMust have MariaDB server software (`server_software_name`).",
-        title="Database Id",
-    )
-    database_user_id: int = Field(
-        ...,
-        description="Must belong to same cluster as database.\n\nMust have MariaDB server software (`server_software_name`).",
-        title="Database User Id",
-    )
-    table_name: Optional[
-        constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    ] = Field(..., description="Specify null for all tables.", title="Table Name")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    database_id: int
+    database_user_id: int
+    table_name: Optional[constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)]
     privilege_name: MariaDBPrivilegeEnum
     includes: DatabaseUserGrantIncludes
 
@@ -2990,54 +1846,20 @@ class FPMPoolIncludes(CoreApiModel):
 
 
 class FPMPoolResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="We recommend adding the version to the name (e.g. `dropflix83`). As `version` cannot be changed, when wanting to change the version, a new FPM pool must be created. By adding the version to the name, the old and new FPM pools can exist simultaneously without name conflicts (as `name` is unique).",
-        title="Name",
-    )
-    version: str = Field(
-        ...,
-        description="Must be installed on cluster (`php_versions`).\n\nThis value cannot be changed as it is FPM pool specific. When wanting to change the version, create a new FPM pool, and update it on the virtual host(s) that use the current FPM pool. Or use the CLI command `corectl fpm-pools update-version` which does this for you.",
-        title="Version",
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    max_children: int = Field(
-        ...,
-        description="The maximum amount of concurrent PHP-FPM processes (also known as workers). For example, to handle 10 requests simultaneously, set this value to 10.\n\nIf you don't know what to set, set to `5`.",
-        title="Max Children",
-    )
-    max_requests: int = Field(
-        ...,
-        description="Each PHP-FPM process will restart after N requests. This can prevent memory leaks.\n\nIf you don't know what to set, set to `20`.",
-        title="Max Requests",
-    )
-    process_idle_timeout: int = Field(
-        ...,
-        description="Each PHP-FPM process will be stopped after it has not received requests after N seconds. This can decrease memory usage when a busy PHP-FPM pool (that started many PHP-FPM processes) is no longer busy. However, if all PHP-FPM processes are stopped, the first request takes longer as one must be started first.\n\nIf you don't know what to set, set to `10`.",
-        title="Process Idle Timeout",
-    )
-    cpu_limit: Optional[int] = Field(
-        ...,
-        description="Each step of `100` means 1 CPU core. For example, a value of `200` means 2 CPU cores.",
-        title="Cpu Limit",
-    )
-    log_slow_requests_threshold: Optional[int] = Field(
-        ...,
-        description="Minimum amount of seconds a request must take to be logged to the PHP-FPM slow log.\n\nTo retrieve the results, contact Cyberfusion.",
-        title="Log Slow Requests Threshold",
-    )
-    is_namespaced: bool = Field(
-        ...,
-        description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
-        title="Is Namespaced",
-    )
-    memory_limit: Optional[conint(ge=256)] = Field(
-        ..., description="In MB.", title="Memory Limit"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    version: str
+    unix_user_id: int
+    max_children: int
+    max_requests: int
+    process_idle_timeout: int
+    cpu_limit: Optional[int]
+    log_slow_requests_threshold: Optional[int]
+    is_namespaced: bool
+    memory_limit: Optional[conint(ge=256)]
     includes: FPMPoolIncludes
 
 
@@ -3047,22 +1869,14 @@ class FTPUserIncludes(CoreApiModel):
 
 
 class FTPUserResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255) = Field(
-        ..., title="Password"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32) = Field(
-        ..., title="Username"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
-    directory_path: str = Field(
-        ...,
-        description="The directory path must start with the UNIX user home directory. The path may end there, or it can end with custom path elements under it.",
-        title="Directory Path",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    cluster_id: int
+    username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
+    unix_user_id: int
+    directory_path: str
     includes: FTPUserIncludes
 
 
@@ -3074,34 +1888,16 @@ class FirewallRuleIncludes(CoreApiModel):
 
 
 class FirewallRuleResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    node_id: int = Field(..., description="Must have Admin group.", title="Node Id")
-    firewall_group_id: Optional[int] = Field(
-        ...,
-        description="Allow access from firewall group.\n\nEither 'firewall_group_id' or 'external_provider_name' may not both be set (allow all), or only one.",
-        title="Firewall Group Id",
-    )
-    external_provider_name: Optional[FirewallRuleExternalProviderNameEnum] = Field(
-        ...,
-        description="Allow access from external provider.\n\nEither 'firewall_group_id' or 'external_provider_name' may not both be set (allow all), or only one.\n\nRequires `firewall_rules_external_providers_enabled` to be set to `true` on the cluster.",
-    )
-    service_name: Optional[FirewallRuleServiceNameEnum] = Field(
-        ...,
-        description="Protect service.\n\nEither 'service_name', 'haproxy_listen_id' or 'port' must be set.",
-    )
-    haproxy_listen_id: Optional[int] = Field(
-        ...,
-        description="Protect port of HAProxy listen.\n\nEither 'service_name', 'haproxy_listen_id' or 'port' must be set.",
-        title="Haproxy Listen Id",
-    )
-    port: Optional[int] = Field(
-        ...,
-        description="Protect port.\n\nEither 'service_name', 'haproxy_listen_id' or 'port' must be set.",
-        title="Port",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    node_id: int
+    firewall_group_id: Optional[int]
+    external_provider_name: Optional[FirewallRuleExternalProviderNameEnum]
+    service_name: Optional[FirewallRuleServiceNameEnum]
+    haproxy_listen_id: Optional[int]
+    port: Optional[int]
     includes: FirewallRuleIncludes
 
 
@@ -3112,14 +1908,12 @@ class HAProxyListenToNodeIncludes(CoreApiModel):
 
 
 class HAProxyListenToNodeResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    haproxy_listen_id: int = Field(..., title="Haproxy Listen Id")
-    node_id: int = Field(
-        ..., description="Node must have HAProxy group.", title="Node Id"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    haproxy_listen_id: int
+    node_id: int
     includes: HAProxyListenToNodeIncludes
 
 
@@ -3129,16 +1923,12 @@ class HostsEntryIncludes(CoreApiModel):
 
 
 class HostsEntryResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    node_id: int = Field(
-        ...,
-        description="Route lookups for hostname to specified node.",
-        title="Node Id",
-    )
-    host_name: str = Field(..., title="Host Name")
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    node_id: int
+    host_name: str
+    cluster_id: int
     includes: HostsEntryIncludes
 
 
@@ -3148,11 +1938,11 @@ class HtpasswdFileIncludes(CoreApiModel):
 
 
 class HtpasswdFileResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    unix_user_id: int = Field(..., title="Unix User Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    unix_user_id: int
     includes: HtpasswdFileIncludes
 
 
@@ -3162,17 +1952,13 @@ class HtpasswdUserIncludes(CoreApiModel):
 
 
 class HtpasswdUserResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255) = Field(
-        ..., title="Password"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
-    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255) = Field(
-        ..., title="Username"
-    )
-    htpasswd_file_id: int = Field(..., title="Htpasswd File Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    cluster_id: int
+    username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255)
+    htpasswd_file_id: int
     includes: HtpasswdUserIncludes
 
 
@@ -3182,20 +1968,14 @@ class MailDomainIncludes(CoreApiModel):
 
 
 class MailDomainResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    domain: str = Field(..., title="Domain")
-    unix_user_id: int = Field(..., title="Unix User Id")
-    catch_all_forward_email_addresses: List[EmailStr] = Field(
-        ..., title="Catch All Forward Email Addresses", unique_items=True
-    )
-    is_local: bool = Field(
-        ...,
-        description="Set to `true` when MX records point to cluster. Set to `false` when mail domain exists on cluster, but MX records point elsewhere.\n\nWhen this value is `false`, emails sent from other mail accounts on the same cluster will not be delivered locally, but sent to the MX records.",
-        title="Is Local",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    domain: str
+    unix_user_id: int
+    catch_all_forward_email_addresses: List[EmailStr] = Field(..., unique_items=True)
+    is_local: bool
     includes: MailDomainIncludes
 
 
@@ -3205,12 +1985,12 @@ class MailHostnameIncludes(CoreApiModel):
 
 
 class MailHostnameResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    domain: str = Field(..., title="Domain")
-    cluster_id: int = Field(..., title="Cluster Id")
-    certificate_id: int = Field(..., title="Certificate Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    domain: str
+    cluster_id: int
+    certificate_id: int
     includes: MailHostnameIncludes
 
 
@@ -3220,18 +2000,14 @@ class MalwareIncludes(CoreApiModel):
 
 
 class MalwareResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    unix_user_id: int = Field(..., title="Unix User Id")
-    name: constr(
-        regex=r"^\{([A-Z]+)\}[a-zA-Z0-9-_.]+$", min_length=1, max_length=255
-    ) = Field(..., title="Name")
-    path: str = Field(..., title="Path")
-    last_seen_at: datetime = Field(
-        ..., description="Timestamp is in UTC.", title="Last Seen At"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    unix_user_id: int
+    name: constr(regex=r"^\{([A-Z]+)\}[a-zA-Z0-9-_.]+$", min_length=1, max_length=255)
+    path: str
+    last_seen_at: datetime
     includes: MalwareIncludes
 
 
@@ -3241,99 +2017,45 @@ class NodeAddOnIncludes(CoreApiModel):
 
 
 class NodeAddOnResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    node_id: int = Field(..., title="Node Id")
-    product: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="Get available products with `GET /node-add-ons/products`.",
-        title="Product",
-    )
-    quantity: int = Field(..., title="Quantity")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    node_id: int
+    product: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
+    quantity: int
     includes: NodeAddOnIncludes
 
 
 class NodeCreateRequest(CoreApiModel):
-    product: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2) = Field(
-        ...,
-        description="Get available products with `GET /nodes/products`.",
-        title="Product",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    product: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)
+    cluster_id: int
     groups: List[NodeGroupEnum] = Field(
         ...,
-        description="Software on this node. If multiple nodes in the same cluster have the same software (groups), that software is redundant / highly-available.\n\nOnly one node in any cluster may have these groups:\n\n* Borg\n* Elasticsearch\n* SingleStore\n* Meilisearch\n* maldet\n* Admin\n* PostgreSQL\n* Meilisearch\n\nThe following groups do not require any cluster group:\n\n* HAProxy\n* KernelCare\n* New Relic\n\nThe following groups may only be used on clusters with the Borg Client group:\n\n* Borg\n\nThe following groups may only be used on clusters with the Borg Server group:\n\n* Borg\n\nThe following groups may only be used on clusters with the Database group:\n\n* MariaDB\n* Meilisearch\n* PostgreSQL\n* Redis\n* Grafana\n* SingleStore\n* Metabase\n* Elasticsearch\n* RabbitMQ\n\nThe following groups may only be used on clusters with the Mail group:\n\n* Dovecot\n* Admin\n\nThe following groups may only be used on clusters with the Redirect group:\n\n* Fast Redirect\n\nThe following groups may only be used on clusters with the Web group:\n\n* Apache\n* Admin\n* nginx\n* PHP\n* Passenger\n* ProFTPD\n* Composer\n* WP-CLI\n* ImageMagick\n* wkhtmltopdf\n* GNU Mailutils\n* Puppeteer\n* LibreOffice\n* Ghostscript\n* FFmpeg\n* Docker\n* maldet\n* NodeJS\n* ClamAV\n\nThe groups Composer and WP-CLI require the PHP group.\n\nThe group Puppeteer requires the NodeJS group. This group only installs the dependencies for Puppeteer; you must install the NodeJS module within your application(s).\n\nThe group KernelCare requires a KernelCare license key to be set on the cluster (`kernelcare_license_key`).\n\nFor the group ClamAV, clamd listens on port 3310. clamd can be accessed from any node in the cluster; it does not have any form of authentication.\nFind the implications on https://github.com/Cisco-Talos/clamav/issues/1169\n\nIf a node with the Admin group also has group(s) that are load-balanced (such as Apache or nginx), the node is not used for domain routers for which it is not explicitly configured by being set as `node_id` (see [Domain Routers](#tag/Domain-Routers)).\nThis allows you to use the Admin node for specific domain routers, e.g. second-tier applications such as serving assets to a CDN, while it is not used for regular traffic.\n",
-        title="Groups",
         unique_items=True,
     )
-    comment: Optional[
-        constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Comment")
-    load_balancer_health_checks_groups_pairs: Dict[
-        NodeGroupEnum, List[NodeGroupEnum]
-    ] = Field(
-        ...,
-        description="When health-checking the primary group (key), check health of additional groups (value). Node must have specified primary group and additional groups. The following primary groups are supported: Apache, nginx, Fast Redirect. The following additional groups are supported: MariaDB, PostgreSQL.\n\nCommon use case: when web server uses local database server, when checking web server health, check database server health.",
-        title="Load Balancer Health Checks Groups Pairs",
-    )
+    comment: Optional[constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)]
+    load_balancer_health_checks_groups_pairs: Dict[NodeGroupEnum, List[NodeGroupEnum]]
 
 
 class NodeCronDependency(CoreApiModel):
-    is_dependency: bool = Field(
-        ...,
-        description="Will the service become unavailable when this node is unreachable?",
-        title="Is Dependency",
-    )
-    impact: Optional[str] = Field(
-        ...,
-        description="What impact will this node becoming unreachable have?",
-        title="Impact",
-    )
-    reason: str = Field(
-        ...,
-        description="Why will the node being unreachable have impact?",
-        title="Reason",
-    )
+    is_dependency: bool
+    impact: Optional[str]
+    reason: str
     cron: CronResource
 
 
 class NodeDaemonDependency(CoreApiModel):
-    is_dependency: bool = Field(
-        ...,
-        description="Will the service become unavailable when this node is unreachable?",
-        title="Is Dependency",
-    )
-    impact: Optional[str] = Field(
-        ...,
-        description="What impact will this node becoming unreachable have?",
-        title="Impact",
-    )
-    reason: str = Field(
-        ...,
-        description="Why will the node being unreachable have impact?",
-        title="Reason",
-    )
+    is_dependency: bool
+    impact: Optional[str]
+    reason: str
     daemon: DaemonResource
 
 
 class NodeHostsEntryDependency(CoreApiModel):
-    is_dependency: bool = Field(
-        ...,
-        description="Will the service become unavailable when this node is unreachable?",
-        title="Is Dependency",
-    )
-    impact: Optional[str] = Field(
-        ...,
-        description="What impact will this node becoming unreachable have?",
-        title="Impact",
-    )
-    reason: str = Field(
-        ...,
-        description="Why will the node being unreachable have impact?",
-        title="Reason",
-    )
+    is_dependency: bool
+    impact: Optional[str]
+    reason: str
     hosts_entry: HostsEntryResource
 
 
@@ -3343,53 +2065,27 @@ class PassengerAppIncludes(CoreApiModel):
 
 
 class PassengerAppResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    port: int = Field(..., title="Port")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    port: int
     app_type: PassengerAppTypeEnum
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    app_root: str = Field(
-        ..., description="Must be in UNIX user home directory.", title="App Root"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    app_root: str
+    unix_user_id: int
     environment: PassengerEnvironmentEnum
     environment_variables: Dict[
         constr(regex=r"^[A-Za-z_]+$"), constr(regex=r"^[ -~]+$")
-    ] = Field(
-        ...,
-        description="Do not store secrets in them in environment variables; they are stored in plain text.",
-        title="Environment Variables",
-    )
-    max_pool_size: int = Field(
-        ...,
-        description="The maximum amount of concurrent processes (also known as workers). For example, to handle 10 requests simultaneously, set this value to 10.\n\nIf you don't know what to set, set to `10`.",
-        title="Max Pool Size",
-    )
-    max_requests: int = Field(
-        ...,
-        description="Each process will restart after N requests. This can prevent memory leaks.\n\nIf you don't know what to set, set to `2000`.",
-        title="Max Requests",
-    )
-    pool_idle_time: int = Field(
-        ...,
-        description="Each process will be stopped after it has not received requests after N seconds. This can decrease memory usage when a busy pool (that started many processes) is no longer busy. However, if all processes are stopped, the first request takes longer as one must be started first.\n\nIf you don't know what to set, set to `10`.",
-        title="Pool Idle Time",
-    )
-    is_namespaced: bool = Field(
-        ...,
-        description="Apply multiple security measures, most notably:\n\n- Dedicated special devices (`/dev/`)\n- When the cluster UNIX user home directory is `/home`, other directories are hidden. This ensures usernames of other UNIX users are not leaked.\n\nThis setting is recommended for shared environments in which users are not trusted.\n",
-        title="Is Namespaced",
-    )
-    cpu_limit: Optional[int] = Field(..., title="Cpu Limit")
+    ]
+    max_pool_size: int
+    max_requests: int
+    pool_idle_time: int
+    is_namespaced: bool
+    cpu_limit: Optional[int]
     includes: PassengerAppIncludes
-    nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = Field(
-        ..., title="Nodejs Version"
-    )
-    startup_file: Optional[str] = Field(..., title="Startup File")
+    nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
+    startup_file: Optional[str]
 
 
 class SSHKeyIncludes(CoreApiModel):
@@ -3398,21 +2094,15 @@ class SSHKeyIncludes(CoreApiModel):
 
 
 class SSHKeyResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    public_key: Optional[str] = Field(..., title="Public Key")
-    private_key: Optional[str] = Field(..., title="Private Key")
-    identity_file_path: Optional[str] = Field(
-        ...,
-        description="Path to private key if the SSH key is a private key.",
-        title="Identity File Path",
-    )
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    public_key: Optional[str]
+    private_key: Optional[str]
+    identity_file_path: Optional[str]
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
+    unix_user_id: int
     includes: SSHKeyIncludes
 
 
@@ -3424,57 +2114,25 @@ class VirtualHostIncludes(CoreApiModel):
 
 
 class VirtualHostResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    unix_user_id: int = Field(..., title="Unix User Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    unix_user_id: int
     server_software_name: VirtualHostServerSoftwareNameEnum
-    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]] = Field(
-        ..., title="Allow Override Directives"
-    )
-    allow_override_option_directives: Optional[
-        List[AllowOverrideOptionDirectiveEnum]
-    ] = Field(..., title="Allow Override Option Directives")
-    domain_root: str = Field(..., title="Domain Root")
-    cluster_id: int = Field(..., title="Cluster Id")
-    domain: str = Field(
-        ...,
-        description="Unique across all virtual hosts and URL redirects. May not be the same as hostname of any node.\n\nA domain router is created for the domain.",
-        title="Domain",
-    )
-    public_root: str = Field(
-        ...,
-        description="This directory is created automatically. It is also periodically scanned for CMSes which will be added to the API.\n\nThis is what you should set to a custom value for systems such as Laravel. Often to a subdirectory such as `public`.\n\nDo not confuse with document root (`document_root`), which is the directory that files will be loaded from when receiving an HTTP request.\n\nMust be inside UNIX user virtual hosts directory + specified domain (e.g. `/home/dropflix/dropflix.io/htdocs`).",
-        title="Public Root",
-    )
+    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]]
+    allow_override_option_directives: Optional[List[AllowOverrideOptionDirectiveEnum]]
+    domain_root: str
+    cluster_id: int
+    domain: str
+    public_root: str
     server_aliases: List[str] = Field(
         ...,
-        description="May not contain `domain`.\n\nEach server alias is unique across all virtual hosts and URL redirects.\n\nA domain router is created for every server alias.",
-        title="Server Aliases",
         unique_items=True,
     )
-    document_root: str = Field(
-        ...,
-        description="When receiving an HTTP request, files will be loaded from this directory.",
-        title="Document Root",
-    )
-    fpm_pool_id: Optional[int] = Field(
-        ...,
-        description="Let the specified FPM pool handle requests to PHP files.\n\nMay not be set when Passenger app (`passenger_app_id`) is set.",
-        title="Fpm Pool Id",
-    )
-    passenger_app_id: Optional[int] = Field(
-        ...,
-        description="Let the specified Passenger app handle requests.\n\nMay only be set when server software is set to nginx (`server_software_name`).\n\nMay not be set when FPM pool (`fpm_pool_id`) is set.",
-        title="Passenger App Id",
-    )
-    custom_config: Optional[
-        constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
-    ] = Field(
-        ...,
-        description="Include custom config snippets using the syntax `{{ custom_config_snippets.name }}`.\n\nReplace `name` with the name of the custom config snippet.\n\nDefault custom config snippets (`is_default`) are inserted after the virtual host specific custom config. To place a default custom config snippet earlier, include it manually in the virtual host specific custom config.\n\nWhen the server software nginx is used, custom configs are added to the `server` context.\n\nIf the virtual host has basic authentication realms, the `auth_basic` and `auth_basic_user_file` directives may not be set in the default context.\n",
-        title="Custom Config",
-    )
+    document_root: str
+    fpm_pool_id: Optional[int]
+    passenger_app_id: Optional[int]
+    custom_config: Optional[constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)]
     includes: VirtualHostIncludes
 
 
@@ -3485,28 +2143,14 @@ class BasicAuthenticationRealmIncludes(CoreApiModel):
 
 
 class BasicAuthenticationRealmResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    directory_path: Optional[str] = Field(
-        ...,
-        description="Specify null for entire virtual host document root. If the specified virtual host uses the server software Apache, must be in its domain root (`domain_root`).",
-        title="Directory Path",
-    )
-    virtual_host_id: int = Field(
-        ...,
-        description="Must have same UNIX user as specified htpasswd file.",
-        title="Virtual Host Id",
-    )
-    name: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    htpasswd_file_id: int = Field(
-        ...,
-        description="Must have same UNIX user as specified virtual host.",
-        title="Htpasswd File Id",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    directory_path: Optional[str]
+    virtual_host_id: int
+    name: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64)
+    htpasswd_file_id: int
     includes: BasicAuthenticationRealmIncludes
 
 
@@ -3518,16 +2162,14 @@ class BorgArchiveIncludes(CoreApiModel):
 
 
 class BorgArchiveResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    database_id: Optional[int] = Field(..., title="Database Id")
-    unix_user_id: Optional[int] = Field(..., title="Unix User Id")
-    cluster_id: int = Field(..., title="Cluster Id")
-    borg_repository_id: int = Field(..., title="Borg Repository Id")
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    database_id: Optional[int]
+    unix_user_id: Optional[int]
+    cluster_id: int
+    borg_repository_id: int
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     includes: BorgArchiveIncludes
 
 
@@ -3537,17 +2179,13 @@ class CMSIncludes(CoreApiModel):
 
 
 class CMSResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
     software_name: CMSSoftwareNameEnum
-    is_manually_created: bool = Field(
-        ...,
-        description="Value is `false` when CMS was detected automatically. Must be set to `true` in other cases.",
-        title="Is Manually Created",
-    )
-    virtual_host_id: int = Field(..., title="Virtual Host Id")
+    is_manually_created: bool
+    virtual_host_id: int
     includes: CMSIncludes
 
 
@@ -3557,24 +2195,20 @@ class CertificateManagerIncludes(CoreApiModel):
 
 
 class CertificateManagerResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    main_common_name: str = Field(..., title="Main Common Name")
-    certificate_id: Optional[int] = Field(..., title="Certificate Id")
-    last_request_task_collection_uuid: Optional[UUID4] = Field(
-        ..., title="Last Request Task Collection Uuid"
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    main_common_name: str
+    certificate_id: Optional[int]
+    last_request_task_collection_uuid: Optional[UUID4]
     common_names: List[str] = Field(
         ...,
-        description="May not contain wildcard domains.\n\nEach common name is unique across all certificate managers.",
         min_items=1,
-        title="Common Names",
         unique_items=True,
     )
     provider_name: CertificateProviderNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    request_callback_url: Optional[AnyUrl] = Field(..., title="Request Callback Url")
+    cluster_id: int
+    request_callback_url: Optional[AnyUrl]
     includes: CertificateManagerIncludes
 
 
@@ -3588,35 +2222,19 @@ class DomainRouterIncludes(CoreApiModel):
 
 
 class DomainRouterResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    domain: str = Field(..., title="Domain")
-    virtual_host_id: Optional[int] = Field(
-        ...,
-        description="May only be set when `category` is `Virtual Host`.",
-        title="Virtual Host Id",
-    )
-    url_redirect_id: Optional[int] = Field(
-        ...,
-        description="May only be set when `category` is `URL Redirect`.",
-        title="Url Redirect Id",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    domain: str
+    virtual_host_id: Optional[int]
+    url_redirect_id: Optional[int]
     category: DomainRouterCategoryEnum
-    cluster_id: int = Field(..., title="Cluster Id")
-    node_id: Optional[int] = Field(
-        ...,
-        description="\nWhen set, traffic is routed to the specified node rather than load-balanced over all available nodes (default). This prevents resources (such as FPM pools) from being active on multiple nodes, which can decrease costs.\n\nIf the node is unavailable, traffic is failed over to another node.\n\nIf a node with the Admin group also has group(s) that are load-balanced (such as Apache or nginx), the node is not used for domain routers for which it is not explicitly configured by being set as `node_id`.\nThis allows you to use the Admin node for specific domain routers, e.g. second-tier applications such as serving assets to a CDN, while it is not used for regular traffic.\n",
-        title="Node Id",
-    )
-    certificate_id: Optional[int] = Field(..., title="Certificate Id")
-    security_txt_policy_id: Optional[int] = Field(..., title="Security Txt Policy Id")
-    firewall_groups_ids: Optional[List[int]] = Field(
-        ...,
-        description="Only IP networks in the specified firewall groups may access this domain router.\n\nIf this is null, all IP networks may.",
-        title="Firewall Groups Ids",
-    )
-    force_ssl: bool = Field(..., title="Force Ssl")
+    cluster_id: int
+    node_id: Optional[int]
+    certificate_id: Optional[int]
+    security_txt_policy_id: Optional[int]
+    firewall_groups_ids: Optional[List[int]]
+    force_ssl: bool
     includes: DomainRouterIncludes
 
 
@@ -3626,24 +2244,14 @@ class MailAccountIncludes(CoreApiModel):
 
 
 class MailAccountResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255) = Field(
-        ..., title="Password"
-    )
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail alias in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    cluster_id: int = Field(..., title="Cluster Id")
-    quota: Optional[int] = Field(
-        ...,
-        description="When the quota has been reached, emails will be bounced.\n\nIn MB.",
-        title="Quota",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
+    mail_domain_id: int
+    cluster_id: int
+    quota: Optional[int]
     includes: MailAccountIncludes
 
 
@@ -3653,38 +2261,20 @@ class MailAliasIncludes(CoreApiModel):
 
 
 class MailAliasResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    cluster_id: int = Field(..., title="Cluster Id")
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail account in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    forward_email_addresses: List[EmailStr] = Field(
-        ..., min_items=1, title="Forward Email Addresses", unique_items=True
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
+    mail_domain_id: int
+    forward_email_addresses: List[EmailStr] = Field(..., min_items=1, unique_items=True)
     includes: MailAliasIncludes
 
 
 class NodeDomainRouterDependency(CoreApiModel):
-    is_dependency: bool = Field(
-        ...,
-        description="Will the service become unavailable when this node is unreachable?",
-        title="Is Dependency",
-    )
-    impact: Optional[str] = Field(
-        ...,
-        description="What impact will this node becoming unreachable have?",
-        title="Impact",
-    )
-    reason: str = Field(
-        ...,
-        description="Why will the node being unreachable have impact?",
-        title="Reason",
-    )
+    is_dependency: bool
+    impact: Optional[str]
+    reason: str
     domain_router: DomainRouterResource
 
 
@@ -3749,227 +2339,189 @@ class TombstoneDataCustomConfigIncludes(BaseModel):
 
 
 class TombstoneDataDatabaseUser(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["database_user"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
+    id: int
+    data_type: Literal["database_user"]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     host: Optional[HostEnum]
     server_software_name: DatabaseServerSoftwareNameEnum
     includes: TombstoneDataDatabaseUserIncludes
 
 
 class TombstoneDataDatabase(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["database"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63) = Field(
-        ..., title="Name"
-    )
+    id: int
+    data_type: Literal["database"]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataDatabaseIncludes
 
 
 class TombstoneDataDatabaseUserGrantIncludes(BaseModel):
-    id: int = Field(..., title="Id")
-    database: Union[DatabaseResource, TombstoneDataDatabase] = Field(
-        ..., title="Database"
-    )
-    database_user: Union[DatabaseUserResource, TombstoneDataDatabaseUser] = Field(
-        ..., title="Database User"
-    )
+    id: int
+    database: Union[DatabaseResource, TombstoneDataDatabase]
+    database_user: Union[DatabaseUserResource, TombstoneDataDatabaseUser]
 
 
 class TombstoneDataDatabaseUserGrant(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["database_user_grant"] = Field(..., title="Data Type")
-    table_name: Optional[
-        constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    ] = Field(..., title="Table Name")
+    id: int
+    data_type: Literal["database_user_grant"]
+    table_name: Optional[constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)]
     privilege_name: MariaDBPrivilegeEnum
-    database_id: int = Field(..., title="Database Id")
-    database_user_id: int = Field(..., title="Database User Id")
+    database_id: int
+    database_user_id: int
     includes: TombstoneDataDatabaseUserGrantIncludes
 
 
 class TombstoneDataDomainRouter(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["domain_router"] = Field(..., title="Data Type")
-    domain: str = Field(..., title="Domain")
+    id: int
+    data_type: Literal["domain_router"]
+    domain: str
     includes: TombstoneDataDomainRouterIncludes
 
 
 class TombstoneDataRootSSHKey(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["root_ssh_key"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    is_private_key: bool = Field(..., title="Is Private Key")
+    id: int
+    data_type: Literal["root_ssh_key"]
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    is_private_key: bool
     includes: TombstoneDataRootSSHKeyIncludes
 
 
 class TombstoneDataSSHKey(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["ssh_key"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    identity_file_path: Optional[str] = Field(..., title="Identity File Path")
+    id: int
+    data_type: Literal["ssh_key"]
+    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    identity_file_path: Optional[str]
     includes: TombstoneDataSSHKeyIncludes
 
 
 class TombstoneDataMailHostname(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["mail_hostname"] = Field(..., title="Data Type")
-    domain: str = Field(..., title="Domain")
+    id: int
+    data_type: Literal["mail_hostname"]
+    domain: str
     includes: TombstoneDataMailHostnameIncludes
 
 
 class TombstoneDataCertificate(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["certificate"] = Field(..., title="Data Type")
+    id: int
+    data_type: Literal["certificate"]
     includes: TombstoneDataCertificateIncludes
 
 
 class TombstoneDataDaemon(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["daemon"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    nodes_ids: List[int] = Field(..., min_items=1, title="Nodes Ids", unique_items=True)
+    id: int
+    data_type: Literal["daemon"]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
     includes: TombstoneDataDaemonIncludes
 
 
 class TombstoneDataFPMPool(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["fpm_pool"] = Field(..., title="Data Type")
-    version: str = Field(..., title="Version")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
+    id: int
+    data_type: Literal["fpm_pool"]
+    version: str
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     includes: TombstoneDataFPMPoolIncludes
 
 
 class TombstoneDataPassengerApp(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["passenger_app"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    app_root: str = Field(..., title="App Root")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    id: int
+    data_type: Literal["passenger_app"]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    app_root: str
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataPassengerAppIncludes
 
 
 class TombstoneDataRedisInstance(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["redis_instance"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    id: int
+    data_type: Literal["redis_instance"]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataRedisInstanceIncludes
 
 
 class TombstoneDataUNIXUser(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["unix_user"] = Field(..., title="Data Type")
-    home_directory: str = Field(..., title="Home Directory")
-    mail_domains_directory: Optional[str] = Field(..., title="Mail Domains Directory")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    id: int
+    data_type: Literal["unix_user"]
+    home_directory: str
+    mail_domains_directory: Optional[str]
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataUNIXUserIncludes
 
 
 class TombstoneDataCronIncludes(BaseModel):
     node: NodeResource
-    unix_user: Union[TombstoneDataUNIXUser, UNIXUserResource] = Field(
-        ..., title="Unix User"
-    )
+    unix_user: Union[TombstoneDataUNIXUser, UNIXUserResource]
 
 
 class TombstoneDataHtpasswdFileIncludes(BaseModel):
-    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser] = Field(
-        ..., title="Unix User"
-    )
+    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser]
 
 
 class TombstoneDataHtpasswdFile(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["htpasswd_file"] = Field(..., title="Data Type")
-    unix_user_id: int = Field(..., title="Unix User Id")
+    id: int
+    data_type: Literal["htpasswd_file"]
+    unix_user_id: int
     includes: TombstoneDataHtpasswdFileIncludes
 
 
 class TombstoneDataMailDomainIncludes(BaseModel):
-    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser] = Field(
-        ..., title="Unix User"
-    )
+    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser]
 
 
 class TombstoneDataMailDomain(BaseModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["mail_domain"] = Field(..., title="Data Type")
-    domain: str = Field(..., title="Domain")
-    unix_user_id: int = Field(..., title="Unix User Id")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    id: int
+    data_type: Literal["mail_domain"]
+    domain: str
+    unix_user_id: int
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataMailDomainIncludes
 
 
 class TombstoneDataMailAccountIncludes(BaseModel):
-    mail_domain: Union[MailDomainResource, TombstoneDataMailDomain] = Field(
-        ..., title="Mail Domain"
-    )
+    mail_domain: Union[MailDomainResource, TombstoneDataMailDomain]
 
 
 class TombstoneDataMailAccount(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["mail_account"] = Field(..., title="Data Type")
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64) = Field(
-        ...,
-        description="May not be in use by mail alias in the same mail domain.",
-        title="Local Part",
-    )
-    mail_domain_id: int = Field(..., title="Mail Domain Id")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    id: int
+    data_type: Literal["mail_account"]
+    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
+    mail_domain_id: int
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataMailAccountIncludes
 
 
 class TombstoneDataCron(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["cron"] = Field(..., title="Data Type")
-    node_id: int = Field(..., title="Node Id")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64) = Field(
-        ..., title="Name"
-    )
-    unix_user_id: int = Field(..., title="Unix User Id")
+    id: int
+    data_type: Literal["cron"]
+    node_id: int
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    unix_user_id: int
     includes: TombstoneDataCronIncludes
 
 
 class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["unix_user_rabbitmq_credentials"] = Field(..., title="Data Type")
+    id: int
+    data_type: Literal["unix_user_rabbitmq_credentials"]
     rabbitmq_virtual_host_name: constr(
         regex=r"^[a-z0-9-.]+$", min_length=1, max_length=32
-    ) = Field(..., title="Rabbitmq Virtual Host Name")
+    )
     includes: TombstoneDataUNIXUserRabbitMQCredentialsIncludes
 
 
 class TombstoneDataVirtualHost(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["virtual_host"] = Field(..., title="Data Type")
-    domain_root: str = Field(..., title="Domain Root")
-    delete_on_cluster: Optional[bool] = Field(False, title="Delete On Cluster")
+    id: int
+    data_type: Literal["virtual_host"]
+    domain_root: str
+    delete_on_cluster: Optional[bool] = False
     includes: TombstoneDataVirtualHostIncludes
 
 
 class TombstoneDataCustomConfig(CoreApiModel):
-    id: int = Field(..., title="Id")
-    data_type: Literal["custom_config"] = Field(..., title="Data Type")
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128) = Field(
-        ..., title="Name"
-    )
+    id: int
+    data_type: Literal["custom_config"]
+    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
     includes: TombstoneDataCustomConfigIncludes
 
 
@@ -3978,9 +2530,9 @@ class TombstoneIncludes(CoreApiModel):
 
 
 class TombstoneResource(CoreApiModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
+    id: int
+    created_at: datetime
+    updated_at: datetime
     data: Union[
         TombstoneDataPassengerApp,
         TombstoneDataCertificate,
@@ -4002,43 +2554,42 @@ class TombstoneResource(CoreApiModel):
         TombstoneDataMailDomain,
         TombstoneDataMailHostname,
         TombstoneDataCustomConfig,
-    ] = Field(..., discriminator="data_type", title="Data")
-    object_id: int = Field(..., title="Object Id")
+    ] = Field(
+        ...,
+        discriminator="data_type",
+    )
+    object_id: int
     object_model_name: ObjectModelNameEnum
-    cluster_id: int = Field(..., title="Cluster Id")
+    cluster_id: int
     includes: TombstoneIncludes
 
 
 class NodeDependenciesResource(CoreApiModel):
-    hostname: str = Field(..., title="Hostname")
-    groups: List[NodeGroupDependency] = Field(..., title="Groups")
-    domain_routers: List[NodeDomainRouterDependency] = Field(
-        ..., title="Domain Routers"
-    )
-    daemons: List[NodeDaemonDependency] = Field(..., title="Daemons")
-    crons: List[NodeCronDependency] = Field(..., title="Crons")
-    hosts_entries: List[NodeHostsEntryDependency] = Field(..., title="Hosts Entries")
+    hostname: str
+    groups: List[NodeGroupDependency]
+    domain_routers: List[NodeDomainRouterDependency]
+    daemons: List[NodeDaemonDependency]
+    crons: List[NodeCronDependency]
+    hosts_entries: List[NodeHostsEntryDependency]
 
 
 class DaemonLogResource(BaseModel):
-    application_name: constr(min_length=1, max_length=65535) = Field(
-        ..., title="Application Name"
-    )
-    priority: int = Field(..., title="Priority")
-    pid: int = Field(..., title="Pid")
-    message: constr(min_length=1, max_length=65535) = Field(..., title="Message")
-    node_hostname: str = Field(..., title="Node Hostname")
-    timestamp: datetime = Field(..., title="Timestamp")
+    application_name: constr(min_length=1, max_length=65535)
+    priority: int
+    pid: int
+    message: constr(min_length=1, max_length=65535)
+    node_hostname: str
+    timestamp: datetime
 
 
 class NodeSpecificationsResource(BaseModel):
-    hostname: str = Field(..., title="Hostname")
-    memory_mib: int = Field(..., title="Memory Mib")
-    cpu_cores: int = Field(..., title="Cpu Cores")
-    disk_gib: int = Field(..., title="Disk Gib")
-    usable_cpu_cores: int = Field(..., title="Usable Cpu Cores")
-    usable_memory_mib: int = Field(..., title="Usable Memory Mib")
-    usable_disk_gib: int = Field(..., title="Usable Disk Gib")
+    hostname: str
+    memory_mib: int
+    cpu_cores: int
+    disk_gib: int
+    usable_cpu_cores: int
+    usable_memory_mib: int
+    usable_disk_gib: int
 
 
 class RequestLogIncludes(BaseModel):
@@ -4046,20 +2597,16 @@ class RequestLogIncludes(BaseModel):
 
 
 class RequestLogResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    ip_address: str = Field(..., title="Ip Address")
-    path: str = Field(..., title="Path")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    ip_address: str
+    path: str
     method: HTTPMethod
-    query_parameters: Dict[str, str] = Field(..., title="Query Parameters")
-    body: Any = Field(
-        ...,
-        description="JSON body if specified and valid on request. Null if no JSON specified, or invalid.",
-        title="Body",
-    )
-    api_user_id: int = Field(..., title="Api User Id")
-    request_id: UUID4 = Field(..., title="Request Id")
+    query_parameters: Dict[str, str]
+    body: Any
+    api_user_id: int
+    request_id: UUID4
     includes: RequestLogIncludes
 
 
@@ -4068,18 +2615,18 @@ class ObjectLogIncludes(BaseModel):
 
 
 class ObjectLogResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    object_id: int = Field(..., title="Object Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    object_id: int
     object_model_name: Optional[
         constr(regex=r"^[a-zA-Z]+$", min_length=1, max_length=255)
-    ] = Field(..., title="Object Model Name")
-    request_id: Optional[UUID4] = Field(..., title="Request Id")
+    ]
+    request_id: Optional[UUID4]
     type: ObjectLogTypeEnum
     causer_type: Optional[CauserTypeEnum]
-    causer_id: Optional[int] = Field(..., title="Causer Id")
-    customer_id: Optional[int] = Field(..., title="Customer Id")
+    causer_id: Optional[int]
+    customer_id: Optional[int]
     includes: ObjectLogIncludes
 
 
@@ -4088,39 +2635,37 @@ class SimpleSpecificationsResource(RootModelCollectionMixin, BaseModel):  # type
 
 
 class ConcreteSpecificationSatisfyResult(BaseModel):
-    satisfied: bool = Field(..., title="Satisfied")
-    requirement: str = Field(..., title="Requirement")
+    satisfied: bool
+    requirement: str
 
 
 class ConcreteSpecificationSatisfyResultResource(BaseModel):
-    satisfied: bool = Field(..., title="Satisfied")
-    requirement: str = Field(..., title="Requirement")
+    satisfied: bool
+    requirement: str
 
 
 class CompositeSpecificationSatisfyResult(BaseModel):
-    name: str = Field(..., title="Name")
+    name: str
     results: List[
         Union[ConcreteSpecificationSatisfyResult, "CompositeSpecificationSatisfyResult"]
-    ] = Field(..., title="Results")
+    ]
     mode: SpecificationMode
 
 
 class CompositeSpecificationSatisfyResultResource(BaseModel):
-    name: str = Field(..., title="Name")
-    satisfied: bool = Field(..., title="Satisfied")
+    name: str
+    satisfied: bool
     results: List[
         Union[
             ConcreteSpecificationSatisfyResultResource,
             "CompositeSpecificationSatisfyResultResource",
         ]
-    ] = Field(..., title="Results")
+    ]
     mode: SpecificationMode
 
 
 class ClusterBorgPropertiesCreateRequest(BaseModel):
-    automatic_borg_repositories_prune_enabled: bool = Field(
-        True, title="Automatic Borg Repositories Prune Enabled"
-    )
+    automatic_borg_repositories_prune_enabled: bool = True
 
 
 class ClusterBorgPropertiesIncludes(BaseModel):
@@ -4128,27 +2673,23 @@ class ClusterBorgPropertiesIncludes(BaseModel):
 
 
 class ClusterBorgPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    automatic_borg_repositories_prune_enabled: bool = Field(
-        ..., title="Automatic Borg Repositories Prune Enabled"
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    automatic_borg_repositories_prune_enabled: bool
+    cluster_id: int
     includes: ClusterBorgPropertiesIncludes
 
 
 class ClusterBorgPropertiesUpdateRequest(BaseModel):
-    automatic_borg_repositories_prune_enabled: Optional[bool] = Field(
-        None, title="Automatic Borg Repositories Prune Enabled"
-    )
+    automatic_borg_repositories_prune_enabled: Optional[bool] = None
 
 
 class ClusterElasticsearchPropertiesCreateRequest(BaseModel):
     elasticsearch_default_users_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
-    ) = Field(..., title="Elasticsearch Default Users Password")
-    kibana_domain: str = Field(..., title="Kibana Domain")
+    )
+    kibana_domain: str
 
 
 class ClusterElasticsearchPropertiesIncludes(BaseModel):
@@ -4156,30 +2697,26 @@ class ClusterElasticsearchPropertiesIncludes(BaseModel):
 
 
 class ClusterElasticsearchPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
+    id: int
+    created_at: datetime
+    updated_at: datetime
     elasticsearch_default_users_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
-    ) = Field(..., title="Elasticsearch Default Users Password")
-    kibana_domain: str = Field(..., title="Kibana Domain")
-    cluster_id: int = Field(..., title="Cluster Id")
+    )
+    kibana_domain: str
+    cluster_id: int
     includes: ClusterElasticsearchPropertiesIncludes
 
 
 class ClusterElasticsearchPropertiesUpdateRequest(BaseModel):
     elasticsearch_default_users_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
-    ] = Field(None, title="Elasticsearch Default Users Password")
-    kibana_domain: Optional[str] = Field(None, title="Kibana Domain")
+    ] = None
+    kibana_domain: Optional[str] = None
 
 
 class ClusterFirewallPropertiesCreateRequest(BaseModel):
-    firewall_rules_external_providers_enabled: bool = Field(
-        False,
-        description="Allows for using 'external_provider_name' with firewall rules.\n\nCannot be disabled once enabled.",
-        title="Firewall Rules External Providers Enabled",
-    )
+    firewall_rules_external_providers_enabled: bool = False
 
 
 class ClusterFirewallPropertiesIncludes(BaseModel):
@@ -4187,28 +2724,20 @@ class ClusterFirewallPropertiesIncludes(BaseModel):
 
 
 class ClusterFirewallPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    firewall_rules_external_providers_enabled: bool = Field(
-        ...,
-        description="Allows for using 'external_provider_name' with firewall rules.\n\nCannot be disabled once enabled.",
-        title="Firewall Rules External Providers Enabled",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    firewall_rules_external_providers_enabled: bool
+    cluster_id: int
     includes: ClusterFirewallPropertiesIncludes
 
 
 class ClusterFirewallPropertiesUpdateRequest(BaseModel):
-    firewall_rules_external_providers_enabled: Optional[bool] = Field(
-        None,
-        description="Allows for using 'external_provider_name' with firewall rules.\n\nCannot be disabled once enabled.",
-        title="Firewall Rules External Providers Enabled",
-    )
+    firewall_rules_external_providers_enabled: Optional[bool] = None
 
 
 class ClusterGrafanaPropertiesCreateRequest(BaseModel):
-    grafana_domain: str = Field(..., title="Grafana Domain")
+    grafana_domain: str
 
 
 class ClusterGrafanaPropertiesIncludes(BaseModel):
@@ -4216,22 +2745,22 @@ class ClusterGrafanaPropertiesIncludes(BaseModel):
 
 
 class ClusterGrafanaPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    grafana_domain: str = Field(..., title="Grafana Domain")
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    grafana_domain: str
+    cluster_id: int
     includes: ClusterGrafanaPropertiesIncludes
 
 
 class ClusterGrafanaPropertiesUpdateRequest(BaseModel):
-    grafana_domain: Optional[str] = Field(None, title="Grafana Domain")
+    grafana_domain: Optional[str] = None
 
 
 class ClusterKernelcarePropertiesCreateRequest(BaseModel):
     kernelcare_license_key: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16
-    ) = Field(..., title="Kernelcare License Key")
+    )
 
 
 class ClusterKernelcarePropertiesIncludes(BaseModel):
@@ -4239,20 +2768,20 @@ class ClusterKernelcarePropertiesIncludes(BaseModel):
 
 
 class ClusterKernelcarePropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
+    id: int
+    created_at: datetime
+    updated_at: datetime
     kernelcare_license_key: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16
-    ) = Field(..., title="Kernelcare License Key")
-    cluster_id: int = Field(..., title="Cluster Id")
+    )
+    cluster_id: int
     includes: ClusterKernelcarePropertiesIncludes
 
 
 class ClusterKernelcarePropertiesUpdateRequest(BaseModel):
     kernelcare_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16)
-    ] = Field(None, title="Kernelcare License Key")
+    ] = None
 
 
 class ClusterLoadBalancingPropertiesIncludes(BaseModel):
@@ -4260,17 +2789,9 @@ class ClusterLoadBalancingPropertiesIncludes(BaseModel):
 
 
 class ClusterMariadbPropertiesCreateRequest(BaseModel):
-    mariadb_version: str = Field(..., title="Mariadb Version")
-    mariadb_backup_interval: conint(ge=1, le=24) = Field(
-        24,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Mariadb Backup Interval",
-    )
-    mariadb_backup_local_retention: conint(ge=1, le=24) = Field(
-        3,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Mariadb Backup Local Retention",
-    )
+    mariadb_version: str
+    mariadb_backup_interval: conint(ge=1, le=24) = 24
+    mariadb_backup_local_retention: conint(ge=1, le=24) = 3
 
 
 class ClusterMariadbPropertiesIncludes(BaseModel):
@@ -4278,38 +2799,20 @@ class ClusterMariadbPropertiesIncludes(BaseModel):
 
 
 class ClusterMariadbPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    mariadb_version: str = Field(..., title="Mariadb Version")
-    mariadb_cluster_name: constr(regex=r"^[a-z.]+$", min_length=1, max_length=64) = (
-        Field(..., description="Only used internally.", title="Mariadb Cluster Name")
-    )
-    mariadb_backup_interval: conint(ge=1, le=24) = Field(
-        ...,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Mariadb Backup Interval",
-    )
-    mariadb_backup_local_retention: conint(ge=1, le=24) = Field(
-        ...,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available..",
-        title="Mariadb Backup Local Retention",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    mariadb_version: str
+    mariadb_cluster_name: constr(regex=r"^[a-z.]+$", min_length=1, max_length=64)
+    mariadb_backup_interval: conint(ge=1, le=24)
+    mariadb_backup_local_retention: conint(ge=1, le=24)
+    cluster_id: int
     includes: ClusterMariadbPropertiesIncludes
 
 
 class ClusterMariadbPropertiesUpdateRequest(BaseModel):
-    mariadb_backup_interval: Optional[conint(ge=1, le=24)] = Field(
-        None,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Mariadb Backup Interval",
-    )
-    mariadb_backup_local_retention: Optional[conint(ge=1, le=24)] = Field(
-        None,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available..",
-        title="Mariadb Backup Local Retention",
-    )
+    mariadb_backup_interval: Optional[conint(ge=1, le=24)] = None
+    mariadb_backup_local_retention: Optional[conint(ge=1, le=24)] = None
 
 
 class ClusterMeilisearchPropertiesIncludes(BaseModel):
@@ -4317,7 +2820,7 @@ class ClusterMeilisearchPropertiesIncludes(BaseModel):
 
 
 class ClusterMetabasePropertiesCreateRequest(BaseModel):
-    metabase_domain: str = Field(..., title="Metabase Domain")
+    metabase_domain: str
 
 
 class ClusterMetabasePropertiesIncludes(BaseModel):
@@ -4325,47 +2828,29 @@ class ClusterMetabasePropertiesIncludes(BaseModel):
 
 
 class ClusterMetabasePropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    metabase_domain: str = Field(..., title="Metabase Domain")
-    metabase_database_password: constr(
-        regex=r"^[ -~]+$", min_length=24, max_length=255
-    ) = Field(
-        ...,
-        description="Password for MySQL user used by Metabase.\n\nThe MySQL user is created automatically.",
-        title="Metabase Database Password",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    metabase_domain: str
+    metabase_database_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
+    cluster_id: int
     includes: ClusterMetabasePropertiesIncludes
 
 
 class ClusterMetabasePropertiesUpdateRequest(BaseModel):
-    metabase_domain: Optional[str] = Field(None, title="Metabase Domain")
+    metabase_domain: Optional[str] = None
     metabase_database_password: Optional[
         constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    ] = Field(
-        None,
-        description="Password for MySQL user used by Metabase.\n\nThe MySQL user is created automatically.",
-        title="Metabase Database Password",
-    )
+    ] = None
 
 
 class ClusterNewRelicPropertiesCreateRequest(BaseModel):
     new_relic_apm_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
-    ] = Field(
-        None,
-        description="Get license key from https://one.eu.newrelic.com/api-keys.",
-        title="New Relic Apm License Key",
-    )
+    ] = None
     new_relic_infrastructure_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
-    ] = Field(
-        None,
-        description="Get license key from https://one.eu.newrelic.com/api-keys.",
-        title="New Relic Infrastructure License Key",
-    )
+    ] = None
 
 
 class ClusterNewRelicPropertiesIncludes(BaseModel):
@@ -4373,70 +2858,38 @@ class ClusterNewRelicPropertiesIncludes(BaseModel):
 
 
 class ClusterNewRelicPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    new_relic_mariadb_password: constr(
-        regex=r"^[ -~]+$", min_length=24, max_length=255
-    ) = Field(
-        ...,
-        description="Password for MySQL user used by New Relic.\n\nThe MySQL user is created automatically.",
-        title="New Relic Mariadb Password",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    new_relic_mariadb_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     new_relic_apm_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
-    ] = Field(
-        ...,
-        description="Get license key from https://one.eu.newrelic.com/api-keys.",
-        title="New Relic Apm License Key",
-    )
+    ]
     new_relic_infrastructure_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
-    ] = Field(
-        ...,
-        description="Get license key from https://one.eu.newrelic.com/api-keys.",
-        title="New Relic Infrastructure License Key",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    ]
+    cluster_id: int
     includes: ClusterNewRelicPropertiesIncludes
 
 
 class ClusterNewRelicPropertiesUpdateRequest(BaseModel):
     new_relic_mariadb_password: Optional[
         constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    ] = Field(
-        None,
-        description="Password for MySQL user used by New Relic.\n\nThe MySQL user is created automatically.",
-        title="New Relic Mariadb Password",
-    )
+    ] = None
     new_relic_apm_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
-    ] = Field(
-        None,
-        description="Get license key from https://one.eu.newrelic.com/api-keys.",
-        title="New Relic Apm License Key",
-    )
+    ] = None
     new_relic_infrastructure_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
-    ] = Field(
-        None,
-        description="Get license key from https://one.eu.newrelic.com/api-keys.",
-        title="New Relic Infrastructure License Key",
-    )
+    ] = None
 
 
 class ClusterNodejsPropertiesCreateRequest(BaseModel):
     nodejs_versions: List[str] = Field(
         ...,
-        description="Cluster has `nodejs_version` and `nodejs_versions` attributes. For information on the difference, see 'Differences between NodeJS versions'.\n\nWhen removing a NodeJS version, it may no longer be in use as version for Passenger apps, and default NodeJS version for UNIX users.\n\nFind all available NodeJS versions on https://nodejs.org/dist/index.tab (first column).",
-        title="Nodejs Versions",
         unique_items=True,
     )
-    nodejs_version: Optional[int] = Field(
-        None,
-        description="Cluster has `nodejs_version` and `nodejs_versions` attributes. For information on the difference, see 'Differences between NodeJS versions'.\n\nSpecify only the major version.",
-        title="Nodejs Version",
-    )
+    nodejs_version: Optional[int] = None
 
 
 class ClusterNodejsPropertiesIncludes(BaseModel):
@@ -4444,38 +2897,24 @@ class ClusterNodejsPropertiesIncludes(BaseModel):
 
 
 class ClusterNodejsPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    nodejs_version: Optional[int] = Field(
-        ...,
-        description="Cluster has `nodejs_version` and `nodejs_versions` attributes. For information on the difference, see 'Differences between NodeJS versions'.\n\nSpecify only the major version.",
-        title="Nodejs Version",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    nodejs_version: Optional[int]
     nodejs_versions: List[NodejsVersion] = Field(
         ...,
-        description="Cluster has `nodejs_version` and `nodejs_versions` attributes. For information on the difference, see 'Differences between NodeJS versions'.\n\nWhen removing a NodeJS version, it may no longer be in use as version for Passenger apps, and default NodeJS version for UNIX users.\n\nFind all available NodeJS versions on https://nodejs.org/dist/index.tab (first column).",
-        title="Nodejs Versions",
         unique_items=True,
     )
-    cluster_id: int = Field(..., title="Cluster Id")
+    cluster_id: int
     includes: ClusterNodejsPropertiesIncludes
 
 
 class ClusterNodejsPropertiesUpdateRequest(BaseModel):
-    nodejs_versions: Optional[List[str]] = Field(
-        None,
-        description="Cluster has `nodejs_version` and `nodejs_versions` attributes. For information on the difference, see 'Differences between NodeJS versions'.\n\nWhen removing a NodeJS version, it may no longer be in use as version for Passenger apps, and default NodeJS version for UNIX users.\n\nFind all available NodeJS versions on https://nodejs.org/dist/index.tab (first column).",
-        title="Nodejs Versions",
-    )
+    nodejs_versions: Optional[List[str]] = None
 
 
 class ClusterOsPropertiesCreateRequest(BaseModel):
-    automatic_upgrades_enabled: bool = Field(
-        False,
-        description="Automatically apply certain higher-severity updates.\n\nWe recommend enabling this for shared hosting to reduce the chance of privilege escalation.",
-        title="Automatic Upgrades Enabled",
-    )
+    automatic_upgrades_enabled: bool = False
 
 
 class ClusterOsPropertiesIncludes(BaseModel):
@@ -4483,24 +2922,16 @@ class ClusterOsPropertiesIncludes(BaseModel):
 
 
 class ClusterOsPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    automatic_upgrades_enabled: bool = Field(
-        ...,
-        description="Automatically apply certain higher-severity updates.\n\nWe recommend enabling this for shared hosting to reduce the chance of privilege escalation.",
-        title="Automatic Upgrades Enabled",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    automatic_upgrades_enabled: bool
+    cluster_id: int
     includes: ClusterOsPropertiesIncludes
 
 
 class ClusterOsPropertiesUpdateRequest(BaseModel):
-    automatic_upgrades_enabled: Optional[bool] = Field(
-        None,
-        description="Automatically apply certain higher-severity updates.\n\nWe recommend enabling this for shared hosting to reduce the chance of privilege escalation.",
-        title="Automatic Upgrades Enabled",
-    )
+    automatic_upgrades_enabled: Optional[bool] = None
 
 
 class ClusterPhpPropertiesIncludes(BaseModel):
@@ -4508,17 +2939,9 @@ class ClusterPhpPropertiesIncludes(BaseModel):
 
 
 class ClusterPostgresqlPropertiesCreateRequest(BaseModel):
-    postgresql_version: int = Field(..., title="Postgresql Version")
-    postgresql_backup_local_retention: conint(ge=1, le=24) = Field(
-        3,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Postgresql Backup Local Retention",
-    )
-    postgresql_backup_interval: conint(ge=1, le=24) = Field(
-        24,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Postgresql Backup Interval",
-    )
+    postgresql_version: int
+    postgresql_backup_local_retention: conint(ge=1, le=24) = 3
+    postgresql_backup_interval: conint(ge=1, le=24) = 24
 
 
 class ClusterPostgresqlPropertiesIncludes(BaseModel):
@@ -4526,42 +2949,26 @@ class ClusterPostgresqlPropertiesIncludes(BaseModel):
 
 
 class ClusterPostgresqlPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    postgresql_version: int = Field(..., title="Postgresql Version")
-    postgresql_backup_local_retention: conint(ge=1, le=24) = Field(
-        ...,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Postgresql Backup Local Retention",
-    )
-    postgresql_backup_interval: conint(ge=1, le=24) = Field(
-        ...,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Postgresql Backup Interval",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    postgresql_version: int
+    postgresql_backup_local_retention: conint(ge=1, le=24)
+    postgresql_backup_interval: conint(ge=1, le=24)
+    cluster_id: int
     includes: ClusterPostgresqlPropertiesIncludes
 
 
 class ClusterPostgresqlPropertiesUpdateRequest(BaseModel):
-    postgresql_backup_local_retention: Optional[conint(ge=1, le=24)] = Field(
-        None,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Postgresql Backup Local Retention",
-    )
-    postgresql_backup_interval: Optional[conint(ge=1, le=24)] = Field(
-        None,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Postgresql Backup Interval",
-    )
+    postgresql_backup_local_retention: Optional[conint(ge=1, le=24)] = None
+    postgresql_backup_interval: Optional[conint(ge=1, le=24)] = None
 
 
 class ClusterRabbitmqPropertiesCreateRequest(BaseModel):
     rabbitmq_admin_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
-    ) = Field(..., title="Rabbitmq Admin Password")
-    rabbitmq_management_domain: str = Field(..., title="Rabbitmq Management Domain")
+    )
+    rabbitmq_management_domain: str
 
 
 class ClusterRabbitmqPropertiesIncludes(BaseModel):
@@ -4569,42 +2976,28 @@ class ClusterRabbitmqPropertiesIncludes(BaseModel):
 
 
 class ClusterRabbitmqPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    rabbitmq_erlang_cookie: constr(
-        regex=r"^[A-Z0-9]+$", min_length=20, max_length=20
-    ) = Field(..., title="Rabbitmq Erlang Cookie")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    rabbitmq_erlang_cookie: constr(regex=r"^[A-Z0-9]+$", min_length=20, max_length=20)
     rabbitmq_admin_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
-    ) = Field(..., title="Rabbitmq Admin Password")
-    rabbitmq_management_domain: str = Field(..., title="Rabbitmq Management Domain")
-    cluster_id: int = Field(..., title="Cluster Id")
+    )
+    rabbitmq_management_domain: str
+    cluster_id: int
     includes: ClusterRabbitmqPropertiesIncludes
 
 
 class ClusterRabbitmqPropertiesUpdateRequest(BaseModel):
     rabbitmq_admin_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
-    ] = Field(None, title="Rabbitmq Admin Password")
-    rabbitmq_management_domain: Optional[str] = Field(
-        None, title="Rabbitmq Management Domain"
-    )
+    ] = None
+    rabbitmq_management_domain: Optional[str] = None
 
 
 class ClusterRedisPropertiesCreateRequest(BaseModel):
-    redis_password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = (
-        Field(
-            ...,
-            description="Each cluster with node(s) with the Redis group has one main Redis instance, and optional additional instances created with the Core API (Redis Instances model). This password applies to the main Redis instance. The password of additional instances is determined by the appropriate Redis Instance model in the Core API.",
-            title="Redis Password",
-        )
-    )
-    redis_memory_limit: int = Field(
-        ...,
-        description="Each cluster with node(s) with the Redis group have one main Redis instance, and optional additional instances created with the Core API (Redis Instances model). This memory limit applies to the main Redis instance. The memory limit of additional instances is determined by the appropriate Redis Instance model in the Core API.\n\nIn MB.",
-        title="Redis Memory Limit",
-    )
+    redis_password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
+    redis_memory_limit: int
 
 
 class ClusterRedisPropertiesIncludes(BaseModel):
@@ -4612,53 +3005,29 @@ class ClusterRedisPropertiesIncludes(BaseModel):
 
 
 class ClusterRedisPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    redis_password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255) = (
-        Field(
-            ...,
-            description="Each cluster with node(s) with the Redis group has one main Redis instance, and optional additional instances created with the Core API (Redis Instances model). This password applies to the main Redis instance. The password of additional instances is determined by the appropriate Redis Instance model in the Core API.",
-            title="Redis Password",
-        )
-    )
-    redis_memory_limit: int = Field(
-        ...,
-        description="Each cluster with node(s) with the Redis group have one main Redis instance, and optional additional instances created with the Core API (Redis Instances model). This memory limit applies to the main Redis instance. The memory limit of additional instances is determined by the appropriate Redis Instance model in the Core API.\n\nIn MB.",
-        title="Redis Memory Limit",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    redis_password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
+    redis_memory_limit: int
+    cluster_id: int
     includes: ClusterRedisPropertiesIncludes
 
 
 class ClusterRedisPropertiesUpdateRequest(BaseModel):
     redis_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
-    ] = Field(
-        None,
-        description="Each cluster with node(s) with the Redis group has one main Redis instance, and optional additional instances created with the Core API (Redis Instances model). This password applies to the main Redis instance. The password of additional instances is determined by the appropriate Redis Instance model in the Core API.",
-        title="Redis Password",
-    )
-    redis_memory_limit: Optional[int] = Field(
-        None,
-        description="Each cluster with node(s) with the Redis group have one main Redis instance, and optional additional instances created with the Core API (Redis Instances model). This memory limit applies to the main Redis instance. The memory limit of additional instances is determined by the appropriate Redis Instance model in the Core API.\n\nIn MB.",
-        title="Redis Memory Limit",
-    )
+    ] = None
+    redis_memory_limit: Optional[int] = None
 
 
 class ClusterSinglestorePropertiesCreateRequest(BaseModel):
-    singlestore_studio_domain: str = Field(..., title="Singlestore Studio Domain")
-    singlestore_api_domain: str = Field(..., title="Singlestore Api Domain")
-    singlestore_license_key: constr(
-        regex=r"^[ -~]+$", min_length=144, max_length=144
-    ) = Field(
-        ...,
-        description="Get license key from https://portal.singlestore.com.",
-        title="Singlestore License Key",
-    )
+    singlestore_studio_domain: str
+    singlestore_api_domain: str
+    singlestore_license_key: constr(regex=r"^[ -~]+$", min_length=144, max_length=144)
     singlestore_root_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
-    ) = Field(..., title="Singlestore Root Password")
+    )
 
 
 class ClusterSinglestorePropertiesIncludes(BaseModel):
@@ -4666,40 +3035,28 @@ class ClusterSinglestorePropertiesIncludes(BaseModel):
 
 
 class ClusterSinglestorePropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    singlestore_studio_domain: str = Field(..., title="Singlestore Studio Domain")
-    singlestore_api_domain: str = Field(..., title="Singlestore Api Domain")
-    singlestore_license_key: constr(
-        regex=r"^[ -~]+$", min_length=144, max_length=6144
-    ) = Field(
-        ...,
-        description="Get license key from https://portal.singlestore.com.",
-        title="Singlestore License Key",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    singlestore_studio_domain: str
+    singlestore_api_domain: str
+    singlestore_license_key: constr(regex=r"^[ -~]+$", min_length=144, max_length=6144)
     singlestore_root_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
-    ) = Field(..., title="Singlestore Root Password")
-    cluster_id: int = Field(..., title="Cluster Id")
+    )
+    cluster_id: int
     includes: ClusterSinglestorePropertiesIncludes
 
 
 class ClusterSinglestorePropertiesUpdateRequest(BaseModel):
-    singlestore_studio_domain: Optional[str] = Field(
-        None, title="Singlestore Studio Domain"
-    )
-    singlestore_api_domain: Optional[str] = Field(None, title="Singlestore Api Domain")
+    singlestore_studio_domain: Optional[str] = None
+    singlestore_api_domain: Optional[str] = None
     singlestore_license_key: Optional[
         constr(regex=r"^[ -~]+$", min_length=144, max_length=144)
-    ] = Field(
-        None,
-        description="Get license key from https://portal.singlestore.com.",
-        title="Singlestore License Key",
-    )
+    ] = None
     singlestore_root_password: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
-    ] = Field(None, title="Singlestore Root Password")
+    ] = None
 
 
 class ClusterUnixUsersPropertiesIncludes(BaseModel):
@@ -4710,193 +3067,109 @@ class ClusterLoadBalancingPropertiesCreateRequest(BaseModel):
     http_retry_properties: HTTPRetryProperties = Field(
         default_factory=lambda: HTTPRetryProperties.parse_obj({"conditions": []})
     )
-    load_balancing_method: LoadBalancingMethodEnum = Field(
-        LoadBalancingMethodEnum.ROUND_ROBIN,
-        description="When set to 'Round Robin', requests are routed to the least busy node. This is the most efficient load balancing method, but can cause issues with deadlocks on databases.\n\nWhen set to 'Source IP Address', the initial request by a specific IP address is routed to the least busy node. All follow-up requests are sent to that node. This causes load to be distributed less efficiently than with the 'Round Robin' method, but cannot cause issues with deadlocks on databases.\n\nIf a cluster has only one node with a group for which load is balanced (such as Apache or nginx), this option has no effect.",
-    )
+    load_balancing_method: LoadBalancingMethodEnum = LoadBalancingMethodEnum.ROUND_ROBIN
 
 
 class ClusterLoadBalancingPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
+    id: int
+    created_at: datetime
+    updated_at: datetime
     http_retry_properties: HTTPRetryProperties
     load_balancing_method: LoadBalancingMethodEnum
-    cluster_id: int = Field(..., title="Cluster Id")
+    cluster_id: int
     includes: ClusterLoadBalancingPropertiesIncludes
 
 
 class ClusterLoadBalancingPropertiesUpdateRequest(BaseModel):
     http_retry_properties: Optional[HTTPRetryProperties] = None
-    load_balancing_method: Optional[LoadBalancingMethodEnum] = Field(
-        None,
-        description="When set to 'Round Robin', requests are routed to the least busy node. This is the most efficient load balancing method, but can cause issues with deadlocks on databases.\n\nWhen set to 'Source IP Address', the initial request by a specific IP address is routed to the least busy node. All follow-up requests are sent to that node. This causes load to be distributed less efficiently than with the 'Round Robin' method, but cannot cause issues with deadlocks on databases.\n\nIf a cluster has only one node with a group for which load is balanced (such as Apache or nginx), this option has no effect.",
-    )
+    load_balancing_method: Optional[LoadBalancingMethodEnum] = None
 
 
 class ClusterMeilisearchPropertiesCreateRequest(BaseModel):
-    meilisearch_backup_local_retention: conint(ge=1, le=24) = Field(
-        3,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Meilisearch Backup Local Retention",
-    )
+    meilisearch_backup_local_retention: conint(ge=1, le=24) = 3
     meilisearch_master_key: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=24
-    ) = Field(
-        ...,
-        description="Only the master key has access to endpoints for creating and deleting API keys.",
-        title="Meilisearch Master Key",
     )
     meilisearch_environment: MeilisearchEnvironmentEnum
-    meilisearch_backup_interval: conint(ge=1, le=24) = Field(
-        24,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Meilisearch Backup Interval",
-    )
+    meilisearch_backup_interval: conint(ge=1, le=24) = 24
 
 
 class ClusterMeilisearchPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    meilisearch_backup_local_retention: conint(ge=1, le=24) = Field(
-        ...,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Meilisearch Backup Local Retention",
-    )
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    meilisearch_backup_local_retention: conint(ge=1, le=24)
     meilisearch_master_key: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=24
-    ) = Field(
-        ...,
-        description="Only the master key has access to endpoints for creating and deleting API keys.",
-        title="Meilisearch Master Key",
     )
     meilisearch_environment: MeilisearchEnvironmentEnum
-    meilisearch_backup_interval: conint(ge=1, le=24) = Field(
-        ...,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Meilisearch Backup Interval",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    meilisearch_backup_interval: conint(ge=1, le=24)
+    cluster_id: int
     includes: ClusterMeilisearchPropertiesIncludes
 
 
 class ClusterMeilisearchPropertiesUpdateRequest(BaseModel):
-    meilisearch_backup_local_retention: Optional[conint(ge=1, le=24)] = Field(
-        None,
-        description="The amount of default (non-Borg) backups stored on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nThese backups are backed up every 24 hours; set this value accordingly. For example, when this is set to `3` and backups are created every 4 hours (`mariadb_backup_interval`), the most recent 3 * 4 = 12 hours of backups are stored locally. When the 24-hour backup runs, the least recent 12 hours of backups would have been rotated, and will therefore no longer be available.",
-        title="Meilisearch Backup Local Retention",
-    )
+    meilisearch_backup_local_retention: Optional[conint(ge=1, le=24)] = None
     meilisearch_master_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=16, max_length=24)
-    ] = Field(
-        None,
-        description="Only the master key has access to endpoints for creating and deleting API keys.",
-        title="Meilisearch Master Key",
-    )
+    ] = None
     meilisearch_environment: Optional[MeilisearchEnvironmentEnum] = None
-    meilisearch_backup_interval: Optional[conint(ge=1, le=24)] = Field(
-        None,
-        description="The frequency of default (non-Borg) backups created on the master node. Cyberfusion can quickly restore these if needed.\n\nDoes not pertain to Borg repositories; those have their own retention settings (`keep_hourly`, etc.).\n\nIn hours.\n\nIf the interval causes backups to run once a day (i.e. exceeds 12), backups run at the hour of the interval. For example, if this is set to `24`, backups run at 00:00. If set to `13`, backups run at 13:00, etc.",
-        title="Meilisearch Backup Interval",
-    )
+    meilisearch_backup_interval: Optional[conint(ge=1, le=24)] = None
 
 
 class ClusterPhpPropertiesCreateRequest(BaseModel):
     php_versions: List[str] = Field(
         ...,
-        description="When removing a PHP version, it may no longer be in use as version for FPM pools, and default PHP version for UNIX users.",
-        title="Php Versions",
         unique_items=True,
     )
     custom_php_modules_names: List[PHPExtensionEnum] = Field(
         ...,
-        description="\n    Custom PHP modules may not be removed once present.\n\n    When adding `vips`, note that FFI will be enabled globally. This has security implications, generally not deemed as dangerous. For more information, see the following comments by the PHP module's author: https://github.com/libvips/php-vips/commit/3c178b30521736136e0368d2858848bf4e6e5f01\n    ",
-        title="Custom Php Modules Names",
         unique_items=True,
     )
     php_settings: PHPSettings
-    php_ioncube_enabled: bool = Field(
-        False,
-        description="Cannot be disabled once enabled.",
-        title="Php Ioncube Enabled",
-    )
-    php_sessions_spread_enabled: bool = Field(
-        True,
-        description="Cannot be disabled once enabled.",
-        title="Php Sessions Spread Enabled",
-    )
+    php_ioncube_enabled: bool = False
+    php_sessions_spread_enabled: bool = True
 
 
 class ClusterPhpPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
+    id: int
+    created_at: datetime
+    updated_at: datetime
     php_versions: List[str] = Field(
         ...,
-        description="When removing a PHP version, it may no longer be in use as version for FPM pools, and default PHP version for UNIX users.",
-        title="Php Versions",
         unique_items=True,
     )
     custom_php_modules_names: List[PHPExtensionEnum] = Field(
         ...,
-        description="\n    Custom PHP modules may not be removed once present.\n\n    When adding `vips`, note that FFI will be enabled globally. This has security implications, generally not deemed as dangerous. For more information, see the following comments by the PHP module's author: https://github.com/libvips/php-vips/commit/3c178b30521736136e0368d2858848bf4e6e5f01\n    ",
-        title="Custom Php Modules Names",
         unique_items=True,
     )
     php_settings: PHPSettings
-    php_ioncube_enabled: bool = Field(
-        ..., description="Cannot be disabled once enabled.", title="Php Ioncube Enabled"
-    )
-    php_sessions_spread_enabled: bool = Field(
-        ...,
-        description="Cannot be disabled once enabled.",
-        title="Php Sessions Spread Enabled",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    php_ioncube_enabled: bool
+    php_sessions_spread_enabled: bool
+    cluster_id: int
     includes: ClusterPhpPropertiesIncludes
 
 
 class ClusterPhpPropertiesUpdateRequest(BaseModel):
-    php_versions: Optional[List[str]] = Field(
-        None,
-        description="When removing a PHP version, it may no longer be in use as version for FPM pools, and default PHP version for UNIX users.",
-        title="Php Versions",
-    )
-    custom_php_modules_names: Optional[List[PHPExtensionEnum]] = Field(
-        None,
-        description="\n    Custom PHP modules may not be removed once present.\n\n    When adding `vips`, note that FFI will be enabled globally. This has security implications, generally not deemed as dangerous. For more information, see the following comments by the PHP module's author: https://github.com/libvips/php-vips/commit/3c178b30521736136e0368d2858848bf4e6e5f01\n    ",
-        title="Custom Php Modules Names",
-    )
+    php_versions: Optional[List[str]] = None
+    custom_php_modules_names: Optional[List[PHPExtensionEnum]] = None
     php_settings: Optional[PHPSettings] = None
-    php_ioncube_enabled: Optional[bool] = Field(
-        None,
-        description="Cannot be disabled once enabled.",
-        title="Php Ioncube Enabled",
-    )
-    php_sessions_spread_enabled: Optional[bool] = Field(
-        None,
-        description="Cannot be disabled once enabled.",
-        title="Php Sessions Spread Enabled",
-    )
+    php_ioncube_enabled: Optional[bool] = None
+    php_sessions_spread_enabled: Optional[bool] = None
 
 
 class ClusterUnixUsersPropertiesCreateRequest(BaseModel):
-    unix_users_home_directory: UNIXUserHomeDirectoryEnum = Field(
-        UNIXUserHomeDirectoryEnum.HOME,
-        description="The directory in which UNIX users' home directories will be stored. For example, if this is set to `/home`, a UNIX user with username `dropflix`'s home directory will be `/home/dropflix`.",
+    unix_users_home_directory: UNIXUserHomeDirectoryEnum = (
+        UNIXUserHomeDirectoryEnum.HOME
     )
 
 
 class ClusterUnixUsersPropertiesResource(BaseModel):
-    id: int = Field(..., title="Id")
-    created_at: datetime = Field(..., title="Created At")
-    updated_at: datetime = Field(..., title="Updated At")
-    unix_users_home_directory: UNIXUserHomeDirectoryEnum = Field(
-        ...,
-        description="The directory in which UNIX users' home directories will be stored. For example, if this is set to `/home`, a UNIX user with username `dropflix`'s home directory will be `/home/dropflix`.",
-    )
-    cluster_id: int = Field(..., title="Cluster Id")
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    unix_users_home_directory: UNIXUserHomeDirectoryEnum
+    cluster_id: int
     includes: ClusterUnixUsersPropertiesIncludes
 
 
