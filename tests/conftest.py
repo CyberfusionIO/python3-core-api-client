@@ -450,6 +450,204 @@ class MailAliasCreateRequestFactory(ModelFactory[models.MailAliasCreateRequest])
 class MailAliasUpdateRequestFactory(UpdateFactory[models.MailAliasUpdateRequest]): ...
 
 
+@register_fixture
+class ClusterBorgPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterBorgPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterElasticsearchPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterElasticsearchPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterFirewallPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterFirewallPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterGrafanaPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterGrafanaPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterKernelcarePropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterKernelcarePropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterLoadBalancingPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterLoadBalancingPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMariadbPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterMariadbPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMeilisearchPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterMeilisearchPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMetabasePropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterMetabasePropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterNewRelicPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterNewRelicPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterNodejsPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterNodejsPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterOsPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterOsPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterPhpPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterPhpPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterPostgresqlPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterPostgresqlPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterRabbitmqPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterRabbitmqPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterRedisPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterRedisPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterSinglestorePropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterSinglestorePropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterUnixUsersPropertiesCreateRequestFactory(
+    ModelFactory[models.ClusterUnixUsersPropertiesCreateRequest]
+): ...
+
+
+@register_fixture
+class ClusterBorgPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterBorgPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterElasticsearchPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterElasticsearchPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterFirewallPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterFirewallPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterGrafanaPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterGrafanaPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterKernelcarePropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterKernelcarePropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterLoadBalancingPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterLoadBalancingPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMariadbPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterMariadbPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMeilisearchPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterMeilisearchPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMetabasePropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterMetabasePropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterNewRelicPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterNewRelicPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterNodejsPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterNodejsPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterOsPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterOsPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterPhpPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterPhpPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterPostgresqlPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterPostgresqlPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterRabbitmqPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterRabbitmqPropertiesUpdateRequest]
+): ...
+
+
 @pytest.fixture
 def api_connector(faker: faker.Faker, base_url: str) -> CoreApiConnector:
     return CoreApiConnector(

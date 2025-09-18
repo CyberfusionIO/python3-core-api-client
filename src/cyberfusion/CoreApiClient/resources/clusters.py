@@ -252,3 +252,1330 @@ class Clusters(Resource):
         return DtoResponse.from_response(
             local_response, models.NodeDependenciesResource
         )
+
+    def list_simple_specifications(
+        self, *, id_: int
+    ) -> DtoResponse[list[models.SimpleSpecificationsResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/specifications/simple",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.SimpleSpecificationsResource
+        )
+
+    def list_advanced_specifications(
+        self, *, id_: int
+    ) -> DtoResponse[list[models.CompositeSpecificationSatisfyResultResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/specifications/advanced",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.CompositeSpecificationSatisfyResultResource
+        )
+
+    def read_borg_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterBorgPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/borg",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterBorgPropertiesResource
+        )
+
+    def read_elasticsearch_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterElasticsearchPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/elasticsearch",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterElasticsearchPropertiesResource
+        )
+
+    def read_firewall_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterFirewallPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/firewall",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterFirewallPropertiesResource
+        )
+
+    def read_grafana_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterGrafanaPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/grafana",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterGrafanaPropertiesResource
+        )
+
+    def read_kernelcare_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterKernelcarePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/kernelcare",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterKernelcarePropertiesResource
+        )
+
+    def read_load_balancing_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterLoadBalancingPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/load-balancing",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterLoadBalancingPropertiesResource
+        )
+
+    def read_mariadb_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMariadbPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/mariadb",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMariadbPropertiesResource
+        )
+
+    def read_meilisearch_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMeilisearchPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/meilisearch",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMeilisearchPropertiesResource
+        )
+
+    def read_metabase_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMetabasePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/metabase",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMetabasePropertiesResource
+        )
+
+    def read_new_relic_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterNewRelicPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/new-relic",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNewRelicPropertiesResource
+        )
+
+    def read_nodejs_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterNodejsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/nodejs",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNodejsPropertiesResource
+        )
+
+    def read_os_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterOsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/os",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterOsPropertiesResource
+        )
+
+    def read_php_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterPhpPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/php",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPhpPropertiesResource
+        )
+
+    def read_postgresql_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterPostgresqlPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/postgresql",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPostgresqlPropertiesResource
+        )
+
+    def read_rabbitmq_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterRabbitmqPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/rabbitmq",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRabbitmqPropertiesResource
+        )
+
+    def read_redis_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterRedisPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/redis",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRedisPropertiesResource
+        )
+
+    def read_singlestore_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterSinglestorePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/singlestore",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterSinglestorePropertiesResource
+        )
+
+    def read_unix_users_properties(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterUnixUsersPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/unix-users",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterUnixUsersPropertiesResource
+        )
+
+    def create_borg_properties(
+        self,
+        request: models.ClusterBorgPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterBorgPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/borg",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterBorgPropertiesResource
+        )
+
+    def create_elasticsearch_properties(
+        self,
+        request: models.ClusterElasticsearchPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterElasticsearchPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/elasticsearch",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterElasticsearchPropertiesResource
+        )
+
+    def create_firewall_properties(
+        self,
+        request: models.ClusterFirewallPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterFirewallPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/firewall",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterFirewallPropertiesResource
+        )
+
+    def create_grafana_properties(
+        self,
+        request: models.ClusterGrafanaPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterGrafanaPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/grafana",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterGrafanaPropertiesResource
+        )
+
+    def create_kernelcare_properties(
+        self,
+        request: models.ClusterKernelcarePropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterKernelcarePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/kernelcare",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterKernelcarePropertiesResource
+        )
+
+    def create_load_balancing_properties(
+        self,
+        request: models.ClusterLoadBalancingPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterLoadBalancingPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/load-balancing",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterLoadBalancingPropertiesResource
+        )
+
+    def create_mariadb_properties(
+        self,
+        request: models.ClusterMariadbPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMariadbPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/mariadb",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMariadbPropertiesResource
+        )
+
+    def create_meilisearch_properties(
+        self,
+        request: models.ClusterMeilisearchPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMeilisearchPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/meilisearch",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMeilisearchPropertiesResource
+        )
+
+    def create_metabase_properties(
+        self,
+        request: models.ClusterMetabasePropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMetabasePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/metabase",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMetabasePropertiesResource
+        )
+
+    def create_new_relic_properties(
+        self,
+        request: models.ClusterNewRelicPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterNewRelicPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/new-relic",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNewRelicPropertiesResource
+        )
+
+    def create_nodejs_properties(
+        self,
+        request: models.ClusterNodejsPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterNodejsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/nodejs",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNodejsPropertiesResource
+        )
+
+    def create_os_properties(
+        self,
+        request: models.ClusterOsPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterOsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/os",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterOsPropertiesResource
+        )
+
+    def create_php_properties(
+        self,
+        request: models.ClusterPhpPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterPhpPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/php",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPhpPropertiesResource
+        )
+
+    def create_postgresql_properties(
+        self,
+        request: models.ClusterPostgresqlPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterPostgresqlPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/postgresql",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPostgresqlPropertiesResource
+        )
+
+    def create_rabbitmq_properties(
+        self,
+        request: models.ClusterRabbitmqPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterRabbitmqPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/rabbitmq",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRabbitmqPropertiesResource
+        )
+
+    def create_redis_properties(
+        self,
+        request: models.ClusterRedisPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterRedisPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/redis",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRedisPropertiesResource
+        )
+
+    def create_singlestore_properties(
+        self,
+        request: models.ClusterSinglestorePropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterSinglestorePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/singlestore",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterSinglestorePropertiesResource
+        )
+
+    def create_unix_users_properties(
+        self,
+        request: models.ClusterUnixUsersPropertiesCreateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterUnixUsersPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/properties/unix-users",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterUnixUsersPropertiesResource
+        )
+
+    def list_borg_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/borg",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterBorgPropertiesResource
+        )
+
+    def list_redis_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/redis",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRedisPropertiesResource
+        )
+
+    def list_elasticsearch_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterElasticsearchPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/elasticsearch",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterElasticsearchPropertiesResource
+        )
+
+    def list_firewall_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/firewall",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterFirewallPropertiesResource
+        )
+
+    def list_grafana_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/grafana",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterGrafanaPropertiesResource
+        )
+
+    def list_kernelcare_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/kernelcare",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterKernelcarePropertiesResource
+        )
+
+    def list_load_balancing_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterLoadBalancingPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/load-balancing",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterLoadBalancingPropertiesResource
+        )
+
+    def list_mariadb_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/mariadb",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMariadbPropertiesResource
+        )
+
+    def list_meilisearch_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterMeilisearchPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/meilisearch",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMeilisearchPropertiesResource
+        )
+
+    def list_metabase_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/metabase",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMetabasePropertiesResource
+        )
+
+    def list_new_relic_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/new-relic",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNewRelicPropertiesResource
+        )
+
+    def list_nodejs_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/nodejs",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNodejsPropertiesResource
+        )
+
+    def list_os_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/os",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterOsPropertiesResource
+        )
+
+    def list_php_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/php",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPhpPropertiesResource
+        )
+
+    def list_postgresql_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/postgresql",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPostgresqlPropertiesResource
+        )
+
+    def list_rabbitmq_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/rabbitmq",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRabbitmqPropertiesResource
+        )
+
+    def list_singlestore_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterSinglestorePropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/singlestore",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterSinglestorePropertiesResource
+        )
+
+    def list_unix_users_properties(
+        self,
+        *,
+        id_: int,
+        skip: Optional[int] = None,
+        limit: Optional[int] = None,
+        filter_: Optional[List[str]] = None,
+        sort: Optional[List[str]] = None,
+    ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/unix-users",
+            data=None,
+            query_parameters={
+                "skip": skip,
+                "limit": limit,
+                "filter": filter_,
+                "sort": sort,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterUnixUsersPropertiesResource
+        )
+
+    def update_borg_properties(
+        self,
+        request: models.ClusterBorgPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterBorgPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/borg",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterBorgPropertiesResource
+        )
+
+    def update_elasticsearch_properties(
+        self,
+        request: models.ClusterElasticsearchPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterElasticsearchPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/elasticsearch",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterElasticsearchPropertiesResource
+        )
+
+    def update_firewall_properties(
+        self,
+        request: models.ClusterFirewallPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterFirewallPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/firewall",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterFirewallPropertiesResource
+        )
+
+    def update_grafana_properties(
+        self,
+        request: models.ClusterGrafanaPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterGrafanaPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/grafana",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterGrafanaPropertiesResource
+        )
+
+    def update_kernelcare_properties(
+        self,
+        request: models.ClusterKernelcarePropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterKernelcarePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/kernelcare",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterKernelcarePropertiesResource
+        )
+
+    def update_load_balancing_properties(
+        self,
+        request: models.ClusterLoadBalancingPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterLoadBalancingPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/load-balancing",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterLoadBalancingPropertiesResource
+        )
+
+    def update_mariadb_properties(
+        self,
+        request: models.ClusterMariadbPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMariadbPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/mariadb",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMariadbPropertiesResource
+        )
+
+    def update_meilisearch_properties(
+        self,
+        request: models.ClusterMeilisearchPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMeilisearchPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/meilisearch",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMeilisearchPropertiesResource
+        )
+
+    def update_metabase_properties(
+        self,
+        request: models.ClusterMetabasePropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMetabasePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/metabase",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterMetabasePropertiesResource
+        )
+
+    def update_new_relic_properties(
+        self,
+        request: models.ClusterNewRelicPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterNewRelicPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/new-relic",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNewRelicPropertiesResource
+        )
+
+    def update_nodejs_properties(
+        self,
+        request: models.ClusterNodejsPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterNodejsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/nodejs",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterNodejsPropertiesResource
+        )
+
+    def update_os_properties(
+        self,
+        request: models.ClusterOsPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterOsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/os",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterOsPropertiesResource
+        )
+
+    def update_php_properties(
+        self,
+        request: models.ClusterPhpPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterPhpPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/php",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPhpPropertiesResource
+        )
+
+    def update_postgresql_properties(
+        self,
+        request: models.ClusterPostgresqlPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterPostgresqlPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/postgresql",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterPostgresqlPropertiesResource
+        )
+
+    def update_rabbitmq_properties(
+        self,
+        request: models.ClusterRabbitmqPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterRabbitmqPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/rabbitmq",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRabbitmqPropertiesResource
+        )
