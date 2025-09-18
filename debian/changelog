@@ -1,3 +1,9 @@
+python3-core-api-client (2.1.1) unstable; urgency=low
+
+  - Fix inheritance
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Thu, 18 Sep 2025 15:16:00 +0200
+
 python3-core-api-client (2.1.0) unstable; urgency=low
 
   - Update API to 1.251
