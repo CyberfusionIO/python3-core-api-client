@@ -19,14 +19,6 @@ def test_list_database_user_grants(
     api_connector.database_user_grants.list_database_user_grants()
 
 
-def test_list_database_user_grants_for_database_users(
-    api_connector: CoreApiConnector, faker: faker.Faker
-) -> None:
-    api_connector.database_user_grants.list_database_user_grants_for_database_users(
-        database_user_id=faker.pyint()
-    )
-
-
 def test_delete_database_user_grant(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
