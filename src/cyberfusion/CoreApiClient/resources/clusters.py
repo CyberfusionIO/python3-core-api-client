@@ -1342,6 +1342,40 @@ class Clusters(Resource):
             local_response, models.ClusterBorgPropertiesResource
         )
 
+    def update_singlestore_properties(
+        self,
+        request: models.ClusterSinglestorePropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterSinglestorePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/singlestore",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterSinglestorePropertiesResource
+        )
+
+    def update_redis_properties(
+        self,
+        request: models.ClusterRedisPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterRedisPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/redis",
+            data=request.dict(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.ClusterRedisPropertiesResource
+        )
+
     def update_elasticsearch_properties(
         self,
         request: models.ClusterElasticsearchPropertiesUpdateRequest,
