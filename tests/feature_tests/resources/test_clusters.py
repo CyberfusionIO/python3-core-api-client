@@ -35,6 +35,8 @@ from tests.conftest import (
     ClusterOsPropertiesUpdateRequestFactory,
     ClusterPhpPropertiesUpdateRequestFactory,
     ClusterPostgresqlPropertiesUpdateRequestFactory,
+    ClusterRedisPropertiesUpdateRequestFactory,
+    ClusterSinglestorePropertiesUpdateRequestFactory,
 )
 import faker
 
@@ -554,6 +556,26 @@ def test_update_borg_properties(
 ) -> None:
     api_connector.clusters.update_borg_properties(
         cluster_borg_properties_update_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_update_singlestore_properties(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cluster_singlestore_properties_update_request_factory: ClusterSinglestorePropertiesUpdateRequestFactory,
+) -> None:
+    api_connector.clusters.update_singlestore_properties(
+        cluster_singlestore_properties_update_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_update_redis_properties(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cluster_redis_properties_update_request_factory: ClusterRedisPropertiesUpdateRequestFactory,
+) -> None:
+    api_connector.clusters.update_redis_properties(
+        cluster_redis_properties_update_request_factory.build(), id_=faker.pyint()
     )
 
 

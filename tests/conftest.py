@@ -565,6 +565,18 @@ class ClusterBorgPropertiesUpdateRequestFactory(
 
 
 @register_fixture
+class ClusterSinglestorePropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterSinglestorePropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterRedisPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterRedisPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
 class ClusterElasticsearchPropertiesUpdateRequestFactory(
     UpdateFactory[models.ClusterElasticsearchPropertiesUpdateRequest]
 ): ...
