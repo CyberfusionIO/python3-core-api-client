@@ -444,109 +444,109 @@ def test_read_unix_users_properties(
 def test_list_borg_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_borg_properties(id_=faker.pyint())
+    api_connector.clusters.list_borg_properties()
 
 
 def test_list_redis_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_redis_properties(id_=faker.pyint())
+    api_connector.clusters.list_redis_properties()
 
 
 def test_list_elasticsearch_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_elasticsearch_properties(id_=faker.pyint())
+    api_connector.clusters.list_elasticsearch_properties()
 
 
 def test_list_firewall_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_firewall_properties(id_=faker.pyint())
+    api_connector.clusters.list_firewall_properties()
 
 
 def test_list_grafana_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_grafana_properties(id_=faker.pyint())
+    api_connector.clusters.list_grafana_properties()
 
 
 def test_list_kernelcare_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_kernelcare_properties(id_=faker.pyint())
+    api_connector.clusters.list_kernelcare_properties()
 
 
 def test_list_load_balancing_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_load_balancing_properties(id_=faker.pyint())
+    api_connector.clusters.list_load_balancing_properties()
 
 
 def test_list_mariadb_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_mariadb_properties(id_=faker.pyint())
+    api_connector.clusters.list_mariadb_properties()
 
 
 def test_list_meilisearch_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_meilisearch_properties(id_=faker.pyint())
+    api_connector.clusters.list_meilisearch_properties()
 
 
 def test_list_metabase_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_metabase_properties(id_=faker.pyint())
+    api_connector.clusters.list_metabase_properties()
 
 
 def test_list_new_relic_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_new_relic_properties(id_=faker.pyint())
+    api_connector.clusters.list_new_relic_properties()
 
 
 def test_list_nodejs_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_nodejs_properties(id_=faker.pyint())
+    api_connector.clusters.list_nodejs_properties()
 
 
 def test_list_os_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_os_properties(id_=faker.pyint())
+    api_connector.clusters.list_os_properties()
 
 
 def test_list_php_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_php_properties(id_=faker.pyint())
+    api_connector.clusters.list_php_properties()
 
 
 def test_list_postgresql_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_postgresql_properties(id_=faker.pyint())
+    api_connector.clusters.list_postgresql_properties()
 
 
 def test_list_rabbitmq_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_rabbitmq_properties(id_=faker.pyint())
+    api_connector.clusters.list_rabbitmq_properties()
 
 
 def test_list_singlestore_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_singlestore_properties(id_=faker.pyint())
+    api_connector.clusters.list_singlestore_properties()
 
 
 def test_list_unix_users_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.clusters.list_unix_users_properties(id_=faker.pyint())
+    api_connector.clusters.list_unix_users_properties()
 
 
 def test_update_borg_properties(
