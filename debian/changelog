@@ -1,8 +1,9 @@
 python3-core-api-client (2.2) UNRELEASED; urgency=low
 
   - Add missing `Clusters.update_singlestore_properties` + `Clusters.update_redis_properties`
+  - Fix list properties methods
 
- -- William Edwards <wedwards@cyberfusion.nl>  Fri, 19 Sep 2025 13:14:00 +0200
+ -- William Edwards <wedwards@cyberfusion.nl>  Wed, 24 Sep 2025 22:38:00 +0200
 
 python3-core-api-client (2.1.1) unstable; urgency=low
 

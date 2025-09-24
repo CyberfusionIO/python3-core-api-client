@@ -878,7 +878,6 @@ class Clusters(Resource):
     def list_borg_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -886,7 +885,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/borg",
+            "/api/v1/clusters/properties/borg",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -903,7 +902,6 @@ class Clusters(Resource):
     def list_redis_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -911,7 +909,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/redis",
+            "/api/v1/clusters/properties/redis",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -928,7 +926,6 @@ class Clusters(Resource):
     def list_elasticsearch_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -936,7 +933,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterElasticsearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/elasticsearch",
+            "/api/v1/clusters/properties/elasticsearch",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -953,7 +950,6 @@ class Clusters(Resource):
     def list_firewall_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -961,7 +957,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/firewall",
+            "/api/v1/clusters/properties/firewall",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -978,7 +974,6 @@ class Clusters(Resource):
     def list_grafana_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -986,7 +981,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/grafana",
+            "/api/v1/clusters/properties/grafana",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1003,7 +998,6 @@ class Clusters(Resource):
     def list_kernelcare_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1011,7 +1005,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/kernelcare",
+            "/api/v1/clusters/properties/kernelcare",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1028,7 +1022,6 @@ class Clusters(Resource):
     def list_load_balancing_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1036,7 +1029,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterLoadBalancingPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/load-balancing",
+            "/api/v1/clusters/properties/load-balancing",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1053,7 +1046,6 @@ class Clusters(Resource):
     def list_mariadb_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1061,7 +1053,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/mariadb",
+            "/api/v1/clusters/properties/mariadb",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1078,7 +1070,6 @@ class Clusters(Resource):
     def list_meilisearch_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1086,7 +1077,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterMeilisearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/meilisearch",
+            "/api/v1/clusters/properties/meilisearch",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1103,7 +1094,6 @@ class Clusters(Resource):
     def list_metabase_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1111,7 +1101,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/metabase",
+            "/api/v1/clusters/properties/metabase",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1128,7 +1118,6 @@ class Clusters(Resource):
     def list_new_relic_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1136,7 +1125,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/new-relic",
+            "/api/v1/clusters/properties/new-relic",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1153,7 +1142,6 @@ class Clusters(Resource):
     def list_nodejs_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1161,7 +1149,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/nodejs",
+            "/api/v1/clusters/properties/nodejs",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1178,7 +1166,6 @@ class Clusters(Resource):
     def list_os_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1186,7 +1173,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/os",
+            "/api/v1/clusters/properties/os",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1203,7 +1190,6 @@ class Clusters(Resource):
     def list_php_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1211,7 +1197,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/php",
+            "/api/v1/clusters/properties/php",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1228,7 +1214,6 @@ class Clusters(Resource):
     def list_postgresql_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1236,7 +1221,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/postgresql",
+            "/api/v1/clusters/properties/postgresql",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1253,7 +1238,6 @@ class Clusters(Resource):
     def list_rabbitmq_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1261,7 +1245,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/rabbitmq",
+            "/api/v1/clusters/properties/rabbitmq",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1278,7 +1262,6 @@ class Clusters(Resource):
     def list_singlestore_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1286,7 +1269,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterSinglestorePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/singlestore",
+            "/api/v1/clusters/properties/singlestore",
             data=None,
             query_parameters={
                 "skip": skip,
@@ -1303,7 +1286,6 @@ class Clusters(Resource):
     def list_unix_users_properties(
         self,
         *,
-        id_: int,
         skip: Optional[int] = None,
         limit: Optional[int] = None,
         filter_: Optional[List[str]] = None,
@@ -1311,7 +1293,7 @@ class Clusters(Resource):
     ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/{id_}/properties/unix-users",
+            "/api/v1/clusters/properties/unix-users",
             data=None,
             query_parameters={
                 "skip": skip,
