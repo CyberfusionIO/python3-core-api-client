@@ -2357,7 +2357,6 @@ class TombstoneDataDatabase(CoreApiModel):
 
 
 class TombstoneDataDatabaseUserGrantIncludes(CoreApiModel):
-    id: int
     database: Union[DatabaseResource, TombstoneDataDatabase]
     database_user: Union[DatabaseUserResource, TombstoneDataDatabaseUser]
 
