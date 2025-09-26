@@ -8,7 +8,6 @@ from tests.conftest import (
     ClusterFirewallPropertiesCreateRequestFactory,
     ClusterGrafanaPropertiesCreateRequestFactory,
     ClusterKernelcarePropertiesCreateRequestFactory,
-    ClusterLoadBalancingPropertiesCreateRequestFactory,
     ClusterMariadbPropertiesCreateRequestFactory,
     ClusterMeilisearchPropertiesCreateRequestFactory,
     ClusterMetabasePropertiesCreateRequestFactory,
@@ -97,17 +96,6 @@ def test_create_kernelcare_properties(
 ) -> None:
     api_connector.clusters.create_kernelcare_properties(
         cluster_kernelcare_properties_create_request_factory.build(), id_=faker.pyint()
-    )
-
-
-def test_create_load_balancing_properties(
-    api_connector: CoreApiConnector,
-    faker: faker.Faker,
-    cluster_load_balancing_properties_create_request_factory: ClusterLoadBalancingPropertiesCreateRequestFactory,
-) -> None:
-    api_connector.clusters.create_load_balancing_properties(
-        cluster_load_balancing_properties_create_request_factory.build(),
-        id_=faker.pyint(),
     )
 
 
@@ -719,3 +707,9 @@ def test_update_rabbitmq_properties(
     api_connector.clusters.update_rabbitmq_properties(
         cluster_rabbitmq_properties_update_request_factory.build(), id_=faker.pyint()
     )
+
+
+def test_generate_innodb_report(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.generate_innodb_report(id_=faker.pyint())

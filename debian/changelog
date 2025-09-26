@@ -1,8 +1,10 @@
-python3-core-api-client (2.2.1) UNRELEASED; urgency=low
+python3-core-api-client (2.3) unstable; urgency=low
 
   - `TombstoneDataDatabaseUserGrantIncludes`: remove non-existent `id` attribute
+  - Fix `SimpleSpecificationsResource` inheritance
+  - Update to Core API 1.252
 
- -- William Edwards <wedwards@cyberfusion.nl>  Thu, 25 Sep 2025 22:25:00 +0200
+ -- William Edwards <wedwards@cyberfusion.nl>  Sat, 27 Sep 2025 00:40:00 +0200
 
 python3-core-api-client (2.2) unstable; urgency=low
 

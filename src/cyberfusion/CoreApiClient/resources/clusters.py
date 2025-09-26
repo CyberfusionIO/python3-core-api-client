@@ -654,23 +654,6 @@ class Clusters(Resource):
             local_response, models.ClusterKernelcarePropertiesResource
         )
 
-    def create_load_balancing_properties(
-        self,
-        request: models.ClusterLoadBalancingPropertiesCreateRequest,
-        *,
-        id_: int,
-    ) -> DtoResponse[models.ClusterLoadBalancingPropertiesResource]:
-        local_response = self.api_connector.send_or_fail(
-            "POST",
-            f"/api/v1/clusters/{id_}/properties/load-balancing",
-            data=request.dict(exclude_unset=True),
-            query_parameters={},
-        )
-
-        return DtoResponse.from_response(
-            local_response, models.ClusterLoadBalancingPropertiesResource
-        )
-
     def create_mariadb_properties(
         self,
         request: models.ClusterMariadbPropertiesCreateRequest,
@@ -1595,3 +1578,17 @@ class Clusters(Resource):
         return DtoResponse.from_response(
             local_response, models.ClusterRabbitmqPropertiesResource
         )
+
+    def generate_innodb_report(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.DatabaseInnodbReport]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/reports/innodb-data",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(local_response, models.DatabaseInnodbReport)
