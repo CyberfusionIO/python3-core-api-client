@@ -2629,7 +2629,7 @@ class ObjectLogResource(CoreApiModel):
     includes: ObjectLogIncludes
 
 
-class SimpleSpecificationsResource(RootModelCollectionMixin, BaseModel):  # type: ignore[misc]
+class SimpleSpecificationsResource(RootModelCollectionMixin, CoreApiModel):  # type: ignore[misc]
     __root__: List[str]
 
 
@@ -3062,13 +3062,6 @@ class ClusterUnixUsersPropertiesIncludes(CoreApiModel):
     pass
 
 
-class ClusterLoadBalancingPropertiesCreateRequest(CoreApiModel):
-    http_retry_properties: HTTPRetryProperties = Field(
-        default_factory=lambda: HTTPRetryProperties.parse_obj({"conditions": []})
-    )
-    load_balancing_method: LoadBalancingMethodEnum = LoadBalancingMethodEnum.ROUND_ROBIN
-
-
 class ClusterLoadBalancingPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
@@ -3172,6 +3165,12 @@ class ClusterUnixUsersPropertiesResource(CoreApiModel):
     includes: ClusterUnixUsersPropertiesIncludes
 
 
+class SpecificationModeEnum(StrEnum):
+    SINGLE = "Single"
+    OR = "Or"
+    AND = "And"
+
+
 class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_VIRTUAL_HOSTS = "Cluster supports virtual hosts"
     CLUSTER_SUPPORTS_MARIADB_ENCRYPTION_KEYS = (
@@ -3241,6 +3240,29 @@ class SpecificationNameEnum(StrEnum):
     UNIX_USER_SUPPORTS_VIRTUAL_HOSTS = "UNIX user supports virtual hosts"
     UNIX_USER_SUPPORTS_MAIL_DOMAINS = "UNIX user supports mail domains"
     UNIX_USER_SUPPORTS_BORG_REPOSITORIES = "UNIX user supports Borg repositories"
+    CLUSTER_SUPPORTS_LOAD_BALANCER_SERVICE_ACCOUNT_SERVICE_ACCOUNT_TO_CLUSTER = (
+        "Cluster supports 'Load Balancer' service account service account to cluster"
+    )
+    CLUSTER_SUPPORTS_DOMAIN_ROUTERS = "Cluster supports domain routers"
+
+
+class TableInnodbDataLengths(CoreApiModel):
+    name: str
+    data_length_bytes: int
+    index_length_bytes: int
+    total_length_bytes: int
+
+
+class DatabaseInnodbDataLengths(CoreApiModel):
+    name: str
+    total_length_bytes: int
+    tables_data_lengths: List[TableInnodbDataLengths]
+
+
+class DatabaseInnodbReport(CoreApiModel):
+    innodb_buffer_pool_size_bytes: int
+    total_innodb_data_length_bytes: int
+    databases_innodb_data_lengths: List[DatabaseInnodbDataLengths]
 
 
 NestedPathsDict.update_forward_refs()

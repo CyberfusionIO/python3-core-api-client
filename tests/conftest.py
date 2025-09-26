@@ -481,12 +481,6 @@ class ClusterKernelcarePropertiesCreateRequestFactory(
 
 
 @register_fixture
-class ClusterLoadBalancingPropertiesCreateRequestFactory(
-    ModelFactory[models.ClusterLoadBalancingPropertiesCreateRequest]
-): ...
-
-
-@register_fixture
 class ClusterMariadbPropertiesCreateRequestFactory(
     ModelFactory[models.ClusterMariadbPropertiesCreateRequest]
 ): ...
