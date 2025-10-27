@@ -1,37 +1,20 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
 
 class BorgArchives(Resource):
-    def create_borg_archive_for_database(
+    def create_borg_archive(
         self,
-        request: models.BorgArchiveCreateDatabaseRequest,
+        request: models.BorgArchiveCreateRequest,
         *,
         callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
-            "/api/v1/borg-archives/database",
-            data=request.dict(exclude_unset=True),
-            query_parameters={
-                "callback_url": callback_url,
-            },
-        )
-
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
-
-    def create_borg_archive_for_unix_user(
-        self,
-        request: models.BorgArchiveCreateUNIXUserRequest,
-        *,
-        callback_url: Optional[str] = None,
-    ) -> DtoResponse[models.TaskCollectionResource]:
-        local_response = self.api_connector.send_or_fail(
-            "POST",
-            "/api/v1/borg-archives/unix-user",
+            "/api/v1/borg-archives",
             data=request.dict(exclude_unset=True),
             query_parameters={
                 "callback_url": callback_url,
@@ -43,21 +26,21 @@ class BorgArchives(Resource):
     def list_borg_archives(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.BorgArchivesSearchRequest | None = None,
     ) -> DtoResponse[list[models.BorgArchiveResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/borg-archives",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.BorgArchiveResource)

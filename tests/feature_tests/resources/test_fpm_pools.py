@@ -39,3 +39,17 @@ def test_reload_fpm_pool(api_connector: CoreApiConnector, faker: faker.Faker) ->
 
 def test_list_fpm_pools(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.fpm_pools.list_fpm_pools()
+
+
+def test_get_fpm_pool_status(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.fpm_pools.get_fpm_pool_status(id_=faker.pyint())
+
+
+def test_update_fpm_pool_version(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.fpm_pools.update_fpm_pool_version(
+        id_=faker.pyint(), version=faker.pystr()
+    )

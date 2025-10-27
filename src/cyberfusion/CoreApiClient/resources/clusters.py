@@ -1,5 +1,5 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -40,21 +40,21 @@ class Clusters(Resource):
     def list_clusters(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.ClusterResource)
@@ -85,20 +85,6 @@ class Clusters(Resource):
 
         return DtoResponse.from_response(local_response, models.ClusterResource)
 
-    def get_borg_ssh_key(
-        self,
-        *,
-        id_: int,
-    ) -> DtoResponse[models.ClusterBorgSSHKey]:
-        local_response = self.api_connector.send_or_fail(
-            "GET",
-            f"/api/v1/clusters/{id_}/borg-ssh-key",
-            data=None,
-            query_parameters={},
-        )
-
-        return DtoResponse.from_response(local_response, models.ClusterBorgSSHKey)
-
     def list_ip_addresses_for_cluster(
         self,
         *,
@@ -118,12 +104,15 @@ class Clusters(Resource):
         request: models.ClusterIPAddressCreateRequest,
         *,
         id_: int,
+        callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/ip-addresses",
             data=request.dict(exclude_unset=True),
-            query_parameters={},
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
@@ -133,12 +122,15 @@ class Clusters(Resource):
         *,
         id_: int,
         ip_address: str,
+        callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "DELETE",
             f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}",
             data=None,
-            query_parameters={},
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
@@ -148,12 +140,15 @@ class Clusters(Resource):
         *,
         id_: int,
         ip_address: str,
+        callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}/l3-ddos-protection",
             data=None,
-            query_parameters={},
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
@@ -163,12 +158,15 @@ class Clusters(Resource):
         *,
         id_: int,
         ip_address: str,
+        callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "DELETE",
             f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}/l3-ddos-protection",
             data=None,
-            query_parameters={},
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
@@ -841,41 +839,24 @@ class Clusters(Resource):
             local_response, models.ClusterSinglestorePropertiesResource
         )
 
-    def create_unix_users_properties(
-        self,
-        request: models.ClusterUnixUsersPropertiesCreateRequest,
-        *,
-        id_: int,
-    ) -> DtoResponse[models.ClusterUnixUsersPropertiesResource]:
-        local_response = self.api_connector.send_or_fail(
-            "POST",
-            f"/api/v1/clusters/{id_}/properties/unix-users",
-            data=request.dict(exclude_unset=True),
-            query_parameters={},
-        )
-
-        return DtoResponse.from_response(
-            local_response, models.ClusterUnixUsersPropertiesResource
-        )
-
     def list_borg_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersBorgPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/borg",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -885,21 +866,21 @@ class Clusters(Resource):
     def list_redis_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersRedisPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/redis",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -909,21 +890,22 @@ class Clusters(Resource):
     def list_elasticsearch_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersElasticsearchPropertiesSearchRequest
+        | None = None,
     ) -> DtoResponse[list[models.ClusterElasticsearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/elasticsearch",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -933,21 +915,21 @@ class Clusters(Resource):
     def list_firewall_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersFirewallPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/firewall",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -957,21 +939,21 @@ class Clusters(Resource):
     def list_grafana_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersGrafanaPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/grafana",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -981,21 +963,21 @@ class Clusters(Resource):
     def list_kernelcare_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersKernelcarePropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/kernelcare",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1005,21 +987,22 @@ class Clusters(Resource):
     def list_load_balancing_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersLoadBalancingPropertiesSearchRequest
+        | None = None,
     ) -> DtoResponse[list[models.ClusterLoadBalancingPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/load-balancing",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1029,21 +1012,21 @@ class Clusters(Resource):
     def list_mariadb_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersMariadbPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/mariadb",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1053,21 +1036,22 @@ class Clusters(Resource):
     def list_meilisearch_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersMeilisearchPropertiesSearchRequest
+        | None = None,
     ) -> DtoResponse[list[models.ClusterMeilisearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/meilisearch",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1077,21 +1061,21 @@ class Clusters(Resource):
     def list_metabase_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersMetabasePropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/metabase",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1101,21 +1085,21 @@ class Clusters(Resource):
     def list_new_relic_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersNewRelicPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/new-relic",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1125,21 +1109,21 @@ class Clusters(Resource):
     def list_nodejs_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersNodejsPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/nodejs",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1149,21 +1133,21 @@ class Clusters(Resource):
     def list_os_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersOsPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/os",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1173,21 +1157,21 @@ class Clusters(Resource):
     def list_php_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersPhpPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/php",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1197,21 +1181,21 @@ class Clusters(Resource):
     def list_postgresql_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersPostgresqlPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/postgresql",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1221,21 +1205,21 @@ class Clusters(Resource):
     def list_rabbitmq_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersRabbitmqPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/rabbitmq",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1245,21 +1229,22 @@ class Clusters(Resource):
     def list_singlestore_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersSinglestorePropertiesSearchRequest
+        | None = None,
     ) -> DtoResponse[list[models.ClusterSinglestorePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/singlestore",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(
@@ -1269,21 +1254,21 @@ class Clusters(Resource):
     def list_unix_users_properties(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ClustersUnixUsersPropertiesSearchRequest | None = None,
     ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/properties/unix-users",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(

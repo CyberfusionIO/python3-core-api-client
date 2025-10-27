@@ -61,14 +61,8 @@ class BorgRepositoryUpdateRequestFactory(
 
 
 @register_fixture
-class BorgArchiveCreateDatabaseRequestFactory(
-    ModelFactory[models.BorgArchiveCreateDatabaseRequest]
-): ...
-
-
-@register_fixture
-class BorgArchiveCreateUnixUserRequestFactory(
-    ModelFactory[models.BorgArchiveCreateUNIXUserRequest]
+class BorgArchiveCreateRequestFactory(
+    ModelFactory[models.BorgArchiveCreateRequest]
 ): ...
 
 
@@ -543,12 +537,6 @@ class ClusterRedisPropertiesCreateRequestFactory(
 @register_fixture
 class ClusterSinglestorePropertiesCreateRequestFactory(
     ModelFactory[models.ClusterSinglestorePropertiesCreateRequest]
-): ...
-
-
-@register_fixture
-class ClusterUnixUsersPropertiesCreateRequestFactory(
-    ModelFactory[models.ClusterUnixUsersPropertiesCreateRequest]
 ): ...
 
 

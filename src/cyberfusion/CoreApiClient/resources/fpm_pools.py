@@ -1,5 +1,5 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.interfaces import Resource
 from cyberfusion.CoreApiClient.http import DtoResponse
@@ -22,21 +22,21 @@ class FPMPools(Resource):
     def list_fpm_pools(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.FpmPoolsSearchRequest | None = None,
     ) -> DtoResponse[list[models.FPMPoolResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/fpm-pools",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.FPMPoolResource)
@@ -106,6 +106,38 @@ class FPMPools(Resource):
             f"/api/v1/fpm-pools/{id_}/reload",
             data=None,
             query_parameters={
+                "callback_url": callback_url,
+            },
+        )
+
+        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+
+    def get_fpm_pool_status(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[list[models.FPMPoolNodeStatus]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/fpm-pools/{id_}/status",
+            data=None,
+        )
+
+        return DtoResponse.from_response(local_response, models.FPMPoolNodeStatus)
+
+    def update_fpm_pool_version(
+        self,
+        *,
+        id_: int,
+        version: str,
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/fpm-pools/{id_}/update-version",
+            data=None,
+            query_parameters={
+                "version": version,
                 "callback_url": callback_url,
             },
         )

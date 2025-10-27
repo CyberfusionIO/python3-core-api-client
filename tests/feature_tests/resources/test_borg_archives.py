@@ -1,28 +1,17 @@
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
 from tests.conftest import (
-    BorgArchiveCreateUnixUserRequestFactory,
-    BorgArchiveCreateDatabaseRequestFactory,
+    BorgArchiveCreateRequestFactory,
 )
 import faker
 
 
-def test_create_borg_archive_for_database(
+def test_create_borg_archive(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
-    borg_archive_create_database_request_factory: BorgArchiveCreateDatabaseRequestFactory,
+    borg_archive_create_request_factory: BorgArchiveCreateRequestFactory,
 ) -> None:
-    api_connector.borg_archives.create_borg_archive_for_database(
-        borg_archive_create_database_request_factory.build()
-    )
-
-
-def test_create_borg_archive_for_unix_user(
-    api_connector: CoreApiConnector,
-    faker: faker.Faker,
-    borg_archive_create_unix_user_request_factory: BorgArchiveCreateUnixUserRequestFactory,
-) -> None:
-    api_connector.borg_archives.create_borg_archive_for_unix_user(
-        borg_archive_create_unix_user_request_factory.build()
+    api_connector.borg_archives.create_borg_archive(
+        borg_archive_create_request_factory.build()
     )
 
 

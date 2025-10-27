@@ -18,7 +18,6 @@ from tests.conftest import (
     ClusterPostgresqlPropertiesCreateRequestFactory,
     ClusterRabbitmqPropertiesCreateRequestFactory,
     ClusterSinglestorePropertiesCreateRequestFactory,
-    ClusterUnixUsersPropertiesCreateRequestFactory,
     ClusterRabbitmqPropertiesUpdateRequestFactory,
     ClusterBorgPropertiesUpdateRequestFactory,
     ClusterElasticsearchPropertiesUpdateRequestFactory,
@@ -199,16 +198,6 @@ def test_create_singlestore_properties(
     )
 
 
-def test_create_unix_users_properties(
-    api_connector: CoreApiConnector,
-    faker: faker.Faker,
-    cluster_unix_users_properties_create_request_factory: ClusterUnixUsersPropertiesCreateRequestFactory,
-) -> None:
-    api_connector.clusters.create_unix_users_properties(
-        cluster_unix_users_properties_create_request_factory.build(), id_=faker.pyint()
-    )
-
-
 def test_update_cluster(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
@@ -237,10 +226,6 @@ def test_get_common_properties(
 
 def test_read_cluster(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.clusters.read_cluster(id_=faker.pyint())
-
-
-def test_get_borg_ssh_key(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
-    api_connector.clusters.get_borg_ssh_key(id_=faker.pyint())
 
 
 def test_delete_ip_address_for_cluster(
