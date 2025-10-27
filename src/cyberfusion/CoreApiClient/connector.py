@@ -184,8 +184,8 @@ class CoreApiConnector(CoreApiClient):
         return resources.login.Login(self)
 
     @cached_property
-    def sites(self) -> resources.sites.Sites:
-        return resources.sites.Sites(self)
+    def regions(self) -> resources.regions.Regions:
+        return resources.regions.Regions(self)
 
     @cached_property
     def customers(self) -> resources.customers.Customers:

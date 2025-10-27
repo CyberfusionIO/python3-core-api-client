@@ -1,24 +1,23 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.interfaces import Resource
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
 class Nodes(Resource):
-    def create_node(
+    def create_nodes(
         self,
         request: models.NodeCreateRequest,
         *,
         callback_url: Optional[str] = None,
+        amount: int = 1,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/nodes",
             data=request.dict(exclude_unset=True),
-            query_parameters={
-                "callback_url": callback_url,
-            },
+            query_parameters={"callback_url": callback_url, "amount": amount},
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
@@ -26,21 +25,21 @@ class Nodes(Resource):
     def list_nodes(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.NodesSearchRequest | None = None,
     ) -> DtoResponse[list[models.NodeResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/nodes",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.NodeResource)
@@ -84,12 +83,18 @@ class Nodes(Resource):
         self,
         *,
         id_: int,
-    ) -> DtoResponse[models.DetailMessage]:
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
-            "DELETE", f"/api/v1/nodes/{id_}", data=None, query_parameters={}
+            "DELETE",
+            f"/api/v1/nodes/{id_}",
+            data=None,
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
 
     def upgrade_downgrade_node(
         self,

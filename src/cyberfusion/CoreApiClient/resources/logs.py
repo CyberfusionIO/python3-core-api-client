@@ -1,5 +1,5 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -12,7 +12,7 @@ class Logs(Resource):
         virtual_host_id: int,
         timestamp: Optional[str] = None,
         sort: Optional[str] = None,
-        limit: Optional[int] = None,
+        page: int = 1,
     ) -> DtoResponse[list[models.WebServerLogAccessResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -20,8 +20,7 @@ class Logs(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
-                "sort": sort,
-                "limit": limit,
+                "page": page,
             },
         )
 
@@ -35,7 +34,7 @@ class Logs(Resource):
         virtual_host_id: int,
         timestamp: Optional[str] = None,
         sort: Optional[str] = None,
-        limit: Optional[int] = None,
+        page: int = 1,
     ) -> DtoResponse[list[models.WebServerLogErrorResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -43,8 +42,7 @@ class Logs(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
-                "sort": sort,
-                "limit": limit,
+                "page": page,
             },
         )
 
@@ -55,21 +53,21 @@ class Logs(Resource):
     def list_object_logs(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.ObjectLogsSearchRequest | None = None,
     ) -> DtoResponse[list[models.ObjectLogResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/object-logs",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.ObjectLogResource)
@@ -77,21 +75,21 @@ class Logs(Resource):
     def list_request_logs(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.RequestLogsSearchRequest | None = None,
     ) -> DtoResponse[list[models.RequestLogResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/request-logs",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.RequestLogResource)

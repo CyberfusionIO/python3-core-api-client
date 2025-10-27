@@ -1,5 +1,5 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -22,21 +22,21 @@ class Daemons(Resource):
     def list_daemons(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.DaemonsSearchRequest | None = None,
     ) -> DtoResponse[list[models.DaemonResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/daemons",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.DaemonResource)
@@ -78,13 +78,30 @@ class Daemons(Resource):
 
         return DtoResponse.from_response(local_response, models.DetailMessage)
 
+    def restart_daemon(
+        self,
+        *,
+        id_: int,
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/daemons/{id_}/restart",
+            data=None,
+            query_parameters={
+                "callback_url": callback_url,
+            },
+        )
+
+        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+
     def list_logs(
         self,
         *,
         daemon_id: int,
         timestamp: Optional[str] = None,
         sort: Optional[str] = None,
-        limit: Optional[int] = None,
+        page: int = 1,
     ) -> DtoResponse[list[models.DaemonLogResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -92,8 +109,7 @@ class Daemons(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
-                "sort": sort,
-                "limit": limit,
+                "page": page,
             },
         )
 

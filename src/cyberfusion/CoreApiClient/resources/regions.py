@@ -4,17 +4,17 @@ from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
 
-class Malwares(Resource):
-    def list_malwares(
+class Regions(Resource):
+    def list_regions(
         self,
         *,
         page: int = 1,
         per_page: int = 0,
-        include_filters: models.MalwaresSearchRequest | None = None,
-    ) -> DtoResponse[list[models.MalwareResource]]:
+        include_filters: models.RegionsSearchRequest | None = None,
+    ) -> DtoResponse[list[models.RegionResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            "/api/v1/malwares",
+            "/api/v1/regions",
             data=None,
             query_parameters={
                 "page": page,
@@ -25,4 +25,4 @@ class Malwares(Resource):
             else None,
         )
 
-        return DtoResponse.from_response(local_response, models.MalwareResource)
+        return DtoResponse.from_response(local_response, models.RegionResource)

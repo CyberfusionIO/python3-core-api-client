@@ -1,5 +1,5 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
+from typing import Optional
 
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -9,21 +9,21 @@ class Customers(Resource):
     def list_customers(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.CustomersSearchRequest | None = None,
     ) -> DtoResponse[list[models.CustomerResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/customers",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(local_response, models.CustomerResource)
@@ -58,12 +58,15 @@ class Customers(Resource):
         request: models.CustomerIPAddressCreateRequest,
         *,
         id_: int,
+        callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/customers/{id_}/ip-addresses",
             data=request.dict(exclude_unset=True),
-            query_parameters={},
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
@@ -73,12 +76,15 @@ class Customers(Resource):
         *,
         id_: int,
         ip_address: str,
+        callback_url: Optional[str] = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "DELETE",
             f"/api/v1/customers/{id_}/ip-addresses/{ip_address}",
             data=None,
-            query_parameters={},
+            query_parameters={
+                "callback_url": callback_url,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)

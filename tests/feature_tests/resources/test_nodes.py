@@ -3,12 +3,12 @@ from tests.conftest import NodeUpdateRequestFactory, NodeCreateRequestFactory
 import faker
 
 
-def test_create_node(
+def test_create_nodes(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
     node_create_request_factory: NodeCreateRequestFactory,
 ) -> None:
-    api_connector.nodes.create_node(node_create_request_factory.build())
+    api_connector.nodes.create_nodes(node_create_request_factory.build())
 
 
 def test_update_node(

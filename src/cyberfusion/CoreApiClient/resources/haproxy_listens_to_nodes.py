@@ -1,5 +1,4 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional, List
 
 from cyberfusion.CoreApiClient.interfaces import Resource
 from cyberfusion.CoreApiClient.http import DtoResponse
@@ -24,21 +23,21 @@ class HAProxyListensToNodes(Resource):
     def list_haproxy_listens_to_nodes(
         self,
         *,
-        skip: Optional[int] = None,
-        limit: Optional[int] = None,
-        filter_: Optional[List[str]] = None,
-        sort: Optional[List[str]] = None,
+        page: int = 1,
+        per_page: int = 0,
+        include_filters: models.HaproxyListensToNodesSearchRequest | None = None,
     ) -> DtoResponse[list[models.HAProxyListenToNodeResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/haproxy-listens-to-nodes",
             data=None,
             query_parameters={
-                "skip": skip,
-                "limit": limit,
-                "filter": filter_,
-                "sort": sort,
-            },
+                "page": page,
+                "per_page": per_page,
+            }
+            | include_filters.dict(exclude_unset=True)
+            if include_filters
+            else None,
         )
 
         return DtoResponse.from_response(

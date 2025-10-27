@@ -41,6 +41,7 @@ class RootModelCollectionMixin:
 class SpecificationMode(StrEnum):
     SINGLE = "Single"
     OR = "Or"
+    AND = "And"
 
 
 class ObjectLogTypeEnum(StrEnum):
@@ -76,7 +77,8 @@ class APIUserInfo(CoreApiModel):
     is_active: bool
     is_superuser: bool
     clusters: List[int] = Field(..., unique_items=True)
-    customer_id: Optional[int]
+    customers: List[int] = Field(..., unique_items=True)
+    service_accounts: List[int] = Field(..., unique_items=True)
     authentication_method: APIUserAuthenticationMethodEnum
 
 
@@ -127,16 +129,9 @@ class BorgArchiveContentObjectTypeEnum(StrEnum):
     SYMBOLIC_LINK = "symbolic_link"
 
 
-class BorgArchiveCreateDatabaseRequest(CoreApiModel):
+class BorgArchiveCreateRequest(CoreApiModel):
     borg_repository_id: int
     name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    database_id: int
-
-
-class BorgArchiveCreateUNIXUserRequest(CoreApiModel):
-    borg_repository_id: int
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    unix_user_id: int
 
 
 class BorgArchiveMetadata(CoreApiModel):
@@ -149,17 +144,13 @@ class BorgArchiveMetadata(CoreApiModel):
 class BorgRepositoryCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    remote_host: str
-    remote_path: str
-    remote_username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     unix_user_id: Optional[int]
-    cluster_id: int
     keep_hourly: Optional[int]
     keep_daily: Optional[int]
     keep_weekly: Optional[int]
     keep_monthly: Optional[int]
     keep_yearly: Optional[int]
-    identity_file_path: Optional[str]
+    database_id: Optional[int]
 
 
 class BorgRepositoryUpdateRequest(CoreApiModel):
@@ -168,7 +159,6 @@ class BorgRepositoryUpdateRequest(CoreApiModel):
     keep_weekly: Optional[int] = None
     keep_monthly: Optional[int] = None
     keep_yearly: Optional[int] = None
-    identity_file_path: Optional[str] = None
 
 
 class CMSConfigurationConstant(CoreApiModel):
@@ -261,10 +251,6 @@ class CertificateProviderNameEnum(StrEnum):
     LETS_ENCRYPT = "lets_encrypt"
 
 
-class ClusterBorgSSHKey(CoreApiModel):
-    public_key: str
-
-
 class NodejsVersion(CoreApiModel):
     __hash__ = object.__hash__
 
@@ -285,7 +271,7 @@ class CronCreateRequest(CoreApiModel):
     node_id: Optional[int]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
     error_count: int
@@ -298,7 +284,9 @@ class CronCreateRequest(CoreApiModel):
 
 
 class CronUpdateRequest(CoreApiModel):
-    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = None
+    command: Optional[
+        constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
+    ] = None
     email_address: Optional[EmailStr] = None
     schedule: Optional[str] = None
     error_count: Optional[int] = None
@@ -360,14 +348,16 @@ class CustomerResource(CoreApiModel):
 class DaemonCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
     nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
 
 
 class DaemonUpdateRequest(CoreApiModel):
-    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = None
+    command: Optional[
+        constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
+    ] = None
     nodes_ids: Optional[List[int]] = None
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
@@ -696,7 +686,7 @@ class NodeAddOnCreateRequest(CoreApiModel):
 class NodeAddOnProduct(CoreApiModel):
     uuid: UUID4
     name: constr(regex=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
-    memory_gib: Optional[int]
+    memory_mib: Optional[int]
     cpu_cores: Optional[int]
     disk_gib: Optional[int]
     price: confloat(ge=0.0)
@@ -714,7 +704,6 @@ class NodeGroupEnum(StrEnum):
     POSTGRESQL = "PostgreSQL"
     PHP = "PHP"
     PASSENGER = "Passenger"
-    BORG = "Borg"
     FAST_REDIRECT = "Fast Redirect"
     HAPROXY = "HAProxy"
     REDIS = "Redis"
@@ -748,7 +737,7 @@ class NodeMariaDBGroupProperties(CoreApiModel):
 class NodeProduct(CoreApiModel):
     uuid: UUID4
     name: constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)
-    memory_gib: int
+    memory_mib: int
     cpu_cores: int
     disk_gib: int
     allow_upgrade_to: List[constr(regex=r"^[A-Z]+$", min_length=1, max_length=2)]
@@ -770,7 +759,7 @@ class ObjectModelNameEnum(StrEnum):
     BORG_ARCHIVE = "BorgArchive"
     BORG_REPOSITORY = "BorgRepository"
     SERVICE_ACCOUNT_TO_CLUSTER = "ServiceAccountToCluster"
-    SITE = "Site"
+    REGION = "Region"
     SERVICE_ACCOUNT_TO_CUSTOMER = "ServiceAccountToCustomer"
     CLUSTER = "Cluster"
     CUSTOMER = "Customer"
@@ -803,12 +792,13 @@ class ObjectModelNameEnum(StrEnum):
     CERTIFICATE = "Certificate"
     ROOT_SSH_KEY = "RootSSHKey"
     SSH_KEY = "SSHKey"
+    BORG_REPOSITORY_SSH_KEY = "BorgRepositorySshKey"
     UNIX_USER = "UNIXUser"
     UNIX_USER_RABBITMQ_CREDENTIALS = "UNIXUserRabbitMQCredentials"
     HAPROXY_LISTEN = "HAProxyListen"
     HAPROXY_LISTEN_TO_NODE = "HAProxyListenToNode"
     URL_REDIRECT = "URLRedirect"
-    SITE_TO_CUSTOMER = "SiteToCustomer"
+    REGION_TO_CUSTOMER = "RegionToCustomer"
     SERVICE_ACCOUNT = "ServiceAccount"
     SERVICE_ACCOUNT_SERVER = "ServiceAccountServer"
     CUSTOM_CONFIG = "CustomConfig"
@@ -973,6 +963,7 @@ class SecurityTXTPolicyUpdateRequest(CoreApiModel):
 class ServiceAccountGroupEnum(StrEnum):
     SECURITY_TXT_POLICY_SERVER = "Security TXT Policy Server"
     LOAD_BALANCER = "Load Balancer"
+    BORG = "Borg"
     MAIL_PROXY = "Mail Proxy"
     MAIL_GATEWAY = "Mail Gateway"
     INTERNET_ROUTER = "Internet Router"
@@ -980,20 +971,18 @@ class ServiceAccountGroupEnum(StrEnum):
     PHPMYADMIN = "phpMyAdmin"
 
 
-class ShellPathEnum(StrEnum):
-    BASH = "/bin/bash"
-    JAILSHELL = "/usr/local/bin/jailshell"
-    NOLOGIN = "/usr/sbin/nologin"
+class ShellNameEnum(StrEnum):
+    BASH = "Bash"
 
 
-class SiteIncludes(CoreApiModel):
+class RegionIncludes(CoreApiModel):
     pass
 
 
-class SiteResource(CoreApiModel):
+class RegionResource(CoreApiModel):
     id: int
     name: constr(regex=r"^[A-Z0-9-]+$", min_length=1, max_length=32)
-    includes: SiteIncludes
+    includes: RegionIncludes
 
 
 class StatusCodeEnum(IntEnum):
@@ -1056,16 +1045,16 @@ class UNIXUserCreateRequest(CoreApiModel):
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     virtual_hosts_directory: Optional[str]
     mail_domains_directory: Optional[str]
-    borg_repositories_directory: Optional[str]
     cluster_id: int
     password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)]
-    shell_path: ShellPathEnum
+    shell_name: ShellNameEnum
     record_usage_files: bool
     default_php_version: Optional[str]
     default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
+    shell_is_namespaced: bool
 
 
 class UNIXUserHomeDirectoryEnum(StrEnum):
@@ -1078,7 +1067,7 @@ class UNIXUserHomeDirectoryEnum(StrEnum):
 
 class UNIXUserUpdateRequest(CoreApiModel):
     password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)] = None
-    shell_path: Optional[ShellPathEnum] = None
+    shell_name: Optional[ShellNameEnum] = None
     record_usage_files: Optional[bool] = None
     default_php_version: Optional[str] = None
     default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = None
@@ -1170,6 +1159,7 @@ class VirtualHostUpdateRequest(CoreApiModel):
         List[AllowOverrideOptionDirectiveEnum]
     ] = None
     server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = None
+    public_root: Optional[str] = None
 
 
 class BorgArchiveContent(CoreApiModel):
@@ -1207,8 +1197,9 @@ class CertificateManagerCreateRequest(CoreApiModel):
 
 class ClusterCreateRequest(CoreApiModel):
     customer_id: int
-    site_id: int
+    region_id: int
     description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
+    cephfs_enabled: bool
 
 
 class ClusterDeploymentTaskResult(CoreApiModel):
@@ -1224,7 +1215,7 @@ class ClusterIPAddressCreateRequest(CoreApiModel):
 
 
 class ClusterIncludes(CoreApiModel):
-    site: SiteResource
+    region: RegionResource
     customer: CustomerResource
 
 
@@ -1234,7 +1225,7 @@ class ClusterResource(CoreApiModel):
     updated_at: datetime
     name: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
     customer_id: int
-    site_id: int
+    region_id: int
     description: constr(regex=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
     includes: ClusterIncludes
 
@@ -1366,7 +1357,7 @@ class DatabaseUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
+    hashed_password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
     host: Optional[HostEnum]
@@ -1407,7 +1398,7 @@ class HAProxyListenCreateRequest(CoreApiModel):
     cluster_id: int
     nodes_group: NodeGroupEnum
     nodes_ids: Optional[List[int]] = None
-    port: Optional[conint(ge=3306, le=7700)]
+    port: Optional[int]
     socket_path: Optional[str]
     load_balancing_method: LoadBalancingMethodEnum = Field(
         LoadBalancingMethodEnum.SOURCE_IP_ADDRESS,
@@ -1428,7 +1419,7 @@ class HAProxyListenResource(CoreApiModel):
     cluster_id: int
     nodes_group: NodeGroupEnum
     nodes_ids: Optional[List[int]]
-    port: Optional[conint(ge=3306, le=7700)]
+    port: Optional[int]
     socket_path: Optional[str]
     load_balancing_method: Optional[LoadBalancingMethodEnum] = (
         LoadBalancingMethodEnum.SOURCE_IP_ADDRESS
@@ -1630,7 +1621,7 @@ class TaskCollectionResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    object_id: Optional[int]
+    objects_ids: List[int]
     object_model_name: ObjectModelNameEnum
     uuid: UUID4
     description: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
@@ -1646,6 +1637,7 @@ class TaskResult(CoreApiModel):
     message: Optional[str]
     state: TaskStateEnum
     retries: conint(ge=0)
+    free_form_data: Dict[str, Any]
 
 
 class TokenResource(CoreApiModel):
@@ -1662,22 +1654,22 @@ class UNIXUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
+    hashed_password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     unix_id: int
     home_directory: str
     ssh_directory: str
     virtual_hosts_directory: Optional[str]
     mail_domains_directory: Optional[str]
-    borg_repositories_directory: Optional[str]
     cluster_id: int
-    shell_path: ShellPathEnum
+    shell_name: ShellNameEnum
     record_usage_files: bool
     default_php_version: Optional[str]
     default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
+    shell_is_namespaced: bool
     includes: UNIXUserIncludes
 
 
@@ -1724,6 +1716,7 @@ class VirtualHostCreateRequest(CoreApiModel):
 
 class BorgRepositoryIncludes(CoreApiModel):
     unix_user: Optional[UNIXUserResource]
+    database: Optional[DatabaseResource]
     cluster: ClusterResource
 
 
@@ -1744,6 +1737,7 @@ class BorgRepositoryResource(CoreApiModel):
     keep_yearly: Optional[int]
     identity_file_path: Optional[str]
     unix_user_id: Optional[int]
+    unix_id: int
     includes: BorgRepositoryIncludes
 
 
@@ -1790,7 +1784,7 @@ class CronResource(CoreApiModel):
     node_id: int
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
     error_count: int
@@ -1815,7 +1809,7 @@ class DaemonResource(CoreApiModel):
     cluster_id: int
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
     nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
     memory_limit: Optional[conint(ge=256)]
     cpu_limit: Optional[int]
@@ -1872,7 +1866,7 @@ class FTPUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    hashed_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
     cluster_id: int
     username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
     unix_user_id: int
@@ -1955,7 +1949,7 @@ class HtpasswdUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    hashed_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
     cluster_id: int
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255)
     htpasswd_file_id: int
@@ -2157,16 +2151,12 @@ class BasicAuthenticationRealmResource(CoreApiModel):
 class BorgArchiveIncludes(CoreApiModel):
     borg_repository: BorgRepositoryResource
     cluster: ClusterResource
-    unix_user: Optional[UNIXUserResource]
-    database: Optional[DatabaseResource]
 
 
 class BorgArchiveResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    database_id: Optional[int]
-    unix_user_id: Optional[int]
     cluster_id: int
     borg_repository_id: int
     name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
@@ -2247,7 +2237,7 @@ class MailAccountResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    hashed_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
     local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
     mail_domain_id: int
     cluster_id: int
@@ -3150,12 +3140,6 @@ class ClusterPhpPropertiesUpdateRequest(CoreApiModel):
     php_sessions_spread_enabled: Optional[bool] = None
 
 
-class ClusterUnixUsersPropertiesCreateRequest(CoreApiModel):
-    unix_users_home_directory: UNIXUserHomeDirectoryEnum = (
-        UNIXUserHomeDirectoryEnum.HOME
-    )
-
-
 class ClusterUnixUsersPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
@@ -3227,7 +3211,6 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_WP_CLI_NODES = "Cluster supports WP-CLI nodes"
     CLUSTER_SUPPORTS_NODEJS_NODES = "Cluster supports NodeJS nodes"
     CLUSTER_SUPPORTS_PASSENGER_NODES = "Cluster supports Passenger nodes"
-    CLUSTER_SUPPORTS_BORG_NODES = "Cluster supports Borg nodes"
     CLUSTER_SUPPORTS_KERNELCARE_NODES = "Cluster supports KernelCare nodes"
     CLUSTER_SUPPORTS_NEW_RELIC_NODES = "Cluster supports New Relic nodes"
     CLUSTER_SUPPORTS_REDIS_NODES = "Cluster supports Redis nodes"
@@ -3241,9 +3224,15 @@ class SpecificationNameEnum(StrEnum):
     UNIX_USER_SUPPORTS_MAIL_DOMAINS = "UNIX user supports mail domains"
     UNIX_USER_SUPPORTS_BORG_REPOSITORIES = "UNIX user supports Borg repositories"
     CLUSTER_SUPPORTS_LOAD_BALANCER_SERVICE_ACCOUNT_SERVICE_ACCOUNT_TO_CLUSTER = (
-        "Cluster supports 'Load Balancer' service account service account to cluster"
+        "Cluster supports Load Balancer service account service account to cluster"
     )
     CLUSTER_SUPPORTS_DOMAIN_ROUTERS = "Cluster supports domain routers"
+    CLUSTER_SUPPORTS_MARIADB_DATABASE_BORG_REPOSITORIES = (
+        "Cluster supports MariaDB database Borg repositories"
+    )
+    CLUSTER_SUPPORTS_UNIX_USER_BORG_REPOSITORIES = (
+        "Cluster supports UNIX user Borg repositories"
+    )
 
 
 class TableInnodbDataLengths(CoreApiModel):
@@ -3263,6 +3252,472 @@ class DatabaseInnodbReport(CoreApiModel):
     innodb_buffer_pool_size_bytes: int
     total_innodb_data_length_bytes: int
     databases_innodb_data_lengths: List[DatabaseInnodbDataLengths]
+
+
+class FPMPoolChildStatus(CoreApiModel):
+    current_request_duration: int
+    http_method: HTTPMethod
+    http_uri: str
+    basic_authentication_user: Optional[str]
+    script: str
+
+
+class FPMPoolNodeStatus(CoreApiModel):
+    node_id: int
+    child_statuses: List[FPMPoolChildStatus]
+    current_amount_children: conint(ge=0)
+
+
+class BasicAuthenticationRealmsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    virtual_host_id: Optional[int] = None
+    name: Optional[str] = None
+    htpasswd_file_id: Optional[int] = None
+
+
+class BorgArchivesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    borg_repository_id: Optional[int] = None
+    name: Optional[str] = None
+
+
+class BorgRepositoriesSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    unix_id: Optional[int] = None
+    cluster_id: Optional[int] = None
+    unix_user_id: Optional[int] = None
+    database_id: Optional[int] = None
+
+
+class CertificatesSearchRequest(CoreApiModel):
+    main_common_name: Optional[str] = None
+    common_names: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersBorgPropertiesSearchRequest(CoreApiModel):
+    automatic_borg_repositories_prune_enabled: Optional[bool] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersElasticsearchPropertiesSearchRequest(CoreApiModel):
+    elasticsearch_default_users_password: Optional[str] = None
+    kibana_domain: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersFirewallPropertiesSearchRequest(CoreApiModel):
+    firewall_rules_external_providers_enabled: Optional[bool] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersGrafanaPropertiesSearchRequest(CoreApiModel):
+    grafana_domain: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersKernelcarePropertiesSearchRequest(CoreApiModel):
+    kernelcare_license_key: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersMariadbPropertiesSearchRequest(CoreApiModel):
+    mariadb_version: Optional[str] = None
+    mariadb_cluster_name: Optional[str] = None
+    mariadb_backup_interval: Optional[int] = None
+    mariadb_backup_local_retention: Optional[int] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersMetabasePropertiesSearchRequest(CoreApiModel):
+    metabase_domain: Optional[str] = None
+    metabase_database_password: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersNewRelicPropertiesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+
+
+class ClustersNodejsPropertiesSearchRequest(CoreApiModel):
+    nodejs_version: Optional[int] = None
+    nodejs_versions: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersOsPropertiesSearchRequest(CoreApiModel):
+    automatic_upgrades_enabled: Optional[bool] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersPostgresqlPropertiesSearchRequest(CoreApiModel):
+    postgresql_version: Optional[int] = None
+    postgresql_backup_local_retention: Optional[int] = None
+    postgresql_backup_interval: Optional[int] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersRabbitmqPropertiesSearchRequest(CoreApiModel):
+    rabbitmq_management_domain: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersRedisPropertiesSearchRequest(CoreApiModel):
+    redis_password: Optional[str] = None
+    redis_memory_limit: Optional[int] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    region_id: Optional[int] = None
+    description: Optional[str] = None
+    customer_id: Optional[int] = None
+
+
+class ClustersSinglestorePropertiesSearchRequest(CoreApiModel):
+    singlestore_studio_domain: Optional[str] = None
+    singlestore_api_domain: Optional[str] = None
+    singlestore_license_key: Optional[str] = None
+    singlestore_root_password: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class CmsesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    software_name: Optional[CMSSoftwareNameEnum] = None
+    is_manually_created: Optional[bool] = None
+    virtual_host_id: Optional[int] = None
+
+
+class CronsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    node_id: Optional[int] = None
+    name: Optional[str] = None
+    unix_user_id: Optional[int] = None
+    email_address: Optional[EmailStr] = None
+    locking_enabled: Optional[bool] = None
+    is_active: Optional[bool] = None
+
+
+class CustomConfigsSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    cluster_id: Optional[int] = None
+    server_software_name: Optional[CustomConfigServerSoftwareNameEnum] = None
+
+
+class CustomersSearchRequest(CoreApiModel):
+    identifier: Optional[str] = None
+    dns_subdomain: Optional[str] = None
+    is_internal: Optional[bool] = None
+    team_code: Optional[str] = None
+
+
+class DaemonsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    name: Optional[str] = None
+    unix_user_id: Optional[int] = None
+    nodes_ids: Optional[int] = None
+
+
+class DatabaseUsersSearchRequest(CoreApiModel):
+    phpmyadmin_firewall_groups_ids: Optional[int] = None
+
+
+class DatabasesSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    server_software_name: Optional[DatabaseServerSoftwareNameEnum] = None
+    cluster_id: Optional[int] = None
+    optimizing_enabled: Optional[bool] = None
+    backups_enabled: Optional[bool] = None
+
+
+class DomainRoutersSearchRequest(CoreApiModel):
+    domain: Optional[str] = None
+    virtual_host_id: Optional[int] = None
+    url_redirect_id: Optional[int] = None
+    category: Optional[DomainRouterCategoryEnum] = None
+    cluster_id: Optional[int] = None
+    node_id: Optional[int] = None
+    certificate_id: Optional[int] = None
+    security_txt_policy_id: Optional[int] = None
+    firewall_groups_ids: Optional[int] = None
+    force_ssl: Optional[bool] = None
+
+
+class FirewallGroupsSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    cluster_id: Optional[int] = None
+    ip_networks: Optional[str] = None
+
+
+class FirewallRulesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    node_id: Optional[int] = None
+    firewall_group_id: Optional[int] = None
+    external_provider_name: Optional[FirewallRuleExternalProviderNameEnum] = None
+    service_name: Optional[FirewallRuleServiceNameEnum] = None
+    haproxy_listen_id: Optional[int] = None
+    port: Optional[int] = None
+
+
+class FpmPoolsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    name: Optional[str] = None
+    version: Optional[str] = None
+    unix_user_id: Optional[int] = None
+    max_children: Optional[int] = None
+    is_namespaced: Optional[bool] = None
+
+
+class FtpUsersSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    username: Optional[str] = None
+    unix_user_id: Optional[int] = None
+
+
+class HaproxyListensToNodesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    haproxy_listen_id: Optional[int] = None
+    node_id: Optional[int] = None
+
+
+class HostsEntriesSearchRequest(CoreApiModel):
+    node_id: Optional[int] = None
+    host_name: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class HtpasswdFilesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    unix_user_id: Optional[int] = None
+
+
+class HtpasswdUsersSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    username: Optional[str] = None
+    htpasswd_file_id: Optional[int] = None
+
+
+class MailAccountsSearchRequest(CoreApiModel):
+    local_part: Optional[str] = None
+    mail_domain_id: Optional[int] = None
+    cluster_id: Optional[int] = None
+    quota: Optional[int] = None
+
+
+class MailAliasesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    local_part: Optional[str] = None
+    mail_domain_id: Optional[int] = None
+    forward_email_addresses: Optional[EmailStr] = None
+
+
+class MailDomainsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    domain: Optional[str] = None
+    unix_user_id: Optional[int] = None
+    catch_all_forward_email_addresses: Optional[EmailStr] = None
+    is_local: Optional[bool] = None
+
+
+class MailHostnamesSearchRequest(CoreApiModel):
+    domain: Optional[str] = None
+    cluster_id: Optional[int] = None
+    certificate_id: Optional[int] = None
+
+
+class MalwaresSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    unix_user_id: Optional[int] = None
+    name: Optional[str] = None
+
+
+class MariadbEncryptionKeysSearchRequest(CoreApiModel):
+    identifier: Optional[int] = None
+    cluster_id: Optional[int] = None
+
+
+class NodeAddOnsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    node_id: Optional[int] = None
+    product: Optional[str] = None
+    quantity: Optional[int] = None
+
+
+class NodesSearchRequest(CoreApiModel):
+    hostname: Optional[str] = None
+    product: Optional[str] = None
+    cluster_id: Optional[int] = None
+    groups: Optional[NodeGroupEnum] = None
+    comment: Optional[str] = None
+    is_ready: Optional[bool] = None
+
+
+class ObjectLogsSearchRequest(CoreApiModel):
+    object_id: Optional[int] = None
+    object_model_name: Optional[str] = None
+    request_id: Optional[UUID4] = None
+    type: Optional[ObjectLogTypeEnum] = None
+    causer_type: Optional[CauserTypeEnum] = None
+    causer_id: Optional[int] = None
+    customer_id: Optional[int] = None
+
+
+class RedisInstancesSearchRequest(CoreApiModel):
+    port: Optional[int] = None
+    name: Optional[str] = None
+    cluster_id: Optional[int] = None
+    eviction_policy: Optional[RedisEvictionPolicyEnum] = None
+
+
+class RegionsSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+
+
+class RequestLogsSearchRequest(CoreApiModel):
+    ip_address: Optional[str] = None
+    path: Optional[str] = None
+    method: Optional[HTTPMethod] = None
+    api_user_id: Optional[int] = None
+    request_id: Optional[UUID4] = None
+
+
+class RootSshKeysSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    name: Optional[str] = None
+
+
+class SecurityTxtPoliciesSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    email_contacts: Optional[EmailStr] = None
+    url_contacts: Optional[AnyUrl] = None
+    encryption_key_urls: Optional[AnyUrl] = None
+    acknowledgment_urls: Optional[AnyUrl] = None
+    policy_urls: Optional[AnyUrl] = None
+    opening_urls: Optional[AnyUrl] = None
+    preferred_languages: Optional[LanguageCodeEnum] = None
+
+
+class SshKeysSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    name: Optional[str] = None
+    unix_user_id: Optional[int] = None
+
+
+class TombstonesSearchRequest(CoreApiModel):
+    object_id: Optional[int] = None
+    object_model_name: Optional[ObjectModelNameEnum] = None
+    cluster_id: Optional[int] = None
+
+
+class UnixUsersSearchRequest(CoreApiModel):
+    username: Optional[str] = None
+    unix_id: Optional[int] = None
+    cluster_id: Optional[int] = None
+    shell_name: Optional[ShellNameEnum] = None
+    record_usage_files: Optional[bool] = None
+    default_php_version: Optional[str] = None
+    default_nodejs_version: Optional[str] = None
+    description: Optional[str] = None
+
+
+class UrlRedirectsSearchRequest(CoreApiModel):
+    domain: Optional[str] = None
+    cluster_id: Optional[int] = None
+    server_aliases: Optional[str] = None
+    destination_url: Optional[AnyUrl] = None
+    status_code: Optional[StatusCodeEnum] = None
+    keep_query_parameters: Optional[bool] = None
+    keep_path: Optional[bool] = None
+    description: Optional[str] = None
+
+
+class VirtualHostsSearchRequest(CoreApiModel):
+    unix_user_id: Optional[int] = None
+    server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = None
+    domain_root: Optional[str] = None
+    cluster_id: Optional[int] = None
+    domain: Optional[str] = None
+    public_root: Optional[str] = None
+    server_aliases: Optional[str] = None
+    document_root: Optional[str] = None
+    fpm_pool_id: Optional[int] = None
+    passenger_app_id: Optional[int] = None
+
+
+class CertificateManagersSearchRequest(CoreApiModel):
+    main_common_name: Optional[str] = None
+    certificate_id: Optional[int] = None
+    common_names: Optional[str] = None
+    provider_name: Optional[CertificateProviderNameEnum] = None
+    cluster_id: Optional[int] = None
+    request_callback_url: Optional[AnyUrl] = None
+
+
+class ClustersLoadBalancingPropertiesSearchRequest(CoreApiModel):
+    http_retry_properties: Optional[HTTPRetryProperties] = None
+    load_balancing_method: Optional[LoadBalancingMethodEnum] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersMeilisearchPropertiesSearchRequest(CoreApiModel):
+    meilisearch_backup_local_retention: Optional[int] = None
+    meilisearch_environment: Optional[MeilisearchEnvironmentEnum] = None
+    meilisearch_backup_interval: Optional[int] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersPhpPropertiesSearchRequest(CoreApiModel):
+    php_versions: Optional[str] = None
+    custom_php_modules_names: Optional[PHPExtensionEnum] = None
+    php_ioncube_enabled: Optional[bool] = None
+    php_sessions_spread_enabled: Optional[bool] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersUnixUsersPropertiesSearchRequest(CoreApiModel):
+    unix_users_home_directory: Optional[UNIXUserHomeDirectoryEnum] = None
+    cluster_id: Optional[int] = None
+
+
+class CustomConfigSnippetsSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = None
+    cluster_id: Optional[int] = None
+    is_default: Optional[bool] = None
+
+
+class DatabaseUserGrantsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    database_id: Optional[int] = None
+    database_user_id: Optional[int] = None
+    table_name: Optional[str] = None
+    privilege_name: Optional[MariaDBPrivilegeEnum] = None
+
+
+class HaproxyListensSearchRequest(CoreApiModel):
+    name: Optional[str] = None
+    cluster_id: Optional[int] = None
+    nodes_group: Optional[NodeGroupEnum] = None
+    nodes_ids: Optional[int] = None
+    port: Optional[int] = None
+    socket_path: Optional[str] = None
+    load_balancing_method: Optional[LoadBalancingMethodEnum] = None
+    destination_cluster_id: Optional[int] = None
+
+
+class PassengerAppsSearchRequest(CoreApiModel):
+    cluster_id: Optional[int] = None
+    port: Optional[int] = None
+    app_type: Optional[PassengerAppTypeEnum] = None
+    name: Optional[str] = None
+    unix_user_id: Optional[int] = None
+    environment: Optional[PassengerEnvironmentEnum] = None
+    max_pool_size: Optional[int] = None
+    is_namespaced: Optional[bool] = None
+    cpu_limit: Optional[int] = None
+    nodejs_version: Optional[str] = None
 
 
 NestedPathsDict.update_forward_refs()
