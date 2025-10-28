@@ -19,7 +19,7 @@ unit test and feature test:
   stage: test
   image: python:3.11-bookworm
   services:
-    - name: stoplight/prism:5.14.2
+    - name: stoplight/prism:5.14.3
       alias: prism
       command: [ "mock", "-h", "0.0.0.0", "https://cluster-api-staging.cyberfusion.nl/openapi.json" ]
   script:

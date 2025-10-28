@@ -2,7 +2,7 @@ version: '3'
 
 services:
   prism:
-    image: stoplight/prism:5.14.2
+    image: stoplight/prism:5.14.3
     ports:
       - "4411:4010"
     command: [ "mock", "-h", "0.0.0.0", "http://host.docker.internal:22190/openapi.json" ]
