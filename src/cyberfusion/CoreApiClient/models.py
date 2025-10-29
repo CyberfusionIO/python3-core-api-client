@@ -271,7 +271,7 @@ class CronCreateRequest(CoreApiModel):
     node_id: Optional[int]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
     error_count: int
@@ -284,9 +284,7 @@ class CronCreateRequest(CoreApiModel):
 
 
 class CronUpdateRequest(CoreApiModel):
-    command: Optional[
-        constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
-    ] = None
+    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = None
     email_address: Optional[EmailStr] = None
     schedule: Optional[str] = None
     error_count: Optional[int] = None
@@ -348,16 +346,14 @@ class CustomerResource(CoreApiModel):
 class DaemonCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
     nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
 
 
 class DaemonUpdateRequest(CoreApiModel):
-    command: Optional[
-        constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
-    ] = None
+    command: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)] = None
     nodes_ids: Optional[List[int]] = None
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
@@ -1784,7 +1780,7 @@ class CronResource(CoreApiModel):
     node_id: int
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
     error_count: int
@@ -1809,7 +1805,7 @@ class DaemonResource(CoreApiModel):
     cluster_id: int
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(regex=r"^[a-zA-Z0-9-\._\$\/\ ]+$", min_length=1, max_length=65535)
+    command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
     nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
     memory_limit: Optional[conint(ge=256)]
     cpu_limit: Optional[int]
