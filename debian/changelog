@@ -1,3 +1,9 @@
+python3-core-api-client (2.4.1) unstable; urgency=low
+
+  - Revert command regex
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Wed, 29 Oct 2025 02:34:00 +0200
+
 python3-core-api-client (2.4) unstable; urgency=low
 
   - Update to Core API 1.253
