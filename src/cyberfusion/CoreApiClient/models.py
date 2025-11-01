@@ -798,24 +798,24 @@ class ObjectModelNameEnum(StrEnum):
     SERVICE_ACCOUNT = "ServiceAccount"
     SERVICE_ACCOUNT_SERVER = "ServiceAccountServer"
     CUSTOM_CONFIG = "CustomConfig"
-    CLUSTERS_PHP_PROPERTIES = "clusters_php_properties"
-    CLUSTERS_NODEJS_PROPERTIES = "clusters_nodejs_properties"
-    CLUSTERS_BORG_PROPERTIES = "clusters_borg_properties"
-    CLUSTERS_KERNELCARE_PROPERTIES = "clusters_kernelcare_properties"
-    CLUSTERS_NEW_RELIC_PROPERTIES = "clusters_new_relic_properties"
-    CLUSTERS_REDIS_PROPERTIES = "clusters_redis_properties"
-    CLUSTERS_POSTGRESQL_PROPERTIES = "clusters_postgresql_properties"
-    CLUSTERS_MARIADB_PROPERTIES = "clusters_mariadb_properties"
-    CLUSTERS_MEILISEARCH_PROPERTIES = "clusters_meilisearch_properties"
-    CLUSTERS_GRAFANA_PROPERTIES = "clusters_grafana_properties"
-    CLUSTERS_SINGLESTORE_PROPERTIES = "clusters_singlestore_properties"
-    CLUSTERS_ELASTICSEARCH_PROPERTIES = "clusters_elasticsearch_properties"
-    CLUSTERS_RABBITMQ_PROPERTIES = "clusters_rabbitmq_properties"
-    CLUSTERS_METABASE_PROPERTIES = "clusters_metabase_properties"
-    CLUSTERS_UNIX_USERS_PROPERTIES = "clusters_unix_users_properties"
-    CLUSTERS_LOAD_BALANCING_PROPERTIES = "clusters_load_balancing_properties"
-    CLUSTERS_FIREWALL_PROPERTIES = "clusters_firewall_properties"
-    CLUSTERS_OS_PROPERTIES = "clusters_os_properties"
+    CLUSTERS_PHP_PROPERTIES = "ClustersPhpProperties"
+    CLUSTERS_NODEJS_PROPERTIES = "ClustersNodejsProperties"
+    CLUSTERS_BORG_PROPERTIES = "ClustersBorgProperties"
+    CLUSTERS_KERNELCARE_PROPERTIES = "ClustersKernelcareProperties"
+    CLUSTERS_NEW_RELIC_PROPERTIES = "ClustersNewRelicProperties"
+    CLUSTERS_REDIS_PROPERTIES = "ClustersRedisProperties"
+    CLUSTERS_POSTGRESQL_PROPERTIES = "ClustersPostgresqlProperties"
+    CLUSTERS_MARIADB_PROPERTIES = "ClustersMariadbProperties"
+    CLUSTERS_MEILISEARCH_PROPERTIES = "ClustersMeilisearchProperties"
+    CLUSTERS_GRAFANA_PROPERTIES = "ClustersGrafanaProperties"
+    CLUSTERS_SINGLESTORE_PROPERTIES = "ClustersSinglestoreProperties"
+    CLUSTERS_ELASTICSEARCH_PROPERTIES = "ClustersElasticsearchProperties"
+    CLUSTERS_RABBITMQ_PROPERTIES = "ClustersRabbitmqProperties"
+    CLUSTERS_METABASE_PROPERTIES = "ClustersMetabaseProperties"
+    CLUSTERS_UNIX_USERS_PROPERTIES = "ClustersUnixUsersProperties"
+    CLUSTERS_LOAD_BALANCING_PROPERTIES = "ClustersLoadBalancingProperties"
+    CLUSTERS_FIREWALL_PROPERTIES = "ClustersFirewallProperties"
+    CLUSTERS_OS_PROPERTIES = "ClustersOsProperties"
 
 
 class PHPExtensionEnum(StrEnum):
@@ -1070,6 +1070,7 @@ class UNIXUserUpdateRequest(CoreApiModel):
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ] = None
+    shell_is_namespaced: Optional[bool] = None
 
 
 class UNIXUserUsageFile(CoreApiModel):
@@ -2824,9 +2825,6 @@ class ClusterMetabasePropertiesResource(CoreApiModel):
 
 class ClusterMetabasePropertiesUpdateRequest(CoreApiModel):
     metabase_domain: Optional[str] = None
-    metabase_database_password: Optional[
-        constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    ] = None
 
 
 class ClusterNewRelicPropertiesCreateRequest(CoreApiModel):
@@ -2874,7 +2872,6 @@ class ClusterNodejsPropertiesCreateRequest(CoreApiModel):
         ...,
         unique_items=True,
     )
-    nodejs_version: Optional[int] = None
 
 
 class ClusterNodejsPropertiesIncludes(CoreApiModel):
@@ -2885,7 +2882,6 @@ class ClusterNodejsPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    nodejs_version: Optional[int]
     nodejs_versions: List[NodejsVersion] = Field(
         ...,
         unique_items=True,
@@ -3218,7 +3214,6 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_METABASE_NODES = "Cluster supports Metabase nodes"
     UNIX_USER_SUPPORTS_VIRTUAL_HOSTS = "UNIX user supports virtual hosts"
     UNIX_USER_SUPPORTS_MAIL_DOMAINS = "UNIX user supports mail domains"
-    UNIX_USER_SUPPORTS_BORG_REPOSITORIES = "UNIX user supports Borg repositories"
     CLUSTER_SUPPORTS_LOAD_BALANCER_SERVICE_ACCOUNT_SERVICE_ACCOUNT_TO_CLUSTER = (
         "Cluster supports Load Balancer service account service account to cluster"
     )
@@ -3336,7 +3331,6 @@ class ClustersNewRelicPropertiesSearchRequest(CoreApiModel):
 
 
 class ClustersNodejsPropertiesSearchRequest(CoreApiModel):
-    nodejs_version: Optional[int] = None
     nodejs_versions: Optional[str] = None
     cluster_id: Optional[int] = None
 
@@ -3417,7 +3411,7 @@ class DaemonsSearchRequest(CoreApiModel):
 
 
 class DatabaseUsersSearchRequest(CoreApiModel):
-    phpmyadmin_firewall_groups_ids: Optional[int] = None
+    phpmyadmin_firewall_group_id: Optional[int] = None
 
 
 class DatabasesSearchRequest(CoreApiModel):
@@ -3437,7 +3431,7 @@ class DomainRoutersSearchRequest(CoreApiModel):
     node_id: Optional[int] = None
     certificate_id: Optional[int] = None
     security_txt_policy_id: Optional[int] = None
-    firewall_groups_ids: Optional[int] = None
+    firewall_group_id: Optional[int] = None
     force_ssl: Optional[bool] = None
 
 
@@ -3506,7 +3500,7 @@ class MailAliasesSearchRequest(CoreApiModel):
     cluster_id: Optional[int] = None
     local_part: Optional[str] = None
     mail_domain_id: Optional[int] = None
-    forward_email_addresses: Optional[EmailStr] = None
+    forward_email_address: Optional[EmailStr] = None
 
 
 class MailDomainsSearchRequest(CoreApiModel):
