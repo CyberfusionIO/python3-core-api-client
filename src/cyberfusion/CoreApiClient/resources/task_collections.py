@@ -2,6 +2,7 @@ from cyberfusion.CoreApiClient import models
 from typing import Optional
 
 from cyberfusion.CoreApiClient.interfaces import Resource
+from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
@@ -25,6 +26,7 @@ class TaskCollections(Resource):
         *,
         uuid: str,
         callback_url: Optional[str] = None,
+        includes: list[str] | None = None,
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
@@ -32,7 +34,8 @@ class TaskCollections(Resource):
             data=None,
             query_parameters={
                 "callback_url": callback_url,
-            },
+            }
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)

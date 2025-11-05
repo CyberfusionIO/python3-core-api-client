@@ -1212,8 +1212,8 @@ class ClusterIPAddressCreateRequest(CoreApiModel):
 
 
 class ClusterIncludes(CoreApiModel):
-    region: RegionResource
-    customer: CustomerResource
+    region: Optional[RegionResource]
+    customer: Optional[CustomerResource]
 
 
 class ClusterResource(CoreApiModel):
@@ -1254,7 +1254,7 @@ class CustomConfigCreateRequest(CoreApiModel):
 
 
 class CustomConfigIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class CustomConfigResource(CoreApiModel):
@@ -1285,7 +1285,7 @@ class CustomConfigSnippetCreateFromTemplateRequest(CoreApiModel):
 
 
 class CustomConfigSnippetIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class CustomConfigSnippetResource(CoreApiModel):
@@ -1315,7 +1315,7 @@ class DatabaseCreateRequest(CoreApiModel):
 
 
 class DatabaseIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class DatabaseResource(CoreApiModel):
@@ -1347,7 +1347,7 @@ class DatabaseUserGrantCreateRequest(CoreApiModel):
 
 
 class DatabaseUserIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class DatabaseUserResource(CoreApiModel):
@@ -1364,7 +1364,7 @@ class DatabaseUserResource(CoreApiModel):
 
 
 class FirewallGroupIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class FirewallGroupResource(CoreApiModel):
@@ -1404,8 +1404,8 @@ class HAProxyListenCreateRequest(CoreApiModel):
 
 
 class HAProxyListenIncludes(CoreApiModel):
-    destination_cluster: ClusterResource
-    cluster: ClusterResource
+    destination_cluster: Optional[ClusterResource]
+    cluster: Optional[ClusterResource]
 
 
 class HAProxyListenResource(CoreApiModel):
@@ -1462,7 +1462,7 @@ class WebServerLogErrorResource(CoreApiModel):
 
 
 class MariaDBEncryptionKeyIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class MariaDBEncryptionKeyResource(CoreApiModel):
@@ -1489,7 +1489,7 @@ class NodeGroupsProperties(CoreApiModel):
 
 
 class NodeIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class NodeResource(CoreApiModel):
@@ -1552,7 +1552,7 @@ class PassengerAppUpdateRequest(CoreApiModel):
 
 
 class RedisInstanceIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class RedisInstanceResource(CoreApiModel):
@@ -1570,7 +1570,7 @@ class RedisInstanceResource(CoreApiModel):
 
 
 class RootSSHKeyIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class RootSSHKeyResource(CoreApiModel):
@@ -1585,7 +1585,7 @@ class RootSSHKeyResource(CoreApiModel):
 
 
 class SecurityTXTPolicyIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class SecurityTXTPolicyResource(CoreApiModel):
@@ -1644,7 +1644,7 @@ class TokenResource(CoreApiModel):
 
 
 class UNIXUserIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource] = None
 
 
 class UNIXUserResource(CoreApiModel):
@@ -1671,7 +1671,7 @@ class UNIXUserResource(CoreApiModel):
 
 
 class URLRedirectIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class URLRedirectResource(CoreApiModel):
@@ -1714,7 +1714,7 @@ class VirtualHostCreateRequest(CoreApiModel):
 class BorgRepositoryIncludes(CoreApiModel):
     unix_user: Optional[UNIXUserResource]
     database: Optional[DatabaseResource]
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class BorgRepositoryResource(CoreApiModel):
@@ -1739,7 +1739,7 @@ class BorgRepositoryResource(CoreApiModel):
 
 
 class CertificateIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class CertificateResource(CoreApiModel):
@@ -1768,9 +1768,9 @@ class ClusterDeploymentResults(CoreApiModel):
 
 
 class CronIncludes(CoreApiModel):
-    cluster: ClusterResource
-    unix_user: UNIXUserResource
-    node: NodeResource
+    cluster: Optional[ClusterResource]
+    unix_user: Optional[UNIXUserResource]
+    node: Optional[NodeResource]
 
 
 class CronResource(CoreApiModel):
@@ -1795,8 +1795,8 @@ class CronResource(CoreApiModel):
 
 
 class DaemonIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class DaemonResource(CoreApiModel):
@@ -1814,9 +1814,9 @@ class DaemonResource(CoreApiModel):
 
 
 class DatabaseUserGrantIncludes(CoreApiModel):
-    cluster: ClusterResource
-    database: DatabaseResource
-    database_user: DatabaseUserResource
+    cluster: Optional[ClusterResource]
+    database: Optional[DatabaseResource]
+    database_user: Optional[DatabaseUserResource]
 
 
 class DatabaseUserGrantResource(CoreApiModel):
@@ -1832,8 +1832,8 @@ class DatabaseUserGrantResource(CoreApiModel):
 
 
 class FPMPoolIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class FPMPoolResource(CoreApiModel):
@@ -1855,8 +1855,8 @@ class FPMPoolResource(CoreApiModel):
 
 
 class FTPUserIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class FTPUserResource(CoreApiModel):
@@ -1872,10 +1872,10 @@ class FTPUserResource(CoreApiModel):
 
 
 class FirewallRuleIncludes(CoreApiModel):
-    node: NodeResource
+    node: Optional[NodeResource]
     firewall_group: Optional[FirewallGroupResource]
     haproxy_listen: Optional[HAProxyListenResource]
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class FirewallRuleResource(CoreApiModel):
@@ -1893,9 +1893,9 @@ class FirewallRuleResource(CoreApiModel):
 
 
 class HAProxyListenToNodeIncludes(CoreApiModel):
-    haproxy_listen: HAProxyListenResource
-    node: NodeResource
-    cluster: ClusterResource
+    haproxy_listen: Optional[HAProxyListenResource]
+    node: Optional[NodeResource]
+    cluster: Optional[ClusterResource]
 
 
 class HAProxyListenToNodeResource(CoreApiModel):
@@ -1909,8 +1909,8 @@ class HAProxyListenToNodeResource(CoreApiModel):
 
 
 class HostsEntryIncludes(CoreApiModel):
-    node: NodeResource
-    cluster: ClusterResource
+    node: Optional[NodeResource]
+    cluster: Optional[ClusterResource]
 
 
 class HostsEntryResource(CoreApiModel):
@@ -1924,8 +1924,8 @@ class HostsEntryResource(CoreApiModel):
 
 
 class HtpasswdFileIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class HtpasswdFileResource(CoreApiModel):
@@ -1938,8 +1938,8 @@ class HtpasswdFileResource(CoreApiModel):
 
 
 class HtpasswdUserIncludes(CoreApiModel):
-    htpasswd_file: HtpasswdFileResource
-    cluster: ClusterResource
+    htpasswd_file: Optional[HtpasswdFileResource]
+    cluster: Optional[ClusterResource]
 
 
 class HtpasswdUserResource(CoreApiModel):
@@ -1954,8 +1954,8 @@ class HtpasswdUserResource(CoreApiModel):
 
 
 class MailDomainIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class MailDomainResource(CoreApiModel):
@@ -1971,8 +1971,8 @@ class MailDomainResource(CoreApiModel):
 
 
 class MailHostnameIncludes(CoreApiModel):
-    certificate: CertificateResource
-    cluster: ClusterResource
+    certificate: Optional[CertificateResource]
+    cluster: Optional[ClusterResource]
 
 
 class MailHostnameResource(CoreApiModel):
@@ -1986,8 +1986,8 @@ class MailHostnameResource(CoreApiModel):
 
 
 class MalwareIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class MalwareResource(CoreApiModel):
@@ -2003,8 +2003,8 @@ class MalwareResource(CoreApiModel):
 
 
 class NodeAddOnIncludes(CoreApiModel):
-    node: NodeResource
-    cluster: ClusterResource
+    node: Optional[NodeResource]
+    cluster: Optional[ClusterResource]
 
 
 class NodeAddOnResource(CoreApiModel):
@@ -2051,8 +2051,8 @@ class NodeHostsEntryDependency(CoreApiModel):
 
 
 class PassengerAppIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class PassengerAppResource(CoreApiModel):
@@ -2080,8 +2080,8 @@ class PassengerAppResource(CoreApiModel):
 
 
 class SSHKeyIncludes(CoreApiModel):
-    unix_user: UNIXUserResource
-    cluster: ClusterResource
+    unix_user: Optional[UNIXUserResource]
+    cluster: Optional[ClusterResource]
 
 
 class SSHKeyResource(CoreApiModel):
@@ -2098,8 +2098,8 @@ class SSHKeyResource(CoreApiModel):
 
 
 class VirtualHostIncludes(CoreApiModel):
-    cluster: ClusterResource
-    unix_user: UNIXUserResource
+    cluster: Optional[ClusterResource]
+    unix_user: Optional[UNIXUserResource]
     fpm_pool: Optional[FPMPoolResource]
     passenger_app: Optional[PassengerAppResource]
 
@@ -2128,9 +2128,9 @@ class VirtualHostResource(CoreApiModel):
 
 
 class BasicAuthenticationRealmIncludes(CoreApiModel):
-    htpasswd_file: HtpasswdFileResource
-    virtual_host: VirtualHostResource
-    cluster: ClusterResource
+    htpasswd_file: Optional[HtpasswdFileResource]
+    virtual_host: Optional[VirtualHostResource]
+    cluster: Optional[ClusterResource]
 
 
 class BasicAuthenticationRealmResource(CoreApiModel):
@@ -2146,8 +2146,8 @@ class BasicAuthenticationRealmResource(CoreApiModel):
 
 
 class BorgArchiveIncludes(CoreApiModel):
-    borg_repository: BorgRepositoryResource
-    cluster: ClusterResource
+    borg_repository: Optional[BorgRepositoryResource]
+    cluster: Optional[ClusterResource]
 
 
 class BorgArchiveResource(CoreApiModel):
@@ -2161,8 +2161,8 @@ class BorgArchiveResource(CoreApiModel):
 
 
 class CMSIncludes(CoreApiModel):
-    virtual_host: VirtualHostResource
-    cluster: ClusterResource
+    virtual_host: Optional[VirtualHostResource]
+    cluster: Optional[ClusterResource]
 
 
 class CMSResource(CoreApiModel):
@@ -2178,7 +2178,7 @@ class CMSResource(CoreApiModel):
 
 class CertificateManagerIncludes(CoreApiModel):
     certificate: Optional[CertificateResource]
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class CertificateManagerResource(CoreApiModel):
@@ -2205,7 +2205,7 @@ class DomainRouterIncludes(CoreApiModel):
     node: Optional[NodeResource]
     certificate: Optional[CertificateResource]
     security_txt_policy: Optional[SecurityTXTPolicyResource]
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class DomainRouterResource(CoreApiModel):
@@ -2226,8 +2226,8 @@ class DomainRouterResource(CoreApiModel):
 
 
 class MailAccountIncludes(CoreApiModel):
-    mail_domain: MailDomainResource
-    cluster: ClusterResource
+    mail_domain: Optional[MailDomainResource]
+    cluster: Optional[ClusterResource]
 
 
 class MailAccountResource(CoreApiModel):
@@ -2243,8 +2243,8 @@ class MailAccountResource(CoreApiModel):
 
 
 class MailAliasIncludes(CoreApiModel):
-    mail_domain: MailDomainResource
-    cluster: ClusterResource
+    mail_domain: Optional[MailDomainResource]
+    cluster: Optional[ClusterResource]
 
 
 class MailAliasResource(CoreApiModel):
@@ -2512,7 +2512,7 @@ class TombstoneDataCustomConfig(CoreApiModel):
 
 
 class TombstoneIncludes(CoreApiModel):
-    cluster: ClusterResource
+    cluster: Optional[ClusterResource]
 
 
 class TombstoneResource(CoreApiModel):
@@ -3292,7 +3292,6 @@ class ClustersBorgPropertiesSearchRequest(CoreApiModel):
 
 
 class ClustersElasticsearchPropertiesSearchRequest(CoreApiModel):
-    elasticsearch_default_users_password: Optional[str] = None
     kibana_domain: Optional[str] = None
     cluster_id: Optional[int] = None
 
@@ -3322,7 +3321,6 @@ class ClustersMariadbPropertiesSearchRequest(CoreApiModel):
 
 class ClustersMetabasePropertiesSearchRequest(CoreApiModel):
     metabase_domain: Optional[str] = None
-    metabase_database_password: Optional[str] = None
     cluster_id: Optional[int] = None
 
 
@@ -3353,7 +3351,6 @@ class ClustersRabbitmqPropertiesSearchRequest(CoreApiModel):
 
 
 class ClustersRedisPropertiesSearchRequest(CoreApiModel):
-    redis_password: Optional[str] = None
     redis_memory_limit: Optional[int] = None
     cluster_id: Optional[int] = None
 
@@ -3368,8 +3365,6 @@ class ClustersSearchRequest(CoreApiModel):
 class ClustersSinglestorePropertiesSearchRequest(CoreApiModel):
     singlestore_studio_domain: Optional[str] = None
     singlestore_api_domain: Optional[str] = None
-    singlestore_license_key: Optional[str] = None
-    singlestore_root_password: Optional[str] = None
     cluster_id: Optional[int] = None
 
 
