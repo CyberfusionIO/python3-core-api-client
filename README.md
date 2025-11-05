@@ -63,6 +63,23 @@ response = connector.virtual_hosts.list_virtual_hosts()
 virtual_hosts = response.dto
 ```
 
+By default, no objects are included. You can manually specify which objects you wish to include, for example:
+
+```python
+from cyberfusion.CoreApiClient.connector import CoreApiConnector
+
+connector = CoreApiConnector(
+    username='username', password='password'
+)
+
+response = connector.virtual_hosts.read_virtual_host(includes=["unix_user,cluster.region"])
+
+virtual_host = response.dto
+
+unix_user = virtual_host.includes.unix_user
+region = virtual_host.includes.cluster.includes.region
+```
+
 ## Authentication
 
 This client takes care of authentication.

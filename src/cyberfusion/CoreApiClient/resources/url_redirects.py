@@ -1,4 +1,5 @@
 from cyberfusion.CoreApiClient import models
+from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
@@ -23,6 +24,7 @@ class URLRedirects(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.UrlRedirectsSearchRequest | None = None,
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.URLRedirectResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -32,9 +34,8 @@ class URLRedirects(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.URLRedirectResource)
@@ -43,9 +44,13 @@ class URLRedirects(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None,
     ) -> DtoResponse[models.URLRedirectResource]:
         local_response = self.api_connector.send_or_fail(
-            "GET", f"/api/v1/url-redirects/{id_}", data=None, query_parameters={}
+            "GET",
+            f"/api/v1/url-redirects/{id_}",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.URLRedirectResource)

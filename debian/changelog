@@ -1,3 +1,9 @@
+python3-core-api-client (2.6) unstable; urgency=low
+
+  - Update to Core API 1.255
+
+ -- Mika Scheer <mscheer@cyberfusion.io>  Wed, 05 Nov 2025 19:38:00 +0200
+
 python3-core-api-client (2.5) unstable; urgency=low
 
   - Update to Core API 1.254

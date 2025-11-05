@@ -1,6 +1,7 @@
 from cyberfusion.CoreApiClient import models
 from typing import Optional
 
+from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
@@ -43,6 +44,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersSearchRequest | None = None,
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -52,9 +54,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.ClusterResource)
@@ -63,9 +64,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None,
     ) -> DtoResponse[models.ClusterResource]:
         local_response = self.api_connector.send_or_fail(
-            "GET", f"/api/v1/clusters/{id_}", data=None, query_parameters={}
+            "GET",
+            f"/api/v1/clusters/{id_}",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.ClusterResource)
@@ -208,6 +213,7 @@ class Clusters(Resource):
         cluster_id: int,
         timestamp: str,
         time_unit: Optional[models.UNIXUsersHomeDirectoryUsageResource] = None,
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UNIXUsersHomeDirectoryUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -216,7 +222,8 @@ class Clusters(Resource):
             query_parameters={
                 "timestamp": timestamp,
                 "time_unit": time_unit,
-            },
+            }
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -283,12 +290,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterBorgPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/borg",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -299,12 +307,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterElasticsearchPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/elasticsearch",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -315,12 +324,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterFirewallPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/firewall",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -331,12 +341,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterGrafanaPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/grafana",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -347,12 +358,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterKernelcarePropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/kernelcare",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -363,12 +375,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterLoadBalancingPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/load-balancing",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -379,12 +392,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterMariadbPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/mariadb",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -395,12 +409,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterMeilisearchPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/meilisearch",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -411,12 +426,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterMetabasePropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/metabase",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -427,12 +443,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterNewRelicPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/new-relic",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -443,12 +460,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterNodejsPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/nodejs",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -459,12 +477,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterOsPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/os",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -475,12 +494,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterPhpPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/php",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -491,12 +511,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterPostgresqlPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/postgresql",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -507,12 +528,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterRabbitmqPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/rabbitmq",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -523,12 +545,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterRedisPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/redis",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -539,12 +562,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterSinglestorePropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/singlestore",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -555,12 +579,13 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterUnixUsersPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/properties/unix-users",
             data=None,
-            query_parameters={},
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -845,6 +870,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersBorgPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -854,9 +880,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -869,6 +894,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersRedisPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -878,9 +904,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -894,6 +919,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersElasticsearchPropertiesSearchRequest
         | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterElasticsearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -903,9 +929,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -918,6 +943,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersFirewallPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -927,9 +953,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -942,6 +967,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersGrafanaPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -951,9 +977,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -966,6 +991,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersKernelcarePropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -975,9 +1001,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -991,6 +1016,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersLoadBalancingPropertiesSearchRequest
         | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterLoadBalancingPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1000,9 +1026,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1015,6 +1040,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersMariadbPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1024,9 +1050,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1040,6 +1065,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersMeilisearchPropertiesSearchRequest
         | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterMeilisearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1049,9 +1075,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1064,6 +1089,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersMetabasePropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1073,9 +1099,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1088,6 +1113,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersNewRelicPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1097,9 +1123,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1112,6 +1137,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersNodejsPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1121,9 +1147,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1136,6 +1161,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersOsPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1145,9 +1171,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1160,6 +1185,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersPhpPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1169,9 +1195,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1184,6 +1209,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersPostgresqlPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1193,9 +1219,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1208,6 +1233,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersRabbitmqPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1217,9 +1243,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1233,6 +1258,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersSinglestorePropertiesSearchRequest
         | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterSinglestorePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1242,9 +1268,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(
@@ -1257,6 +1282,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersUnixUsersPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None
     ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1266,9 +1292,8 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(

@@ -2,6 +2,7 @@ from cyberfusion.CoreApiClient import models
 from typing import Optional
 
 from cyberfusion.CoreApiClient.interfaces import Resource
+from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
@@ -25,6 +26,7 @@ class UNIXUsers(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.UnixUsersSearchRequest | None = None,
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UNIXUserResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -34,9 +36,8 @@ class UNIXUsers(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | include_filters.dict(exclude_unset=True)
-            if include_filters
-            else None,
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.UNIXUserResource)
@@ -45,9 +46,13 @@ class UNIXUsers(Resource):
         self,
         *,
         id_: int,
+        includes: list[str] | None = None,
     ) -> DtoResponse[models.UNIXUserResource]:
         local_response = self.api_connector.send_or_fail(
-            "GET", f"/api/v1/unix-users/{id_}", data=None, query_parameters={}
+            "GET",
+            f"/api/v1/unix-users/{id_}",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.UNIXUserResource)
@@ -107,6 +112,7 @@ class UNIXUsers(Resource):
         unix_user_id: int,
         timestamp: str,
         time_unit: Optional[models.UNIXUserUsageResource] = None,
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UNIXUserUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -115,7 +121,8 @@ class UNIXUsers(Resource):
             query_parameters={
                 "timestamp": timestamp,
                 "time_unit": time_unit,
-            },
+            }
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.UNIXUserUsageResource)
