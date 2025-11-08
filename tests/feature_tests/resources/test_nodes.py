@@ -1,4 +1,8 @@
+import random
+
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
+from cyberfusion.CoreApiClient.models import NodeGroupEnum
+
 from tests.conftest import NodeUpdateRequestFactory, NodeCreateRequestFactory
 import faker
 
@@ -45,3 +49,9 @@ def test_upgrade_downgrade_node(
 
 def test_list_nodes(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.nodes.list_nodes()
+
+
+def test_add_node_groups(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
+    api_connector.nodes.add_node_groups(
+        id_=faker.pyint(), groups=[random.choice(list(NodeGroupEnum))]
+    )

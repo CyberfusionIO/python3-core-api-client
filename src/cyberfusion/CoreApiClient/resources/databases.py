@@ -130,14 +130,14 @@ class Databases(Resource):
     def list_database_usages(
         self,
         *,
-        database_id: int,
+        id_: int,
         timestamp: str,
         time_unit: Optional[models.DatabaseUsageResource] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.DatabaseUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/databases/usages/{database_id}",
+            f"/api/v1/databases/{id_}/usages",
             data=None,
             query_parameters={
                 "timestamp": timestamp,

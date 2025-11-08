@@ -49,5 +49,5 @@ def test_list_database_usages(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.databases.list_database_usages(
-        database_id=faker.pyint(), timestamp=faker.date_time()
+        id_=faker.pyint(), timestamp=faker.date_time()
     )

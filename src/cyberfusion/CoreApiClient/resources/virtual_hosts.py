@@ -123,3 +123,47 @@ class VirtualHosts(Resource):
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+
+    def list_access_logs(
+        self,
+        *,
+        id_: int,
+        timestamp: Optional[str] = None,
+        sort: Optional[str] = None,
+        page: int = 1,
+    ) -> DtoResponse[list[models.WebServerLogAccessResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/virtual-hosts/{id_}/logs/access",
+            data=None,
+            query_parameters={
+                "timestamp": timestamp,
+                "page": page,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.WebServerLogAccessResource
+        )
+
+    def list_error_logs(
+        self,
+        *,
+        id_: int,
+        timestamp: Optional[str] = None,
+        sort: Optional[str] = None,
+        page: int = 1,
+    ) -> DtoResponse[list[models.WebServerLogErrorResource]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/virtual-hosts/{id_}/logs/error",
+            data=None,
+            query_parameters={
+                "timestamp": timestamp,
+                "page": page,
+            },
+        )
+
+        return DtoResponse.from_response(
+            local_response, models.WebServerLogErrorResource
+        )

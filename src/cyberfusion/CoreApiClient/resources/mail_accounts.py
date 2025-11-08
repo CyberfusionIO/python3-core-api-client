@@ -92,14 +92,14 @@ class MailAccounts(Resource):
     def list_mail_account_usages(
         self,
         *,
-        mail_account_id: int,
+        id_: int,
         timestamp: str,
         time_unit: Optional[models.MailAccountUsageResource] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.MailAccountUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/mail-accounts/usages/{mail_account_id}",
+            f"/api/v1/mail-accounts/{id_}/usages",
             data=None,
             query_parameters={
                 "timestamp": timestamp,
