@@ -45,5 +45,5 @@ def test_list_unix_user_usages(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.unix_users.list_unix_user_usages(
-        unix_user_id=faker.pyint(), timestamp=faker.date_time()
+        id_=faker.pyint(), timestamp=faker.date_time()
     )

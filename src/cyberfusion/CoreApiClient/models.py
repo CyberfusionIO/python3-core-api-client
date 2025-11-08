@@ -143,7 +143,6 @@ class BorgArchiveMetadata(CoreApiModel):
 
 class BorgRepositoryCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     unix_user_id: Optional[int]
     keep_hourly: Optional[int]
     keep_daily: Optional[int]
@@ -274,11 +273,11 @@ class CronCreateRequest(CoreApiModel):
     command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
-    error_count: int
-    random_delay_max_seconds: int
-    timeout_seconds: Optional[int]
-    locking_enabled: bool
-    is_active: bool
+    error_count: int = 1
+    random_delay_max_seconds: int = 10
+    timeout_seconds: Optional[int] = 600
+    locking_enabled: bool = True
+    is_active: bool = True
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
 
@@ -447,12 +446,12 @@ class FPMPoolCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     version: str
     unix_user_id: int
-    max_children: int
-    max_requests: int
-    process_idle_timeout: int
+    max_children: int = 25
+    max_requests: int = 20
+    process_idle_timeout: int = 10
     cpu_limit: Optional[int]
     log_slow_requests_threshold: Optional[int]
-    is_namespaced: bool
+    is_namespaced: bool = True
     memory_limit: Optional[conint(ge=256)] = None
 
 
@@ -470,7 +469,7 @@ class FTPUserCreateRequest(CoreApiModel):
     username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
     unix_user_id: int
     password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    directory_path: str
+    directory_path: Optional[str] = None
 
 
 class FTPUserUpdateRequest(CoreApiModel):
@@ -540,11 +539,6 @@ class HealthStatusEnum(StrEnum):
     MAINTENANCE = "maintenance"
 
 
-class HostEnum(StrEnum):
-    ALL = "%"
-    LOCALHOST_IPV6 = "::1"
-
-
 class HostsEntryCreateRequest(CoreApiModel):
     node_id: int
     host_name: str
@@ -604,7 +598,7 @@ class MailAccountCreateRequest(CoreApiModel):
     local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
     mail_domain_id: int
     password: constr(regex=r"^[ -~]+$", min_length=6, max_length=255)
-    quota: Optional[int]
+    quota: Optional[int] = None
 
 
 class MailAccountUpdateRequest(CoreApiModel):
@@ -636,8 +630,8 @@ class MailAliasUpdateRequest(CoreApiModel):
 class MailDomainCreateRequest(CoreApiModel):
     domain: str
     unix_user_id: int
-    catch_all_forward_email_addresses: List[EmailStr] = Field(..., unique_items=True)
-    is_local: bool
+    catch_all_forward_email_addresses: List[EmailStr] = Field([], unique_items=True)
+    is_local: bool = True
 
 
 class MailDomainUpdateRequest(CoreApiModel):
@@ -890,8 +884,8 @@ class RedisInstanceCreateRequest(CoreApiModel):
     cluster_id: int
     password: constr(regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     memory_limit: conint(ge=8)
-    max_databases: int
-    eviction_policy: RedisEvictionPolicyEnum
+    max_databases: int = 16
+    eviction_policy: RedisEvictionPolicyEnum = RedisEvictionPolicyEnum.VOLATILE_LRU
 
 
 class RedisInstanceUpdateRequest(CoreApiModel):
@@ -938,11 +932,11 @@ class SecurityTXTPolicyCreateRequest(CoreApiModel):
         ...,
         unique_items=True,
     )
-    encryption_key_urls: List[AnyUrl] = Field(..., unique_items=True)
-    acknowledgment_urls: List[AnyUrl] = Field(..., unique_items=True)
-    policy_urls: List[AnyUrl] = Field(..., unique_items=True)
-    opening_urls: List[AnyUrl] = Field(..., unique_items=True)
-    preferred_languages: List[LanguageCodeEnum] = Field(..., unique_items=True)
+    encryption_key_urls: List[AnyUrl] = Field([], unique_items=True)
+    acknowledgment_urls: List[AnyUrl] = Field([], unique_items=True)
+    policy_urls: List[AnyUrl] = Field([], unique_items=True)
+    opening_urls: List[AnyUrl] = Field([], unique_items=True)
+    preferred_languages: List[LanguageCodeEnum] = Field([], unique_items=True)
 
 
 class SecurityTXTPolicyUpdateRequest(CoreApiModel):
@@ -1043,14 +1037,14 @@ class UNIXUserCreateRequest(CoreApiModel):
     mail_domains_directory: Optional[str]
     cluster_id: int
     password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)]
-    shell_name: ShellNameEnum
-    record_usage_files: bool
+    shell_name: ShellNameEnum = ShellNameEnum.BASH
+    record_usage_files: bool = False
     default_php_version: Optional[str]
     default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
-    shell_is_namespaced: bool
+    shell_is_namespaced: bool = True
 
 
 class UNIXUserHomeDirectoryEnum(StrEnum):
@@ -1109,9 +1103,9 @@ class URLRedirectCreateRequest(CoreApiModel):
         unique_items=True,
     )
     destination_url: AnyUrl
-    status_code: StatusCodeEnum
-    keep_query_parameters: bool
-    keep_path: bool
+    status_code: StatusCodeEnum = StatusCodeEnum.INTEGER_308
+    keep_query_parameters: bool = True
+    keep_path: bool = True
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
@@ -1172,7 +1166,6 @@ class BorgArchiveContent(CoreApiModel):
 
 class CMSCreateRequest(CoreApiModel):
     software_name: CMSSoftwareNameEnum
-    is_manually_created: bool
     virtual_host_id: int
 
 
@@ -1187,9 +1180,11 @@ class CertificateManagerCreateRequest(CoreApiModel):
         min_items=1,
         unique_items=True,
     )
-    provider_name: CertificateProviderNameEnum
+    provider_name: CertificateProviderNameEnum = (
+        CertificateProviderNameEnum.LETS_ENCRYPT
+    )
     cluster_id: int
-    request_callback_url: Optional[AnyUrl]
+    request_callback_url: Optional[AnyUrl] = None
 
 
 class ClusterCreateRequest(CoreApiModel):
@@ -1272,7 +1267,7 @@ class CustomConfigSnippetCreateFromContentsRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
     server_software_name: VirtualHostServerSoftwareNameEnum
     cluster_id: int
-    is_default: bool
+    is_default: bool = False
     contents: constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
 
 
@@ -1280,7 +1275,7 @@ class CustomConfigSnippetCreateFromTemplateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
     server_software_name: VirtualHostServerSoftwareNameEnum
     cluster_id: int
-    is_default: bool
+    is_default: bool = False
     template_name: CustomConfigSnippetTemplateNameEnum
 
 
@@ -1310,8 +1305,8 @@ class DatabaseCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
     cluster_id: int
-    optimizing_enabled: bool
-    backups_enabled: bool
+    optimizing_enabled: bool = False
+    backups_enabled: bool = True
 
 
 class DatabaseIncludes(CoreApiModel):
@@ -1334,9 +1329,8 @@ class DatabaseUserCreateRequest(CoreApiModel):
     password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    host: Optional[HostEnum]
     cluster_id: int
-    phpmyadmin_firewall_groups_ids: Optional[List[int]]
+    phpmyadmin_firewall_groups_ids: Optional[List[int]] = []
 
 
 class DatabaseUserGrantCreateRequest(CoreApiModel):
@@ -1354,10 +1348,12 @@ class DatabaseUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
+    hashed_password: Optional[
+        constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
+    ]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
-    host: Optional[HostEnum]
+    host: Optional[str]
     cluster_id: int
     phpmyadmin_firewall_groups_ids: Optional[List[int]]
     includes: DatabaseUserIncludes
@@ -1511,7 +1507,6 @@ class NodeResource(CoreApiModel):
 
 
 class NodeUpdateRequest(CoreApiModel):
-    groups: Optional[List[NodeGroupEnum]] = None
     comment: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ] = None
@@ -1527,11 +1522,11 @@ class PassengerAppCreateNodeJSRequest(CoreApiModel):
     environment: PassengerEnvironmentEnum
     environment_variables: Dict[
         constr(regex=r"^[A-Za-z_]+$"), constr(regex=r"^[ -~]+$")
-    ]
-    max_pool_size: int
-    max_requests: int
-    pool_idle_time: int
-    is_namespaced: bool
+    ] = {}
+    max_pool_size: int = 10
+    max_requests: int = 2000
+    pool_idle_time: int = 10
+    is_namespaced: bool = True
     cpu_limit: Optional[int]
     nodejs_version: constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")
     startup_file: str
@@ -1651,7 +1646,9 @@ class UNIXUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: Optional[constr(regex=r"^[ -~]+$", min_length=1, max_length=255)]
+    hashed_password: Optional[
+        constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
+    ]
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     unix_id: int
     home_directory: str
@@ -1696,19 +1693,23 @@ class URLRedirectResource(CoreApiModel):
 
 class VirtualHostCreateRequest(CoreApiModel):
     server_software_name: Optional[VirtualHostServerSoftwareNameEnum]
-    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]]
-    allow_override_option_directives: Optional[List[AllowOverrideOptionDirectiveEnum]]
+    allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]] = None
+    allow_override_option_directives: Optional[
+        List[AllowOverrideOptionDirectiveEnum]
+    ] = None
     domain: str
     public_root: str
     unix_user_id: int
     server_aliases: List[str] = Field(
-        ...,
+        [],
         unique_items=True,
     )
     document_root: str
-    fpm_pool_id: Optional[int]
-    passenger_app_id: Optional[int]
-    custom_config: Optional[constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)]
+    fpm_pool_id: Optional[int] = None
+    passenger_app_id: Optional[int] = None
+    custom_config: Optional[
+        constr(regex=r"^[ -~\n]+$", min_length=1, max_length=65535)
+    ] = None
 
 
 class BorgRepositoryIncludes(CoreApiModel):
@@ -1863,7 +1864,7 @@ class FTPUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    hashed_password: constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
     cluster_id: int
     username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
     unix_user_id: int
@@ -1946,7 +1947,7 @@ class HtpasswdUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    hashed_password: constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
     cluster_id: int
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255)
     htpasswd_file_id: int
@@ -2234,7 +2235,7 @@ class MailAccountResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: constr(regex=r"^[ -~]+$", min_length=1, max_length=255)
+    hashed_password: constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
     local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
     mail_domain_id: int
     cluster_id: int
@@ -2329,7 +2330,7 @@ class TombstoneDataDatabaseUser(CoreApiModel):
     id: int
     data_type: Literal["database_user"]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
-    host: Optional[HostEnum]
+    host: Optional[str]
     server_software_name: DatabaseServerSoftwareNameEnum
     includes: TombstoneDataDatabaseUserIncludes
 
@@ -2775,7 +2776,7 @@ class ClusterLoadBalancingPropertiesIncludes(CoreApiModel):
 
 
 class ClusterMariadbPropertiesCreateRequest(CoreApiModel):
-    mariadb_version: str
+    mariadb_version: str = "11.4"
     mariadb_backup_interval: conint(ge=1, le=24) = 24
     mariadb_backup_local_retention: conint(ge=1, le=24) = 3
 
@@ -2920,7 +2921,7 @@ class ClusterPhpPropertiesIncludes(CoreApiModel):
 
 
 class ClusterPostgresqlPropertiesCreateRequest(CoreApiModel):
-    postgresql_version: int
+    postgresql_version: int = 15
     postgresql_backup_local_retention: conint(ge=1, le=24) = 3
     postgresql_backup_interval: conint(ge=1, le=24) = 24
 
@@ -3097,7 +3098,7 @@ class ClusterPhpPropertiesCreateRequest(CoreApiModel):
         unique_items=True,
     )
     custom_php_modules_names: List[PHPExtensionEnum] = Field(
-        ...,
+        [],
         unique_items=True,
     )
     php_settings: PHPSettings

@@ -1,5 +1,4 @@
 from cyberfusion.CoreApiClient import models
-from typing import Optional
 
 from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
@@ -7,50 +6,6 @@ from cyberfusion.CoreApiClient.interfaces import Resource
 
 
 class Logs(Resource):
-    def list_access_logs(
-        self,
-        *,
-        virtual_host_id: int,
-        timestamp: Optional[str] = None,
-        sort: Optional[str] = None,
-        page: int = 1,
-    ) -> DtoResponse[list[models.WebServerLogAccessResource]]:
-        local_response = self.api_connector.send_or_fail(
-            "GET",
-            f"/api/v1/logs/access/{virtual_host_id}",
-            data=None,
-            query_parameters={
-                "timestamp": timestamp,
-                "page": page,
-            },
-        )
-
-        return DtoResponse.from_response(
-            local_response, models.WebServerLogAccessResource
-        )
-
-    def list_error_logs(
-        self,
-        *,
-        virtual_host_id: int,
-        timestamp: Optional[str] = None,
-        sort: Optional[str] = None,
-        page: int = 1,
-    ) -> DtoResponse[list[models.WebServerLogErrorResource]]:
-        local_response = self.api_connector.send_or_fail(
-            "GET",
-            f"/api/v1/logs/error/{virtual_host_id}",
-            data=None,
-            query_parameters={
-                "timestamp": timestamp,
-                "page": page,
-            },
-        )
-
-        return DtoResponse.from_response(
-            local_response, models.WebServerLogErrorResource
-        )
-
     def list_object_logs(
         self,
         *,

@@ -54,3 +54,11 @@ def test_list_virtual_hosts(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.virtual_hosts.list_virtual_hosts()
+
+
+def test_list_access_logs(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
+    api_connector.virtual_hosts.list_access_logs(id_=faker.pyint())
+
+
+def test_list_error_logs(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
+    api_connector.virtual_hosts.list_error_logs(id_=faker.pyint())

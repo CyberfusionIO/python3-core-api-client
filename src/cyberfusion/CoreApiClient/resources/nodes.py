@@ -4,6 +4,7 @@ from typing import Optional
 from cyberfusion.CoreApiClient.interfaces import Resource
 from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
+from cyberfusion.CoreApiClient.models import NodeGroupEnum
 
 
 class Nodes(Resource):
@@ -115,6 +116,24 @@ class Nodes(Resource):
             query_parameters={
                 "callback_url": callback_url,
                 "product": product,
+            },
+        )
+
+        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+
+    def add_node_groups(
+        self,
+        *,
+        id_: int,
+        groups: list[NodeGroupEnum],
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/nodes/{id_}/groups",
+            data=groups,
+            query_parameters={
+                "callback_url": callback_url,
             },
         )
 

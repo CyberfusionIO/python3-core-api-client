@@ -210,14 +210,14 @@ class Clusters(Resource):
     def list_unix_users_home_directory_usages(
         self,
         *,
-        cluster_id: int,
+        id_: int,
         timestamp: str,
         time_unit: Optional[models.UNIXUsersHomeDirectoryUsageResource] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UNIXUsersHomeDirectoryUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/clusters/unix-users-home-directories/usages/{cluster_id}",
+            f"/api/v1/clusters/{id_}/usages/unix-users-home-directory",
             data=None,
             query_parameters={
                 "timestamp": timestamp,
@@ -287,10 +287,7 @@ class Clusters(Resource):
         )
 
     def read_borg_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterBorgPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -304,10 +301,7 @@ class Clusters(Resource):
         )
 
     def read_elasticsearch_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterElasticsearchPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -321,10 +315,7 @@ class Clusters(Resource):
         )
 
     def read_firewall_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterFirewallPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -338,10 +329,7 @@ class Clusters(Resource):
         )
 
     def read_grafana_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterGrafanaPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -355,10 +343,7 @@ class Clusters(Resource):
         )
 
     def read_kernelcare_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterKernelcarePropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -372,10 +357,7 @@ class Clusters(Resource):
         )
 
     def read_load_balancing_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterLoadBalancingPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -389,10 +371,7 @@ class Clusters(Resource):
         )
 
     def read_mariadb_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterMariadbPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -406,10 +385,7 @@ class Clusters(Resource):
         )
 
     def read_meilisearch_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterMeilisearchPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -423,10 +399,7 @@ class Clusters(Resource):
         )
 
     def read_metabase_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterMetabasePropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -440,10 +413,7 @@ class Clusters(Resource):
         )
 
     def read_new_relic_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterNewRelicPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -457,10 +427,7 @@ class Clusters(Resource):
         )
 
     def read_nodejs_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterNodejsPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -474,10 +441,7 @@ class Clusters(Resource):
         )
 
     def read_os_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterOsPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -491,10 +455,7 @@ class Clusters(Resource):
         )
 
     def read_php_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterPhpPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -508,10 +469,7 @@ class Clusters(Resource):
         )
 
     def read_postgresql_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterPostgresqlPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -525,10 +483,7 @@ class Clusters(Resource):
         )
 
     def read_rabbitmq_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterRabbitmqPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -542,10 +497,7 @@ class Clusters(Resource):
         )
 
     def read_redis_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterRedisPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -559,10 +511,7 @@ class Clusters(Resource):
         )
 
     def read_singlestore_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterSinglestorePropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -576,10 +525,7 @@ class Clusters(Resource):
         )
 
     def read_unix_users_properties(
-        self,
-        *,
-        id_: int,
-        includes: list[str] | None = None
+        self, *, id_: int, includes: list[str] | None = None
     ) -> DtoResponse[models.ClusterUnixUsersPropertiesResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -870,7 +816,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersBorgPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -894,7 +840,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersRedisPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -919,7 +865,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersElasticsearchPropertiesSearchRequest
         | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterElasticsearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -943,7 +889,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersFirewallPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -967,7 +913,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersGrafanaPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -991,7 +937,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersKernelcarePropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1016,7 +962,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersLoadBalancingPropertiesSearchRequest
         | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterLoadBalancingPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1040,7 +986,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersMariadbPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1065,7 +1011,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersMeilisearchPropertiesSearchRequest
         | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMeilisearchPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1089,7 +1035,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersMetabasePropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1113,7 +1059,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersNewRelicPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1137,7 +1083,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersNodejsPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1161,7 +1107,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersOsPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1185,7 +1131,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersPhpPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1209,7 +1155,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersPostgresqlPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1233,7 +1179,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersRabbitmqPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1258,7 +1204,7 @@ class Clusters(Resource):
         per_page: int = 0,
         include_filters: models.ClustersSinglestorePropertiesSearchRequest
         | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterSinglestorePropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
@@ -1282,7 +1228,7 @@ class Clusters(Resource):
         page: int = 1,
         per_page: int = 0,
         include_filters: models.ClustersUnixUsersPropertiesSearchRequest | None = None,
-        includes: list[str] | None = None
+        includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",

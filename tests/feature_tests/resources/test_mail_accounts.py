@@ -46,5 +46,5 @@ def test_list_mail_account_usages(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.mail_accounts.list_mail_account_usages(
-        mail_account_id=faker.pyint(), timestamp=faker.date_time()
+        id_=faker.pyint(), timestamp=faker.date_time()
     )

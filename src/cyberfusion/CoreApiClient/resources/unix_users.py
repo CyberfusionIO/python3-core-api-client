@@ -109,14 +109,14 @@ class UNIXUsers(Resource):
     def list_unix_user_usages(
         self,
         *,
-        unix_user_id: int,
+        id_: int,
         timestamp: str,
         time_unit: Optional[models.UNIXUserUsageResource] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UNIXUserUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/unix-users/usages/{unix_user_id}",
+            f"/api/v1/unix-users/{id_}/usages",
             data=None,
             query_parameters={
                 "timestamp": timestamp,
