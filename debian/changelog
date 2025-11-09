@@ -1,6 +1,7 @@
-python3-core-api-client (2.7.1) UNRELEASED; urgency=low
+python3-core-api-client (2.8) unstable; urgency=low
 
   - Add missing include for list mail domains
+  - Update to Core API 1.257
 
  -- William Edwards <wedwards@cyberfusion.nl>  Sun, 09 Nov 2025 01:01:00 +0200
 
