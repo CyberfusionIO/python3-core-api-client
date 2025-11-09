@@ -35,7 +35,8 @@ class MailDomains(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {}),
+            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | construct_includes_query_parameter(includes),
         )
 
         return DtoResponse.from_response(local_response, models.MailDomainResource)
