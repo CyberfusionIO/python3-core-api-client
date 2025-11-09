@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import StrEnum, IntEnum
 from ipaddress import IPv4Address, IPv6Address
-from typing import Dict, List, Literal, Optional, Union, Any
+from typing import Dict, List, Optional, Union, Any
 
 from pydantic import UUID4, AnyUrl, EmailStr, Field, confloat, conint, constr, BaseModel
 from typing import Iterator
@@ -1348,9 +1348,6 @@ class DatabaseUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: Optional[
-        constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
-    ]
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
     host: Optional[str]
@@ -1646,9 +1643,6 @@ class UNIXUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: Optional[
-        constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
-    ]
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     unix_id: int
     home_directory: str
@@ -1723,10 +1717,6 @@ class BorgRepositoryResource(CoreApiModel):
     created_at: datetime
     updated_at: datetime
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    passphrase: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    remote_host: str
-    remote_path: str
-    remote_username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     cluster_id: int
     keep_hourly: Optional[int]
     keep_daily: Optional[int]
@@ -1864,7 +1854,6 @@ class FTPUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
     cluster_id: int
     username: constr(regex=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
     unix_user_id: int
@@ -1947,7 +1936,6 @@ class HtpasswdUserResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
     cluster_id: int
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=255)
     htpasswd_file_id: int
@@ -2235,7 +2223,6 @@ class MailAccountResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    hashed_password: constr(regex=r"^[a-zA-Z0-9.\/$=*]+$", min_length=1, max_length=255)
     local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
     mail_domain_id: int
     cluster_id: int
@@ -2264,291 +2251,6 @@ class NodeDomainRouterDependency(CoreApiModel):
     impact: Optional[str]
     reason: str
     domain_router: DomainRouterResource
-
-
-class TombstoneDataCertificateIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataDaemonIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataDatabaseIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataFPMPoolIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataPassengerAppIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataRedisInstanceIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataUNIXUserIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataUNIXUserRabbitMQCredentialsIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataVirtualHostIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataDatabaseUserIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataDomainRouterIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataRootSSHKeyIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataSSHKeyIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataMailHostnameIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataCustomConfigIncludes(CoreApiModel):
-    pass
-
-
-class TombstoneDataDatabaseUser(CoreApiModel):
-    id: int
-    data_type: Literal["database_user"]
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
-    host: Optional[str]
-    server_software_name: DatabaseServerSoftwareNameEnum
-    includes: TombstoneDataDatabaseUserIncludes
-
-
-class TombstoneDataDatabase(CoreApiModel):
-    id: int
-    data_type: Literal["database"]
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
-    server_software_name: DatabaseServerSoftwareNameEnum
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataDatabaseIncludes
-
-
-class TombstoneDataDatabaseUserGrantIncludes(CoreApiModel):
-    database: Union[DatabaseResource, TombstoneDataDatabase]
-    database_user: Union[DatabaseUserResource, TombstoneDataDatabaseUser]
-
-
-class TombstoneDataDatabaseUserGrant(CoreApiModel):
-    id: int
-    data_type: Literal["database_user_grant"]
-    table_name: Optional[constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)]
-    privilege_name: MariaDBPrivilegeEnum
-    database_id: int
-    database_user_id: int
-    includes: TombstoneDataDatabaseUserGrantIncludes
-
-
-class TombstoneDataDomainRouter(CoreApiModel):
-    id: int
-    data_type: Literal["domain_router"]
-    domain: str
-    includes: TombstoneDataDomainRouterIncludes
-
-
-class TombstoneDataRootSSHKey(CoreApiModel):
-    id: int
-    data_type: Literal["root_ssh_key"]
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    is_private_key: bool
-    includes: TombstoneDataRootSSHKeyIncludes
-
-
-class TombstoneDataSSHKey(CoreApiModel):
-    id: int
-    data_type: Literal["ssh_key"]
-    name: constr(regex=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
-    identity_file_path: Optional[str]
-    includes: TombstoneDataSSHKeyIncludes
-
-
-class TombstoneDataMailHostname(CoreApiModel):
-    id: int
-    data_type: Literal["mail_hostname"]
-    domain: str
-    includes: TombstoneDataMailHostnameIncludes
-
-
-class TombstoneDataCertificate(CoreApiModel):
-    id: int
-    data_type: Literal["certificate"]
-    includes: TombstoneDataCertificateIncludes
-
-
-class TombstoneDataDaemon(CoreApiModel):
-    id: int
-    data_type: Literal["daemon"]
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
-    includes: TombstoneDataDaemonIncludes
-
-
-class TombstoneDataFPMPool(CoreApiModel):
-    id: int
-    data_type: Literal["fpm_pool"]
-    version: str
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    includes: TombstoneDataFPMPoolIncludes
-
-
-class TombstoneDataPassengerApp(CoreApiModel):
-    id: int
-    data_type: Literal["passenger_app"]
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    app_root: str
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataPassengerAppIncludes
-
-
-class TombstoneDataRedisInstance(CoreApiModel):
-    id: int
-    data_type: Literal["redis_instance"]
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataRedisInstanceIncludes
-
-
-class TombstoneDataUNIXUser(CoreApiModel):
-    id: int
-    data_type: Literal["unix_user"]
-    home_directory: str
-    mail_domains_directory: Optional[str]
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataUNIXUserIncludes
-
-
-class TombstoneDataCronIncludes(CoreApiModel):
-    node: NodeResource
-    unix_user: Union[TombstoneDataUNIXUser, UNIXUserResource]
-
-
-class TombstoneDataHtpasswdFileIncludes(CoreApiModel):
-    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser]
-
-
-class TombstoneDataHtpasswdFile(CoreApiModel):
-    id: int
-    data_type: Literal["htpasswd_file"]
-    unix_user_id: int
-    includes: TombstoneDataHtpasswdFileIncludes
-
-
-class TombstoneDataMailDomainIncludes(CoreApiModel):
-    unix_user: Union[UNIXUserResource, TombstoneDataUNIXUser]
-
-
-class TombstoneDataMailDomain(CoreApiModel):
-    id: int
-    data_type: Literal["mail_domain"]
-    domain: str
-    unix_user_id: int
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataMailDomainIncludes
-
-
-class TombstoneDataMailAccountIncludes(CoreApiModel):
-    mail_domain: Union[MailDomainResource, TombstoneDataMailDomain]
-
-
-class TombstoneDataMailAccount(CoreApiModel):
-    id: int
-    data_type: Literal["mail_account"]
-    local_part: constr(regex=r"^[a-z0-9-.]+$", min_length=1, max_length=64)
-    mail_domain_id: int
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataMailAccountIncludes
-
-
-class TombstoneDataCron(CoreApiModel):
-    id: int
-    data_type: Literal["cron"]
-    node_id: int
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    unix_user_id: int
-    includes: TombstoneDataCronIncludes
-
-
-class TombstoneDataUNIXUserRabbitMQCredentials(CoreApiModel):
-    id: int
-    data_type: Literal["unix_user_rabbitmq_credentials"]
-    rabbitmq_virtual_host_name: constr(
-        regex=r"^[a-z0-9-.]+$", min_length=1, max_length=32
-    )
-    includes: TombstoneDataUNIXUserRabbitMQCredentialsIncludes
-
-
-class TombstoneDataVirtualHost(CoreApiModel):
-    id: int
-    data_type: Literal["virtual_host"]
-    domain_root: str
-    delete_on_cluster: Optional[bool] = False
-    includes: TombstoneDataVirtualHostIncludes
-
-
-class TombstoneDataCustomConfig(CoreApiModel):
-    id: int
-    data_type: Literal["custom_config"]
-    name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=128)
-    includes: TombstoneDataCustomConfigIncludes
-
-
-class TombstoneIncludes(CoreApiModel):
-    cluster: Optional[ClusterResource]
-
-
-class TombstoneResource(CoreApiModel):
-    id: int
-    created_at: datetime
-    updated_at: datetime
-    data: Union[
-        TombstoneDataPassengerApp,
-        TombstoneDataCertificate,
-        TombstoneDataFPMPool,
-        TombstoneDataUNIXUserRabbitMQCredentials,
-        TombstoneDataUNIXUser,
-        TombstoneDataCron,
-        TombstoneDataDaemon,
-        TombstoneDataDatabase,
-        TombstoneDataMailAccount,
-        TombstoneDataRedisInstance,
-        TombstoneDataVirtualHost,
-        TombstoneDataDatabaseUser,
-        TombstoneDataDatabaseUserGrant,
-        TombstoneDataDomainRouter,
-        TombstoneDataHtpasswdFile,
-        TombstoneDataRootSSHKey,
-        TombstoneDataSSHKey,
-        TombstoneDataMailDomain,
-        TombstoneDataMailHostname,
-        TombstoneDataCustomConfig,
-    ] = Field(
-        ...,
-        discriminator="data_type",
-    )
-    object_id: int
-    object_model_name: ObjectModelNameEnum
-    cluster_id: int
-    includes: TombstoneIncludes
 
 
 class NodeDependenciesResource(CoreApiModel):
@@ -2790,7 +2492,6 @@ class ClusterMariadbPropertiesResource(CoreApiModel):
     created_at: datetime
     updated_at: datetime
     mariadb_version: str
-    mariadb_cluster_name: constr(regex=r"^[a-z.]+$", min_length=1, max_length=64)
     mariadb_backup_interval: conint(ge=1, le=24)
     mariadb_backup_local_retention: conint(ge=1, le=24)
     cluster_id: int
@@ -2819,7 +2520,6 @@ class ClusterMetabasePropertiesResource(CoreApiModel):
     created_at: datetime
     updated_at: datetime
     metabase_domain: str
-    metabase_database_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     cluster_id: int
     includes: ClusterMetabasePropertiesIncludes
 
@@ -2845,7 +2545,6 @@ class ClusterNewRelicPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    new_relic_mariadb_password: constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
     new_relic_apm_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
     ]
@@ -2857,9 +2556,6 @@ class ClusterNewRelicPropertiesResource(CoreApiModel):
 
 
 class ClusterNewRelicPropertiesUpdateRequest(CoreApiModel):
-    new_relic_mariadb_password: Optional[
-        constr(regex=r"^[ -~]+$", min_length=24, max_length=255)
-    ] = None
     new_relic_apm_license_key: Optional[
         constr(regex=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
     ] = None
@@ -2961,7 +2657,6 @@ class ClusterRabbitmqPropertiesResource(CoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    rabbitmq_erlang_cookie: constr(regex=r"^[A-Z0-9]+$", min_length=20, max_length=20)
     rabbitmq_admin_password: constr(
         regex=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
     )
@@ -3314,7 +3009,6 @@ class ClustersKernelcarePropertiesSearchRequest(CoreApiModel):
 
 class ClustersMariadbPropertiesSearchRequest(CoreApiModel):
     mariadb_version: Optional[str] = None
-    mariadb_cluster_name: Optional[str] = None
     mariadb_backup_interval: Optional[int] = None
     mariadb_backup_local_retention: Optional[int] = None
     cluster_id: Optional[int] = None
@@ -3589,12 +3283,6 @@ class SshKeysSearchRequest(CoreApiModel):
     cluster_id: Optional[int] = None
     name: Optional[str] = None
     unix_user_id: Optional[int] = None
-
-
-class TombstonesSearchRequest(CoreApiModel):
-    object_id: Optional[int] = None
-    object_model_name: Optional[ObjectModelNameEnum] = None
-    cluster_id: Optional[int] = None
 
 
 class UnixUsersSearchRequest(CoreApiModel):

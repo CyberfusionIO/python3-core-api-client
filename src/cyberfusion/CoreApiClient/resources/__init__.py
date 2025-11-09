@@ -45,7 +45,6 @@ from . import (
     mail_accounts,
     fpm_pools,
     mail_domains,
-    tombstones,
 )
 
 __all__ = [
@@ -90,7 +89,6 @@ __all__ = [
     "regions",
     "ssh_keys",
     "task_collections",
-    "tombstones",
     "unix_users",
     "url_redirects",
     "virtual_hosts",

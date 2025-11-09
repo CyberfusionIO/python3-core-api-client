@@ -220,10 +220,6 @@ class CoreApiConnector(CoreApiClient):
         return resources.certificate_managers.CertificateManagers(self)
 
     @cached_property
-    def tombstones(self) -> resources.tombstones.Tombstones:
-        return resources.tombstones.Tombstones(self)
-
-    @cached_property
     def clusters(self) -> resources.clusters.Clusters:
         return resources.clusters.Clusters(self)
 
