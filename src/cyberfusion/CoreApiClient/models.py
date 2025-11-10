@@ -449,8 +449,8 @@ class FPMPoolCreateRequest(CoreApiModel):
     max_children: int = 25
     max_requests: int = 20
     process_idle_timeout: int = 10
-    cpu_limit: Optional[int]
-    log_slow_requests_threshold: Optional[int]
+    cpu_limit: Optional[int] = None
+    log_slow_requests_threshold: Optional[int] = None
     is_namespaced: bool = True
     memory_limit: Optional[conint(ge=256)] = None
 
@@ -1103,7 +1103,7 @@ class URLRedirectCreateRequest(CoreApiModel):
         unique_items=True,
     )
     destination_url: AnyUrl
-    status_code: StatusCodeEnum = StatusCodeEnum.INTEGER_308
+    status_code: StatusCodeEnum = StatusCodeEnum.INTEGER_301
     keep_query_parameters: bool = True
     keep_path: bool = True
     description: Optional[
@@ -1330,7 +1330,7 @@ class DatabaseUserCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=63)
     server_software_name: DatabaseServerSoftwareNameEnum
     cluster_id: int
-    phpmyadmin_firewall_groups_ids: Optional[List[int]] = []
+    phpmyadmin_firewall_groups_ids: Optional[List[int]] = None
 
 
 class DatabaseUserGrantCreateRequest(CoreApiModel):
@@ -1524,7 +1524,7 @@ class PassengerAppCreateNodeJSRequest(CoreApiModel):
     max_requests: int = 2000
     pool_idle_time: int = 10
     is_namespaced: bool = True
-    cpu_limit: Optional[int]
+    cpu_limit: Optional[int] = None
     nodejs_version: constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")
     startup_file: str
 
