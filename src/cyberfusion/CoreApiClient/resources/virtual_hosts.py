@@ -103,7 +103,7 @@ class VirtualHosts(Resource):
 
         return DtoResponse.from_response(local_response, models.VirtualHostDocumentRoot)
 
-    def sync_domain_roots_of_virtual_hosts(
+    def sync_document_roots_of_virtual_hosts(
         self,
         *,
         left_virtual_host_id: int,
@@ -113,7 +113,7 @@ class VirtualHosts(Resource):
     ) -> DtoResponse[models.TaskCollectionResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
-            f"/api/v1/virtual-hosts/{left_virtual_host_id}/domain-root/sync",
+            f"/api/v1/virtual-hosts/{left_virtual_host_id}/document-root/sync",
             data=None,
             query_parameters={
                 "callback_url": callback_url,

@@ -42,10 +42,10 @@ def test_get_virtual_host_document_root(
     api_connector.virtual_hosts.get_virtual_host_document_root(id_=faker.pyint())
 
 
-def test_sync_domain_roots_of_virtual_hosts(
+def test_sync_document_roots_of_virtual_hosts(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.virtual_hosts.sync_domain_roots_of_virtual_hosts(
+    api_connector.virtual_hosts.sync_document_roots_of_virtual_hosts(
         left_virtual_host_id=faker.pyint(), right_virtual_host_id=faker.pyint()
     )
 

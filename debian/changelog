@@ -1,3 +1,9 @@
+python3-core-api-client (2.9) unstable; urgency=low
+
+  - Update to Core API 1.259
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Tue, 11 Nov 2025 02:07:00 +0200
+
 python3-core-api-client (2.8.2) unstable; urgency=low
 
   - Update enum value abbreviations for Core API 1.258
