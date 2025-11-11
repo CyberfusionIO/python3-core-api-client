@@ -102,6 +102,7 @@ class AllowOverrideOptionDirectiveEnum(StrEnum):
 
 class BasicAuthenticationRealmCreateRequest(CoreApiModel):
     directory_path: Optional[str]
+    uri_path: Optional[str]
     virtual_host_id: int
     name: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64)
     htpasswd_file_id: int
@@ -1150,7 +1151,6 @@ class VirtualHostUpdateRequest(CoreApiModel):
         List[AllowOverrideOptionDirectiveEnum]
     ] = None
     server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = None
-    public_root: Optional[str] = None
 
 
 class BorgArchiveContent(CoreApiModel):
@@ -1692,13 +1692,12 @@ class VirtualHostCreateRequest(CoreApiModel):
         List[AllowOverrideOptionDirectiveEnum]
     ] = None
     domain: str
-    public_root: str
     unix_user_id: int
     server_aliases: List[str] = Field(
         [],
         unique_items=True,
     )
-    document_root: str
+    document_root: str | None = None
     fpm_pool_id: Optional[int] = None
     passenger_app_id: Optional[int] = None
     custom_config: Optional[
@@ -2101,10 +2100,8 @@ class VirtualHostResource(CoreApiModel):
     server_software_name: VirtualHostServerSoftwareNameEnum
     allow_override_directives: Optional[List[AllowOverrideDirectiveEnum]]
     allow_override_option_directives: Optional[List[AllowOverrideOptionDirectiveEnum]]
-    domain_root: str
     cluster_id: int
     domain: str
-    public_root: str
     server_aliases: List[str] = Field(
         ...,
         unique_items=True,
@@ -2128,6 +2125,7 @@ class BasicAuthenticationRealmResource(CoreApiModel):
     updated_at: datetime
     cluster_id: int
     directory_path: Optional[str]
+    uri_path: Optional[str]
     virtual_host_id: int
     name: constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64)
     htpasswd_file_id: int
@@ -3310,10 +3308,8 @@ class UrlRedirectsSearchRequest(CoreApiModel):
 class VirtualHostsSearchRequest(CoreApiModel):
     unix_user_id: Optional[int] = None
     server_software_name: Optional[VirtualHostServerSoftwareNameEnum] = None
-    domain_root: Optional[str] = None
     cluster_id: Optional[int] = None
     domain: Optional[str] = None
-    public_root: Optional[str] = None
     server_aliases: Optional[str] = None
     document_root: Optional[str] = None
     fpm_pool_id: Optional[int] = None
