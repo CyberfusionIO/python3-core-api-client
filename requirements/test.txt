@@ -1,4 +1,4 @@
-coverage==7.11.3
+coverage==7.12.0
 Faker==37.12.0
 polyfactory==2.22.5
 pytest==9.0.1
