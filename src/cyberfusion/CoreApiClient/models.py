@@ -347,7 +347,7 @@ class DaemonCreateRequest(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
     command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
-    nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
+    nodes_ids: List[int] = Field(..., unique_items=True)
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
 
@@ -964,6 +964,7 @@ class ServiceAccountGroupEnum(StrEnum):
 
 class ShellNameEnum(StrEnum):
     BASH = "Bash"
+    NOLOGIN = "nologin"
 
 
 class RegionIncludes(CoreApiModel):
@@ -1034,17 +1035,17 @@ class UNIXUserComparison(CoreApiModel):
 
 class UNIXUserCreateRequest(CoreApiModel):
     username: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
-    virtual_hosts_directory: Optional[str]
-    mail_domains_directory: Optional[str]
+    virtual_hosts_directory: Optional[str] = None
+    mail_domains_directory: Optional[str] = None
     cluster_id: int
     password: Optional[constr(regex=r"^[ -~]+$", min_length=24, max_length=255)]
     shell_name: ShellNameEnum = ShellNameEnum.BASH
     record_usage_files: bool = False
-    default_php_version: Optional[str]
-    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
+    default_php_version: Optional[str] = None
+    default_nodejs_version: Optional[constr(regex=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = None
     description: Optional[
         constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
-    ]
+    ] = None
     shell_is_namespaced: bool = True
 
 
@@ -1435,7 +1436,7 @@ class IPAddressProduct(CoreApiModel):
     currency: constr(regex=r"^[A-Z]+$", min_length=3, max_length=3)
 
 
-class WebServerLogAccessResource(CoreApiModel):
+class VirtualHostAccessLogResource(CoreApiModel):
     remote_address: str
     raw_message: constr(min_length=1, max_length=65535)
     method: Optional[LogMethodEnum] = None
@@ -1445,7 +1446,7 @@ class WebServerLogAccessResource(CoreApiModel):
     bytes_sent: conint(ge=0)
 
 
-class WebServerLogErrorResource(CoreApiModel):
+class VirtualHostErrorLogResource(CoreApiModel):
     remote_address: str
     raw_message: constr(min_length=1, max_length=65535)
     method: Optional[LogMethodEnum] = None
@@ -1797,7 +1798,7 @@ class DaemonResource(CoreApiModel):
     name: constr(regex=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
     command: constr(regex=r"^[ -~]+$", min_length=1, max_length=65535)
-    nodes_ids: List[int] = Field(..., min_items=1, unique_items=True)
+    nodes_ids: List[int] = Field(..., unique_items=True)
     memory_limit: Optional[conint(ge=256)]
     cpu_limit: Optional[int]
     includes: DaemonIncludes
@@ -2013,7 +2014,9 @@ class NodeCreateRequest(CoreApiModel):
         ...,
         unique_items=True,
     )
-    comment: Optional[constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)]
+    comment: Optional[
+        constr(regex=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
+    ] = None
     load_balancer_health_checks_groups_pairs: Dict[NodeGroupEnum, List[NodeGroupEnum]]
 
 
