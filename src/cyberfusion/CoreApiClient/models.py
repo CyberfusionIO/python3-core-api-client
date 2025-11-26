@@ -842,6 +842,7 @@ class PHPSettings(CoreApiModel):
     opcache_file_cache: bool = False
     opcache_validate_timestamps: bool = True
     short_open_tag: bool = False
+    session_gc_maxlifetime: conint(ge=1440, le=14400) = 1440
     error_reporting: constr(regex=r"^[A-Z&~_ ]+$", min_length=1, max_length=255) = (
         Field(
             "E_ALL & ~E_DEPRECATED & ~E_STRICT",
