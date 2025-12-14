@@ -13,7 +13,7 @@ class CustomConfigs(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/custom-configs",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -35,7 +35,11 @@ class CustomConfigs(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -65,7 +69,7 @@ class CustomConfigs(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/custom-configs/{id_}",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 

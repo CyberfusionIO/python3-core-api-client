@@ -11,6 +11,7 @@ from requests.models import Response as RequestsResponse
 
 
 ModelType = TypeVar("ModelType", bound=CoreApiModel)
+
 DtoType = TypeVar("DtoType", CoreApiModel, list[CoreApiModel])
 
 
@@ -37,9 +38,9 @@ class DtoResponse(Generic[DtoType], Response):
     @classmethod
     def from_response(cls, response: Response, model: type[ModelType]) -> "DtoResponse":
         if isinstance(response.json, list):
-            dto = [model.parse_obj(object_) for object_ in response.json]
+            dto = [model.model_validate(object_) for object_ in response.json]
         else:
-            dto = model.parse_obj(response.json)
+            dto = model.model_validate(response.json)
 
         return cls(
             status_code=response.status_code,

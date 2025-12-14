@@ -14,7 +14,7 @@ Have questions? Ask your support questions on the [platform](https://platform.cy
 
 This client can be used in any Python project and with any framework.
 
-This client requires Python 3.11 or higher.
+This client requires Python 3.13 or higher.
 
 ## PyPI
 
@@ -289,7 +289,7 @@ To raise `cyberfusion.CoreApiClient.exceptions.CallException` in case of an unex
 
 Auto-generate models as follows:
 
-    datamodel-codegen --input-file-type openapi --url http://127.0.0.1:22190/openapi.json --output temp_models.py --target-python-version 3.11 --base-class cyberfusion.CoreApiClient.models.CoreApiModel
+    datamodel-codegen --input-file-type openapi --url http://127.0.0.1:22190/openapi.json --output temp_models.py --target-python-version 3.13 --base-class cyberfusion.CoreApiClient.models.CoreApiModel
 
 This adds models to `temp_models.py`. Merge it with `models.py`.
 

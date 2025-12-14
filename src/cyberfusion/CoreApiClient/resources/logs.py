@@ -22,7 +22,11 @@ class Logs(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -44,7 +48,11 @@ class Logs(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 

@@ -12,7 +12,7 @@ class Login(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/login/access-token",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
             content_type="application/x-www-form-urlencoded",
         )
