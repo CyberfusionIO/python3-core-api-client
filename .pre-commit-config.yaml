@@ -20,7 +20,7 @@ repos:
           # Keep versions in sync with requirements/dev.txt
           - types-requests==2.27.16
           - types-certifi==2021.10.8.2
-          - pydantic[email,dotenv]==1.10.4
+          - pydantic==2.10.6
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:

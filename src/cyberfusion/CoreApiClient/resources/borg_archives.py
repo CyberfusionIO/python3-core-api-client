@@ -16,7 +16,7 @@ class BorgArchives(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/borg-archives",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={
                 "callback_url": callback_url,
             },
@@ -40,7 +40,11 @@ class BorgArchives(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 

@@ -30,7 +30,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/clusters",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={
                 "callback_url": callback_url,
             },
@@ -54,7 +54,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -84,7 +88,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -114,7 +118,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/ip-addresses",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={
                 "callback_url": callback_url,
             },
@@ -547,7 +551,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/borg",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -564,7 +568,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/elasticsearch",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -581,7 +585,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/firewall",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -598,7 +602,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/grafana",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -615,7 +619,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/kernelcare",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -632,7 +636,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/mariadb",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -649,7 +653,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/meilisearch",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -666,7 +670,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/metabase",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -683,7 +687,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/new-relic",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -700,7 +704,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/nodejs",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -717,7 +721,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/os",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -734,7 +738,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/php",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -751,7 +755,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/postgresql",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -768,7 +772,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/rabbitmq",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -785,7 +789,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/redis",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -802,7 +806,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/clusters/{id_}/properties/singlestore",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -826,7 +830,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -850,7 +858,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -875,7 +887,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -899,7 +915,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -923,7 +943,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -947,7 +971,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -972,7 +1000,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -996,7 +1028,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1021,7 +1057,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1045,7 +1085,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1069,7 +1113,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1093,7 +1141,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1117,7 +1169,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1141,7 +1197,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1165,7 +1225,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1189,7 +1253,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1214,7 +1282,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1238,7 +1310,11 @@ class Clusters(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -1255,7 +1331,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/borg",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1272,7 +1348,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/singlestore",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1289,7 +1365,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/redis",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1306,7 +1382,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/elasticsearch",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1323,7 +1399,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/firewall",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1340,7 +1416,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/grafana",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1357,7 +1433,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/kernelcare",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1374,7 +1450,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/load-balancing",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1391,7 +1467,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/mariadb",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1408,7 +1484,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/meilisearch",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1425,7 +1501,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/metabase",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1442,7 +1518,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/new-relic",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1459,7 +1535,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/nodejs",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1476,7 +1552,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/os",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1493,7 +1569,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/php",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1510,7 +1586,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/postgresql",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -1527,7 +1603,7 @@ class Clusters(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/clusters/{id_}/properties/rabbitmq",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 

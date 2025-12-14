@@ -661,5 +661,5 @@ def base_url(request: pytest.FixtureRequest) -> str:
 
 
 @pytest.fixture(autouse=True)
-def mock_parse_obj(mocker: MockerFixture) -> None:
-    mocker.patch.object(BaseModel, "parse_obj", return_value=lambda x: x)
+def mock_model_validate(mocker: MockerFixture) -> None:
+    mocker.patch.object(BaseModel, "model_validate", return_value=lambda x: x)

@@ -14,7 +14,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/cmses",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -36,7 +36,11 @@ class CMSes(Resource):
                 "page": page,
                 "per_page": per_page,
             }
-            | (include_filters.dict(exclude_unset=True) if include_filters else {})
+            | (
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
             | construct_includes_query_parameter(includes),
         )
 
@@ -78,7 +82,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/cmses/{id_}/install/wordpress",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={
                 "callback_url": callback_url,
             },
@@ -96,7 +100,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/cmses/{id_}/install/nextcloud",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={
                 "callback_url": callback_url,
             },
@@ -139,7 +143,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/cmses/{id_}/options/{name}",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -155,7 +159,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/cmses/{id_}/configuration-constants/{name}",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -173,7 +177,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/cmses/{id_}/users/{user_id}/credentials",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
@@ -291,7 +295,7 @@ class CMSes(Resource):
         local_response = self.api_connector.send_or_fail(
             "POST",
             f"/api/v1/cmses/{id_}/themes",
-            data=request.dict(exclude_unset=True),
+            data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
