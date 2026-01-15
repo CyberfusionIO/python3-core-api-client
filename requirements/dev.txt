@@ -1,6 +1,6 @@
 datamodel-code-generator[http]==0.53.0
 mypy==1.19.1
 pre-commit==4.5.1
-ruff==0.14.11
+ruff==0.14.12
 types-certifi==2021.10.8.3
 types-requests==2.32.4.20260107
