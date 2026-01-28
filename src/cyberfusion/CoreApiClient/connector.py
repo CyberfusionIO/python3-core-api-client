@@ -320,6 +320,10 @@ class CoreApiConnector(CoreApiClient):
         return resources.redis_instances.RedisInstances(self)
 
     @cached_property
+    def n8n_instances(self) -> resources.n8n_instances.N8nInstances:
+        return resources.n8n_instances.N8nInstances(self)
+
+    @cached_property
     def task_collections(self) -> resources.task_collections.TaskCollections:
         return resources.task_collections.TaskCollections(self)
 

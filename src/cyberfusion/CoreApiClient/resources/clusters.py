@@ -42,7 +42,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterResource]]:
@@ -818,7 +818,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersBorgPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
@@ -846,7 +846,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersRedisPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
@@ -874,7 +874,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersElasticsearchPropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
@@ -903,7 +903,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersFirewallPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
@@ -931,7 +931,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersGrafanaPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
@@ -959,7 +959,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersKernelcarePropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
@@ -987,7 +987,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersLoadBalancingPropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
@@ -1016,7 +1016,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersMariadbPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
@@ -1044,7 +1044,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersMeilisearchPropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
@@ -1073,7 +1073,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersMetabasePropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
@@ -1101,7 +1101,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersNewRelicPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
@@ -1129,7 +1129,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersNodejsPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
@@ -1157,7 +1157,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersOsPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
@@ -1185,7 +1185,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersPhpPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
@@ -1213,7 +1213,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersPostgresqlPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
@@ -1241,7 +1241,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersRabbitmqPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
@@ -1269,7 +1269,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersSinglestorePropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
@@ -1298,7 +1298,7 @@ class Clusters(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.ClustersUnixUsersPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:

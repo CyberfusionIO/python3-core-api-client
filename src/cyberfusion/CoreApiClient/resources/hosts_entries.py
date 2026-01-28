@@ -22,7 +22,7 @@ class HostsEntries(Resource):
         self,
         *,
         page: int = 1,
-        per_page: int = 0,
+        per_page: int = 50,
         include_filters: models.HostsEntriesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.HostsEntryResource]]:
