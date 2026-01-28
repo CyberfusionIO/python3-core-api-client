@@ -351,6 +351,18 @@ class RedisInstanceUpdateRequestFactory(
 
 
 @register_fixture
+class N8nInstanceCreateRequestFactory(
+    ModelFactory[models.N8nInstanceCreateRequest]
+): ...
+
+
+@register_fixture
+class N8nInstanceUpdateRequestFactory(
+    UpdateFactory[models.N8nInstanceUpdateRequest]
+): ...
+
+
+@register_fixture
 class NodeCreateRequestFactory(ModelFactory[models.NodeCreateRequest]): ...
 
 

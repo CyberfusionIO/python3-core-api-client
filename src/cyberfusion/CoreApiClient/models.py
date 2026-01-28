@@ -441,6 +441,7 @@ class DomainRouterCategoryEnum(StrEnum):
     RABBITMQ_MANAGEMENT = "RabbitMQ Management"
     VIRTUAL_HOST = "Virtual Host"
     URL_REDIRECT = "URL Redirect"
+    N8N = "n8n"
 
 
 class DomainRouterUpdateRequest(BaseCoreApiModel):
@@ -728,6 +729,7 @@ class NodeGroupEnum(StrEnum):
     GNU_MAILUTILS = "GNU Mailutils"
     CLAMAV = "ClamAV"
     PUPPETEER = "Puppeteer"
+    N8N = "n8n"
     LIBREOFFICE = "LibreOffice"
     GHOSTSCRIPT = "Ghostscript"
     FFMPEG = "FFmpeg"
@@ -815,6 +817,7 @@ class ObjectModelNameEnum(StrEnum):
     SERVICE_ACCOUNT = "ServiceAccount"
     SERVICE_ACCOUNT_SERVER = "ServiceAccountServer"
     CUSTOM_CONFIG = "CustomConfig"
+    N8N_INSTANCE = "N8nInstance"
     CLUSTERS_PHP_PROPERTIES = "ClustersPhpProperties"
     CLUSTERS_NODEJS_PROPERTIES = "ClustersNodejsProperties"
     CLUSTERS_BORG_PROPERTIES = "ClustersBorgProperties"
@@ -901,6 +904,22 @@ class RedisEvictionPolicyEnum(StrEnum):
     ALLKEYS_LFU = "allkeys-lfu"
     ALLKEYS_LRU = "allkeys-lru"
     NOEVICTION = "noeviction"
+
+
+class N8nInstanceCreateRequest(BaseCoreApiModel):
+    name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    domain: str
+    cluster_id: int
+
+
+class N8nInstanceUpdateRequest(BaseCoreApiModel):
+    domain: str | None = None
+
+
+class N8nInstancesSearchRequest(BaseCoreApiModel):
+    name: str | None = None
+    domain: str | None = None
+    cluster_id: int | None = None
 
 
 class RedisInstanceCreateRequest(BaseCoreApiModel):
@@ -2877,6 +2896,7 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_FPM_POOLS = "Cluster supports FPM pools"
     CLUSTER_SUPPORTS_PASSENGER_APPS = "Cluster supports Passenger apps"
     CLUSTER_SUPPORTS_REDIS_INSTANCES = "Cluster supports Redis instances"
+    CLUSTER_SUPPORTS_N8N_INSTANCES = "Cluster supports n8n instances"
     CLUSTER_SUPPORTS_UNIX_USERS = "Cluster supports UNIX users"
     CLUSTER_SUPPORTS_FIREWALL_RULES = "Cluster supports firewall rules"
     CLUSTER_SUPPORTS_FIREWALL_GROUPS = "Cluster supports firewall groups"
@@ -2886,6 +2906,7 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_GHOSTSCRIPT_NODES = "Cluster supports Ghostscript nodes"
     CLUSTER_SUPPORTS_LIBREOFFICE_NODES = "Cluster supports LibreOffice nodes"
     CLUSTER_SUPPORTS_PUPPETEER_NODES = "Cluster supports Puppeteer nodes"
+    CLUSTER_SUPPORTS_N8N_NODES = "Cluster supports n8n nodes"
     CLUSTER_SUPPORTS_CLAMAV_NODES = "Cluster supports ClamAV nodes"
     CLUSTER_SUPPORTS_GNU_MAILUTILS_NODES = "Cluster supports GNU Mailutils nodes"
     CLUSTER_SUPPORTS_WKHTMLTOPDF_NODES = "Cluster supports wkhtmltopdf nodes"
@@ -3060,6 +3081,7 @@ class ClustersSearchRequest(BaseCoreApiModel):
     region_id: Optional[int] = None
     description: Optional[str] = None
     customer_id: Optional[int] = None
+    cephfs_enabled: bool | None = None
 
 
 class ClustersSinglestorePropertiesSearchRequest(BaseCoreApiModel):
@@ -3247,6 +3269,20 @@ class ObjectLogsSearchRequest(BaseCoreApiModel):
     causer_type: Optional[CauserTypeEnum] = None
     causer_id: Optional[int] = None
     customer_id: Optional[int] = None
+
+
+class N8nInstanceIncludes(BaseCoreApiModel):
+    cluster: ClusterResource | None
+
+
+class N8nInstanceResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    domain: str
+    name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
+    cluster_id: int
+    includes: N8nInstanceIncludes
 
 
 class RedisInstancesSearchRequest(BaseCoreApiModel):

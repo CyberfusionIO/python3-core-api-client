@@ -1,36 +1,36 @@
 from cyberfusion.CoreApiClient import models
+from typing import Optional
+
 from cyberfusion.CoreApiClient.interfaces import Resource
 from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class SecurityTXTPolicies(Resource):
-    def create_security_txt_policy(
+class N8nInstances(Resource):
+    def create_n8n_instance(
         self,
-        request: models.SecurityTXTPolicyCreateRequest,
-    ) -> DtoResponse[models.SecurityTXTPolicyResource]:
+        request: models.N8nInstanceCreateRequest,
+    ) -> DtoResponse[models.N8nInstanceResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
-            "/api/v1/security-txt-policies",
+            "/api/v1/n8n-instances",
             data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
-        )
+        return DtoResponse.from_response(local_response, models.N8nInstanceResource)
 
-    def list_security_txt_policies(
+    def list_n8n_instances(
         self,
         *,
         page: int = 1,
         per_page: int = 50,
-        include_filters: models.SecurityTxtPoliciesSearchRequest | None = None,
+        include_filters: models.N8nInstancesSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.SecurityTXTPolicyResource]]:
+    ) -> DtoResponse[list[models.N8nInstanceResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            "/api/v1/security-txt-policies",
+            "/api/v1/n8n-instances",
             data=None,
             query_parameters={
                 "page": page,
@@ -44,54 +44,51 @@ class SecurityTXTPolicies(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
-        )
+        return DtoResponse.from_response(local_response, models.N8nInstanceResource)
 
-    def read_security_txt_policy(
+    def read_n8n_instance(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.SecurityTXTPolicyResource]:
+    ) -> DtoResponse[models.N8nInstanceResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
-            f"/api/v1/security-txt-policies/{id_}",
+            f"/api/v1/n8n-instances/{id_}",
             data=None,
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
-        )
+        return DtoResponse.from_response(local_response, models.N8nInstanceResource)
 
-    def update_security_txt_policy(
+    def update_n8n_instance(
         self,
-        request: models.SecurityTXTPolicyUpdateRequest,
+        request: models.N8nInstanceUpdateRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.SecurityTXTPolicyResource]:
+    ) -> DtoResponse[models.N8nInstanceResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
-            f"/api/v1/security-txt-policies/{id_}",
+            f"/api/v1/n8n-instances/{id_}",
             data=request.model_dump(exclude_unset=True),
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
-        )
+        return DtoResponse.from_response(local_response, models.N8nInstanceResource)
 
-    def delete_security_txt_policy(
+    def delete_n8n_instance(
         self,
         *,
         id_: int,
+        delete_on_cluster: Optional[bool] = None,
     ) -> DtoResponse[models.DetailMessage]:
         local_response = self.api_connector.send_or_fail(
             "DELETE",
-            f"/api/v1/security-txt-policies/{id_}",
+            f"/api/v1/n8n-instances/{id_}",
             data=None,
-            query_parameters={},
+            query_parameters={
+                "delete_on_cluster": delete_on_cluster,
+            },
         )
 
         return DtoResponse.from_response(local_response, models.DetailMessage)

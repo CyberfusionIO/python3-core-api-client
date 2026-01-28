@@ -1,3 +1,9 @@
+python3-core-api-client (2.12) unstable; urgency=low
+
+  - Update to Core API version 1.263.0
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Wed, 28 Jan 2026 15:55:00 +0200
+
 python3-core-api-client (2.11) unstable; urgency=low
 
   - Update to Trixie
