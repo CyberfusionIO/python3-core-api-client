@@ -1757,7 +1757,6 @@ class BorgRepositoryResource(BaseCoreApiModel):
     keep_weekly: Optional[int]
     keep_monthly: Optional[int]
     keep_yearly: Optional[int]
-    identity_file_path: Optional[str]
     unix_user_id: Optional[int]
     unix_id: int
     includes: BorgRepositoryIncludes
