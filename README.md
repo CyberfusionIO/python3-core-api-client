@@ -2,7 +2,7 @@
 
 Python client for Core API.
 
-This client was built for and tested on the **1.263.0** version of the API.
+This client was built for and tested on the **1.265.0** version of the API.
 
 ## Support
 

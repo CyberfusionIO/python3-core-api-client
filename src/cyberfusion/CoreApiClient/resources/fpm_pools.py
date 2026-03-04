@@ -152,3 +152,18 @@ class FPMPools(Resource):
         )
 
         return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+
+    def update_fpm_pool_settings(
+        self,
+        request: models.FpmPoolUpdateSettingsRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.FPMPoolResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/fpm-pools/{id_}/settings",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_response(local_response, models.FPMPoolResource)
