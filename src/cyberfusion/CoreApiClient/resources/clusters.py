@@ -192,25 +192,6 @@ class Clusters(Resource):
 
         return DtoResponse.from_response(local_response, models.IPAddressProduct)
 
-    def list_cluster_deployments_results(
-        self,
-        *,
-        id_: int,
-        get_non_running: Optional[bool] = None,
-    ) -> DtoResponse[models.ClusterDeploymentResults]:
-        local_response = self.api_connector.send_or_fail(
-            "GET",
-            f"/api/v1/clusters/{id_}/deployments-results",
-            data=None,
-            query_parameters={
-                "get_non_running": get_non_running,
-            },
-        )
-
-        return DtoResponse.from_response(
-            local_response, models.ClusterDeploymentResults
-        )
-
     def list_unix_users_home_directory_usages(
         self,
         *,

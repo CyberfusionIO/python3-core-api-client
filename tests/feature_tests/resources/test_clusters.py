@@ -268,12 +268,6 @@ def test_list_ip_addresses_for_cluster(
     api_connector.clusters.list_ip_addresses_for_cluster(id_=faker.pyint())
 
 
-def test_list_cluster_deployments_results(
-    api_connector: CoreApiConnector, faker: faker.Faker
-) -> None:
-    api_connector.clusters.list_cluster_deployments_results(id_=faker.pyint())
-
-
 def test_list_unix_users_home_directory_usages(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
