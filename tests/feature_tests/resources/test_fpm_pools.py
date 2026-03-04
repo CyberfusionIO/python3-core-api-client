@@ -1,5 +1,9 @@
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
-from tests.conftest import FpmPoolUpdateRequestFactory, FpmPoolCreateRequestFactory
+from tests.conftest import (
+    FpmPoolUpdateRequestFactory,
+    FpmPoolCreateRequestFactory,
+    FpmPoolUpdateSettingsRequestFactory,
+)
 import faker
 
 
@@ -52,4 +56,15 @@ def test_update_fpm_pool_version(
 ) -> None:
     api_connector.fpm_pools.update_fpm_pool_version(
         id_=faker.pyint(), version=faker.pystr()
+    )
+
+
+def test_update_fpm_pool_settings(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    fpm_pool_update_settings_request_factory: FpmPoolUpdateSettingsRequestFactory,
+) -> None:
+    api_connector.fpm_pools.update_fpm_pool_settings(
+        fpm_pool_update_settings_request_factory.build(),
+        id_=faker.pyint(),
     )

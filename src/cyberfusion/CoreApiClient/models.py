@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import StrEnum, IntEnum
 from ipaddress import IPv4Address, IPv6Address
-from typing import Dict, List, Optional, Union, Any
+from typing import Dict, List, Optional, Union, Any, Literal
 from pydantic import RootModel
 from pydantic import UUID4, AnyUrl, EmailStr, Field, confloat, conint, constr, BaseModel
 from typing import Iterator
@@ -52,14 +52,20 @@ class SpecificationMode(StrEnum):
     AND = "And"
 
 
+class DeploymentStatusEnum(StrEnum):
+    PENDING = "Pending"
+    FAILED = "Failed"
+    SUCCEEDED = "Succeeded"
+
+
 class ObjectLogTypeEnum(StrEnum):
-    Create = "Create"
-    Update = "Update"
-    Delete = "Delete"
+    CREATE = "Create"
+    UPDATE = "Update"
+    DELETE = "Delete"
 
 
 class CauserTypeEnum(StrEnum):
-    API_User = "API User"
+    API_USER = "API User"
 
 
 class HTTPMethod(StrEnum):
@@ -722,10 +728,8 @@ class NodeGroupEnum(StrEnum):
     HAPROXY = "HAProxy"
     REDIS = "Redis"
     COMPOSER = "Composer"
-    WP_CLI = "WP-CLI"
     KERNELCARE = "KernelCare"
     IMAGEMAGICK = "ImageMagick"
-    WKHTMLTOPDF = "wkhtmltopdf"
     GNU_MAILUTILS = "GNU Mailutils"
     CLAMAV = "ClamAV"
     PUPPETEER = "Puppeteer"
@@ -884,6 +888,28 @@ class PHPSettings(BaseCoreApiModel):
     ] = None
     tideways_sample_rate: Optional[conint(ge=1, le=100)] = None
     newrelic_browser_monitoring_auto_instrument: bool = True
+
+
+class FpmPoolPhpSettings(BaseCoreApiModel):
+    apc_enable_cli: bool | None = None
+    opcache_file_cache: bool | None = None
+    opcache_validate_timestamps: bool | None = None
+    short_open_tag: bool | None = None
+    session_gc_maxlifetime: conint(ge=1440, le=14400) | None = None
+    error_reporting: (
+        constr(pattern=r"^[A-Z&~_ ]+$", min_length=1, max_length=255) | None
+    ) = None
+    opcache_memory_consumption: conint(ge=192, le=1024) | None = None
+    max_execution_time: conint(ge=30, le=120) | None = None
+    max_file_uploads: conint(ge=100, le=1000) | None = None
+    memory_limit: conint(ge=256, le=4096) | None = None
+    post_max_size: conint(ge=32, le=256) | None = None
+    upload_max_filesize: conint(ge=32, le=256) | None = None
+    tideways_api_key: (
+        constr(pattern=r"^[a-zA-Z0-9_]+$", min_length=16, max_length=32) | None
+    ) = None
+    tideways_sample_rate: conint(ge=1, le=100) | None = None
+    newrelic_browser_monitoring_auto_instrument: bool | None = None
 
 
 class PassengerAppTypeEnum(StrEnum):
@@ -1239,12 +1265,6 @@ class ClusterCreateRequest(BaseCoreApiModel):
     cephfs_enabled: bool
 
 
-class ClusterDeploymentTaskResult(BaseCoreApiModel):
-    description: constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)
-    message: Optional[str]
-    state: TaskStateEnum
-
-
 class ClusterIPAddressCreateRequest(BaseCoreApiModel):
     service_account_name: str
     dns_name: str
@@ -1305,6 +1325,7 @@ class CustomConfigResource(BaseCoreApiModel):
     cluster_id: int
     contents: constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
     server_software_name: CustomConfigServerSoftwareNameEnum
+    deployment_status: DeploymentStatusEnum
     includes: CustomConfigIncludes
 
 
@@ -1337,6 +1358,7 @@ class CustomConfigSnippetResource(BaseCoreApiModel):
     contents: constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
     cluster_id: int
     is_default: bool
+    deployment_status: DeploymentStatusEnum
     includes: CustomConfigSnippetIncludes
 
 
@@ -1367,6 +1389,7 @@ class DatabaseResource(BaseCoreApiModel):
     cluster_id: int
     optimizing_enabled: bool
     backups_enabled: bool
+    deployment_status: DeploymentStatusEnum
     includes: DatabaseIncludes
 
 
@@ -1400,6 +1423,7 @@ class DatabaseUserResource(BaseCoreApiModel):
     host: Optional[str]
     cluster_id: int
     phpmyadmin_firewall_groups_ids: Optional[List[int]]
+    deployment_status: DeploymentStatusEnum
     includes: DatabaseUserIncludes
 
 
@@ -1417,6 +1441,7 @@ class FirewallGroupResource(BaseCoreApiModel):
         ...,
         min_length=1,
     )
+    deployment_status: DeploymentStatusEnum
     includes: FirewallGroupIncludes
 
 
@@ -1461,6 +1486,7 @@ class HAProxyListenResource(BaseCoreApiModel):
         LoadBalancingMethodEnum.SOURCE_IP_ADDRESS
     )
     destination_cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: HAProxyListenIncludes
 
 
@@ -1511,6 +1537,7 @@ class MariaDBEncryptionKeyResource(BaseCoreApiModel):
     identifier: int
     key: constr(pattern=r"^[a-z0-9]+$", min_length=64, max_length=64)
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: MariaDBEncryptionKeyIncludes
 
 
@@ -1545,6 +1572,7 @@ class NodeResource(BaseCoreApiModel):
     load_balancer_health_checks_groups_pairs: Dict[NodeGroupEnum, List[NodeGroupEnum]]
     groups_properties: NodeGroupsProperties
     is_ready: bool
+    deployment_status: DeploymentStatusEnum
     includes: NodeIncludes
 
 
@@ -1603,6 +1631,7 @@ class RedisInstanceResource(BaseCoreApiModel):
     memory_limit: conint(ge=8)
     max_databases: int
     eviction_policy: RedisEvictionPolicyEnum
+    deployment_status: DeploymentStatusEnum
     includes: RedisInstanceIncludes
 
 
@@ -1618,6 +1647,7 @@ class RootSSHKeyResource(BaseCoreApiModel):
     public_key: Optional[str]
     private_key: Optional[str]
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    deployment_status: DeploymentStatusEnum
     includes: RootSSHKeyIncludes
 
 
@@ -1638,6 +1668,7 @@ class SecurityTXTPolicyResource(BaseCoreApiModel):
     policy_urls: List[AnyUrl]
     opening_urls: List[AnyUrl]
     preferred_languages: List[LanguageCodeEnum]
+    deployment_status: DeploymentStatusEnum
     includes: SecurityTXTPolicyIncludes
 
 
@@ -1697,6 +1728,7 @@ class UNIXUserResource(BaseCoreApiModel):
         constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
     shell_is_namespaced: bool
+    deployment_status: DeploymentStatusEnum
     includes: UNIXUserIncludes
 
 
@@ -1718,6 +1750,7 @@ class URLRedirectResource(BaseCoreApiModel):
     description: Optional[
         constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
+    deployment_status: DeploymentStatusEnum
     includes: URLRedirectIncludes
 
 
@@ -1759,6 +1792,7 @@ class BorgRepositoryResource(BaseCoreApiModel):
     keep_yearly: Optional[int]
     unix_user_id: Optional[int]
     unix_id: int
+    deployment_status: DeploymentStatusEnum
     includes: BorgRepositoryIncludes
 
 
@@ -1785,13 +1819,9 @@ class CertificateResource(BaseCoreApiModel):
     private_key: constr(
         pattern=r"^[a-zA-Z0-9-_\+\/=\n\\ ]+$", min_length=1, max_length=65535
     )
+    deployment_status: DeploymentStatusEnum
     cluster_id: int
     includes: CertificateIncludes
-
-
-class ClusterDeploymentResults(BaseCoreApiModel):
-    created_at: datetime
-    tasks_results: List[ClusterDeploymentTaskResult]
 
 
 class CronIncludes(BaseCoreApiModel):
@@ -1818,6 +1848,7 @@ class CronResource(BaseCoreApiModel):
     is_active: bool
     memory_limit: Optional[conint(ge=256)]
     cpu_limit: Optional[int]
+    deployment_status: DeploymentStatusEnum
     includes: CronIncludes
 
 
@@ -1837,6 +1868,7 @@ class DaemonResource(BaseCoreApiModel):
     nodes_ids: List[int]
     memory_limit: Optional[conint(ge=256)]
     cpu_limit: Optional[int]
+    deployment_status: DeploymentStatusEnum
     includes: DaemonIncludes
 
 
@@ -1857,6 +1889,7 @@ class DatabaseUserGrantResource(BaseCoreApiModel):
         constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     ]
     privilege_name: MariaDBPrivilegeEnum
+    deployment_status: DeploymentStatusEnum
     includes: DatabaseUserGrantIncludes
 
 
@@ -1880,6 +1913,8 @@ class FPMPoolResource(BaseCoreApiModel):
     log_slow_requests_threshold: Optional[int]
     is_namespaced: bool
     memory_limit: Optional[conint(ge=256)]
+    php_settings: FpmPoolPhpSettings
+    deployment_status: DeploymentStatusEnum
     includes: FPMPoolIncludes
 
 
@@ -1896,6 +1931,7 @@ class FTPUserResource(BaseCoreApiModel):
     username: constr(pattern=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
     unix_user_id: int
     directory_path: str
+    deployment_status: DeploymentStatusEnum
     includes: FTPUserIncludes
 
 
@@ -1917,6 +1953,7 @@ class FirewallRuleResource(BaseCoreApiModel):
     service_name: Optional[FirewallRuleServiceNameEnum]
     haproxy_listen_id: Optional[int]
     port: Optional[int]
+    deployment_status: DeploymentStatusEnum
     includes: FirewallRuleIncludes
 
 
@@ -1933,6 +1970,7 @@ class HAProxyListenToNodeResource(BaseCoreApiModel):
     cluster_id: int
     haproxy_listen_id: int
     node_id: int
+    deployment_status: DeploymentStatusEnum
     includes: HAProxyListenToNodeIncludes
 
 
@@ -1947,6 +1985,7 @@ class HostsEntryResource(BaseCoreApiModel):
     updated_at: datetime
     node_id: int
     host_name: str
+    deployment_status: DeploymentStatusEnum
     cluster_id: int
     includes: HostsEntryIncludes
 
@@ -1962,6 +2001,7 @@ class HtpasswdFileResource(BaseCoreApiModel):
     updated_at: datetime
     cluster_id: int
     unix_user_id: int
+    deployment_status: DeploymentStatusEnum
     includes: HtpasswdFileIncludes
 
 
@@ -1977,6 +2017,7 @@ class HtpasswdUserResource(BaseCoreApiModel):
     cluster_id: int
     username: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=255)
     htpasswd_file_id: int
+    deployment_status: DeploymentStatusEnum
     includes: HtpasswdUserIncludes
 
 
@@ -1994,6 +2035,7 @@ class MailDomainResource(BaseCoreApiModel):
     unix_user_id: int
     catch_all_forward_email_addresses: List[EmailStr]
     is_local: bool
+    deployment_status: DeploymentStatusEnum
     includes: MailDomainIncludes
 
 
@@ -2009,6 +2051,7 @@ class MailHostnameResource(BaseCoreApiModel):
     domain: str
     cluster_id: int
     certificate_id: int
+    deployment_status: DeploymentStatusEnum
     includes: MailHostnameIncludes
 
 
@@ -2102,6 +2145,7 @@ class PassengerAppResource(BaseCoreApiModel):
     cpu_limit: Optional[int]
     includes: PassengerAppIncludes
     nodejs_version: Optional[constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$")]
+    deployment_status: DeploymentStatusEnum
     startup_file: Optional[str]
 
 
@@ -2120,6 +2164,7 @@ class SSHKeyResource(BaseCoreApiModel):
     identity_file_path: Optional[str]
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
     unix_user_id: int
+    deployment_status: DeploymentStatusEnum
     includes: SSHKeyIncludes
 
 
@@ -2147,6 +2192,7 @@ class VirtualHostResource(BaseCoreApiModel):
     custom_config: Optional[
         constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
     ]
+    deployment_status: DeploymentStatusEnum
     includes: VirtualHostIncludes
 
 
@@ -2166,6 +2212,7 @@ class BasicAuthenticationRealmResource(BaseCoreApiModel):
     virtual_host_id: int
     name: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=64)
     htpasswd_file_id: int
+    deployment_status: DeploymentStatusEnum
     includes: BasicAuthenticationRealmIncludes
 
 
@@ -2245,6 +2292,7 @@ class DomainRouterResource(BaseCoreApiModel):
     security_txt_policy_id: Optional[int]
     firewall_groups_ids: Optional[List[int]]
     force_ssl: bool
+    deployment_status: DeploymentStatusEnum
     includes: DomainRouterIncludes
 
 
@@ -2261,6 +2309,7 @@ class MailAccountResource(BaseCoreApiModel):
     mail_domain_id: int
     cluster_id: int
     quota: Optional[int]
+    deployment_status: DeploymentStatusEnum
     includes: MailAccountIncludes
 
 
@@ -2280,6 +2329,7 @@ class MailAliasResource(BaseCoreApiModel):
         ...,
         min_length=1,
     )
+    deployment_status: DeploymentStatusEnum
     includes: MailAliasIncludes
 
 
@@ -2346,13 +2396,14 @@ class ObjectLogResource(BaseCoreApiModel):
     updated_at: datetime
     object_id: int
     object_model_name: Optional[
-        constr(pattern=r"^[a-zA-Z]+$", min_length=1, max_length=255)
+        constr(pattern=r"^[a-zA-Z0-9]+$", min_length=1, max_length=255)
     ]
     request_id: Optional[UUID4]
     type: ObjectLogTypeEnum
     causer_type: Optional[CauserTypeEnum]
     causer_id: Optional[int]
     customer_id: Optional[int]
+    changes: dict[str, tuple[Any, Any]] | None
     includes: ObjectLogIncludes
 
 
@@ -2404,6 +2455,7 @@ class ClusterBorgPropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     automatic_borg_repositories_prune_enabled: bool
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterBorgPropertiesIncludes
 
 
@@ -2431,6 +2483,7 @@ class ClusterElasticsearchPropertiesResource(BaseCoreApiModel):
     )
     kibana_domain: str
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterElasticsearchPropertiesIncludes
 
 
@@ -2455,6 +2508,7 @@ class ClusterFirewallPropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     firewall_rules_external_providers_enabled: bool
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterFirewallPropertiesIncludes
 
 
@@ -2476,6 +2530,7 @@ class ClusterGrafanaPropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     grafana_domain: str
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterGrafanaPropertiesIncludes
 
 
@@ -2501,6 +2556,7 @@ class ClusterKernelcarePropertiesResource(BaseCoreApiModel):
         pattern=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16
     )
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterKernelcarePropertiesIncludes
 
 
@@ -2532,6 +2588,7 @@ class ClusterMariadbPropertiesResource(BaseCoreApiModel):
     mariadb_backup_interval: conint(ge=1, le=24)
     mariadb_backup_local_retention: conint(ge=1, le=24)
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterMariadbPropertiesIncludes
 
 
@@ -2558,6 +2615,7 @@ class ClusterMetabasePropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     metabase_domain: str
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterMetabasePropertiesIncludes
 
 
@@ -2589,6 +2647,7 @@ class ClusterNewRelicPropertiesResource(BaseCoreApiModel):
         constr(pattern=r"^[a-zA-Z0-9]+$", min_length=40, max_length=40)
     ]
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterNewRelicPropertiesIncludes
 
 
@@ -2615,6 +2674,7 @@ class ClusterNodejsPropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     nodejs_versions: List[NodejsVersion]
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterNodejsPropertiesIncludes
 
 
@@ -2636,6 +2696,7 @@ class ClusterOsPropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     automatic_upgrades_enabled: bool
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterOsPropertiesIncludes
 
 
@@ -2665,6 +2726,7 @@ class ClusterPostgresqlPropertiesResource(BaseCoreApiModel):
     postgresql_backup_local_retention: conint(ge=1, le=24)
     postgresql_backup_interval: conint(ge=1, le=24)
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterPostgresqlPropertiesIncludes
 
 
@@ -2693,6 +2755,7 @@ class ClusterRabbitmqPropertiesResource(BaseCoreApiModel):
     )
     rabbitmq_management_domain: str
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterRabbitmqPropertiesIncludes
 
 
@@ -2719,6 +2782,7 @@ class ClusterRedisPropertiesResource(BaseCoreApiModel):
     redis_password: constr(pattern=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     redis_memory_limit: int
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterRedisPropertiesIncludes
 
 
@@ -2755,6 +2819,7 @@ class ClusterSinglestorePropertiesResource(BaseCoreApiModel):
         pattern=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
     )
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterSinglestorePropertiesIncludes
 
 
@@ -2780,6 +2845,7 @@ class ClusterLoadBalancingPropertiesResource(BaseCoreApiModel):
     http_retry_properties: HTTPRetryProperties
     load_balancing_method: LoadBalancingMethodEnum
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterLoadBalancingPropertiesIncludes
 
 
@@ -2808,6 +2874,7 @@ class ClusterMeilisearchPropertiesResource(BaseCoreApiModel):
     meilisearch_environment: MeilisearchEnvironmentEnum
     meilisearch_backup_interval: conint(ge=1, le=24)
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterMeilisearchPropertiesIncludes
 
 
@@ -2840,6 +2907,7 @@ class ClusterPhpPropertiesResource(BaseCoreApiModel):
     php_ioncube_enabled: bool
     php_sessions_spread_enabled: bool
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterPhpPropertiesIncludes
 
 
@@ -2857,6 +2925,7 @@ class ClusterUnixUsersPropertiesResource(BaseCoreApiModel):
     updated_at: datetime
     unix_users_home_directory: UNIXUserHomeDirectoryEnum
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: ClusterUnixUsersPropertiesIncludes
 
 
@@ -2908,7 +2977,6 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_N8N_NODES = "Cluster supports n8n nodes"
     CLUSTER_SUPPORTS_CLAMAV_NODES = "Cluster supports ClamAV nodes"
     CLUSTER_SUPPORTS_GNU_MAILUTILS_NODES = "Cluster supports GNU Mailutils nodes"
-    CLUSTER_SUPPORTS_WKHTMLTOPDF_NODES = "Cluster supports wkhtmltopdf nodes"
     CLUSTER_SUPPORTS_IMAGEMAGICK_NODES = "Cluster supports ImageMagick nodes"
     CLUSTER_SUPPORTS_HAPROXY_NODES = "Cluster supports HAProxy nodes"
     CLUSTER_SUPPORTS_PROFTPD_NODES = "Cluster supports ProFTPD nodes"
@@ -2921,7 +2989,6 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_POSTGRESQL_NODES = "Cluster supports PostgreSQL nodes"
     CLUSTER_SUPPORTS_PHP_NODES = "Cluster supports PHP nodes"
     CLUSTER_SUPPORTS_COMPOSER_NODES = "Cluster supports Composer nodes"
-    CLUSTER_SUPPORTS_WP_CLI_NODES = "Cluster supports WP-CLI nodes"
     CLUSTER_SUPPORTS_NODEJS_NODES = "Cluster supports NodeJS nodes"
     CLUSTER_SUPPORTS_PASSENGER_NODES = "Cluster supports Passenger nodes"
     CLUSTER_SUPPORTS_KERNELCARE_NODES = "Cluster supports KernelCare nodes"
@@ -3430,6 +3497,107 @@ class PassengerAppsSearchRequest(BaseCoreApiModel):
     is_namespaced: Optional[bool] = None
     cpu_limit: Optional[int] = None
     nodejs_version: Optional[str] = None
+
+
+class FpmPoolUpdateSettingPairApcEnableCliRequest(BaseCoreApiModel):
+    setting: Literal["apc_enable_cli"]
+    value: bool
+
+
+class FpmPoolUpdateSettingPairErrorReportingRequest(BaseCoreApiModel):
+    setting: Literal["error_reporting"]
+    value: constr(pattern=r"^[A-Z&~_ ]+$", min_length=1, max_length=255)
+
+
+class FpmPoolUpdateSettingPairMaxExecutionTimeRequest(BaseCoreApiModel):
+    setting: Literal["max_execution_time"]
+    value: conint(ge=30, le=120)
+
+
+class FpmPoolUpdateSettingPairMaxFileUploadsRequest(BaseCoreApiModel):
+    setting: Literal["max_file_uploads"]
+    value: conint(ge=100, le=1000)
+
+
+class FpmPoolUpdateSettingPairMemoryLimitRequest(BaseCoreApiModel):
+    setting: Literal["memory_limit"]
+    value: conint(ge=256, le=4096)
+
+
+class FpmPoolUpdateSettingPairNewrelicBrowserMonitoringAutoInstrumentRequest(
+    BaseCoreApiModel
+):
+    setting: Literal["newrelic_browser_monitoring_auto_instrument"]
+    value: bool
+
+
+class FpmPoolUpdateSettingPairOpcacheFileCacheRequest(BaseCoreApiModel):
+    setting: Literal["opcache_file_cache"]
+    value: bool
+
+
+class FpmPoolUpdateSettingPairOpcacheMemoryConsumptionRequest(BaseCoreApiModel):
+    setting: Literal["opcache_memory_consumption"]
+    value: conint(ge=192, le=1024)
+
+
+class FpmPoolUpdateSettingPairOpcacheValidateTimestampsRequest(BaseCoreApiModel):
+    setting: Literal["opcache_validate_timestamps"]
+    value: bool
+
+
+class FpmPoolUpdateSettingPairPostMaxSizeRequest(BaseCoreApiModel):
+    setting: Literal["post_max_size"]
+    value: conint(ge=32, le=256)
+
+
+class FpmPoolUpdateSettingPairSessionGcMaxlifetimeRequest(BaseCoreApiModel):
+    setting: Literal["session_gc_maxlifetime"]
+    value: conint(ge=1440, le=14400)
+
+
+class FpmPoolUpdateSettingPairShortOpenTagRequest(BaseCoreApiModel):
+    setting: Literal["short_open_tag"]
+    value: bool
+
+
+class FpmPoolUpdateSettingPairTidewaysApiKeyRequest(BaseCoreApiModel):
+    setting: Literal["tideways_api_key"]
+    value: constr(pattern=r"^[a-zA-Z0-9_]+$", min_length=16, max_length=32)
+
+
+class FpmPoolUpdateSettingPairTidewaysSampleRateRequest(BaseCoreApiModel):
+    setting: Literal["tideways_sample_rate"]
+    value: conint(ge=1, le=100)
+
+
+class FpmPoolUpdateSettingPairUploadMaxFilesizeRequest(BaseCoreApiModel):
+    setting: Literal["upload_max_filesize"]
+    value: conint(ge=32, le=256)
+
+
+class FpmPoolUpdateSettingPairRequest(RootCoreApiModel):
+    root: (
+        FpmPoolUpdateSettingPairApcEnableCliRequest
+        | FpmPoolUpdateSettingPairOpcacheFileCacheRequest
+        | FpmPoolUpdateSettingPairOpcacheValidateTimestampsRequest
+        | FpmPoolUpdateSettingPairShortOpenTagRequest
+        | FpmPoolUpdateSettingPairErrorReportingRequest
+        | FpmPoolUpdateSettingPairOpcacheMemoryConsumptionRequest
+        | FpmPoolUpdateSettingPairSessionGcMaxlifetimeRequest
+        | FpmPoolUpdateSettingPairMaxExecutionTimeRequest
+        | FpmPoolUpdateSettingPairMaxFileUploadsRequest
+        | FpmPoolUpdateSettingPairMemoryLimitRequest
+        | FpmPoolUpdateSettingPairPostMaxSizeRequest
+        | FpmPoolUpdateSettingPairUploadMaxFilesizeRequest
+        | FpmPoolUpdateSettingPairTidewaysApiKeyRequest
+        | FpmPoolUpdateSettingPairTidewaysSampleRateRequest
+        | FpmPoolUpdateSettingPairNewrelicBrowserMonitoringAutoInstrumentRequest
+    ) = Field(..., discriminator="setting")
+
+
+class FpmPoolUpdateSettingsRequest(RootCoreApiModel):
+    root: list[FpmPoolUpdateSettingPairRequest]
 
 
 NestedPathsDict.model_rebuild()
