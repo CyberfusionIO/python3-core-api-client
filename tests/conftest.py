@@ -654,6 +654,12 @@ class ClusterRabbitmqPropertiesUpdateRequestFactory(
 ): ...
 
 
+@register_fixture
+class FpmPoolUpdateSettingsRequestFactory(
+    UpdateFactory[models.FpmPoolUpdateSettingsRequest]
+): ...
+
+
 @pytest.fixture
 def api_connector(faker: faker.Faker, base_url: str) -> CoreApiConnector:
     return CoreApiConnector(
