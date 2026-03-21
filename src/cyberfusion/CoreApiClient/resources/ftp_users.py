@@ -5,11 +5,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class FTPUsers(Resource):
+class FtpUsers(Resource):
     def create_ftp_user(
         self,
-        request: models.FTPUserCreateRequest,
-    ) -> DtoResponse[models.FTPUserResource]:
+        request: models.FtpUserCreateRequest,
+    ) -> DtoResponse[models.FtpUserResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/ftp-users",
@@ -17,7 +17,7 @@ class FTPUsers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FTPUserResource)
+        return DtoResponse.from_response(local_response, models.FtpUserResource)
 
     def list_ftp_users(
         self,
@@ -26,7 +26,7 @@ class FTPUsers(Resource):
         per_page: int = 50,
         include_filters: models.FtpUsersSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.FTPUserResource]]:
+    ) -> DtoResponse[list[models.FtpUserResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/ftp-users",
@@ -43,14 +43,14 @@ class FTPUsers(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FTPUserResource)
+        return DtoResponse.from_response(local_response, models.FtpUserResource)
 
     def read_ftp_user(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.FTPUserResource]:
+    ) -> DtoResponse[models.FtpUserResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/ftp-users/{id_}",
@@ -58,14 +58,14 @@ class FTPUsers(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FTPUserResource)
+        return DtoResponse.from_response(local_response, models.FtpUserResource)
 
     def update_ftp_user(
         self,
-        request: models.FTPUserUpdateRequest,
+        request: models.FtpUserUpdateRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.FTPUserResource]:
+    ) -> DtoResponse[models.FtpUserResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/ftp-users/{id_}",
@@ -73,7 +73,7 @@ class FTPUsers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FTPUserResource)
+        return DtoResponse.from_response(local_response, models.FtpUserResource)
 
     def delete_ftp_user(
         self,
@@ -88,8 +88,8 @@ class FTPUsers(Resource):
 
     def create_temporary_ftp_user(
         self,
-        request: models.TemporaryFTPUserCreateRequest,
-    ) -> DtoResponse[models.TemporaryFTPUserResource]:
+        request: models.TemporaryFtpUserCreateRequest,
+    ) -> DtoResponse[models.TemporaryFtpUserResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/ftp-users/temporary",
@@ -98,5 +98,5 @@ class FTPUsers(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.TemporaryFTPUserResource
+            local_response, models.TemporaryFtpUserResource
         )

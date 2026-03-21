@@ -6,11 +6,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class UNIXUsers(Resource):
+class UnixUsers(Resource):
     def create_unix_user(
         self,
-        request: models.UNIXUserCreateRequest,
-    ) -> DtoResponse[models.UNIXUserResource]:
+        request: models.UnixUserCreateRequest,
+    ) -> DtoResponse[models.UnixUserResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/unix-users",
@@ -18,7 +18,7 @@ class UNIXUsers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.UNIXUserResource)
+        return DtoResponse.from_response(local_response, models.UnixUserResource)
 
     def list_unix_users(
         self,
@@ -27,7 +27,7 @@ class UNIXUsers(Resource):
         per_page: int = 50,
         include_filters: models.UnixUsersSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.UNIXUserResource]]:
+    ) -> DtoResponse[list[models.UnixUserResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/unix-users",
@@ -44,14 +44,14 @@ class UNIXUsers(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UNIXUserResource)
+        return DtoResponse.from_response(local_response, models.UnixUserResource)
 
     def read_unix_user(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.UNIXUserResource]:
+    ) -> DtoResponse[models.UnixUserResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/unix-users/{id_}",
@@ -59,14 +59,14 @@ class UNIXUsers(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UNIXUserResource)
+        return DtoResponse.from_response(local_response, models.UnixUserResource)
 
     def update_unix_user(
         self,
-        request: models.UNIXUserUpdateRequest,
+        request: models.UnixUserUpdateRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.UNIXUserResource]:
+    ) -> DtoResponse[models.UnixUserResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/unix-users/{id_}",
@@ -74,7 +74,7 @@ class UNIXUsers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.UNIXUserResource)
+        return DtoResponse.from_response(local_response, models.UnixUserResource)
 
     def delete_unix_user(
         self,
@@ -98,7 +98,7 @@ class UNIXUsers(Resource):
         *,
         left_unix_user_id: int,
         right_unix_user_id: int,
-    ) -> DtoResponse[models.UNIXUserComparison]:
+    ) -> DtoResponse[models.UnixUserComparison]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/unix-users/{left_unix_user_id}/comparison",
@@ -108,16 +108,16 @@ class UNIXUsers(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.UNIXUserComparison)
+        return DtoResponse.from_response(local_response, models.UnixUserComparison)
 
     def list_unix_user_usages(
         self,
         *,
         id_: int,
         timestamp: str,
-        time_unit: Optional[models.UNIXUserUsageResource] = None,
+        time_unit: Optional[models.UnixUserUsageResource] = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.UNIXUserUsageResource]]:
+    ) -> DtoResponse[list[models.UnixUserUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/unix-users/{id_}/usages",
@@ -129,4 +129,4 @@ class UNIXUsers(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UNIXUserUsageResource)
+        return DtoResponse.from_response(local_response, models.UnixUserUsageResource)

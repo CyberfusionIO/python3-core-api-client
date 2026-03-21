@@ -52,7 +52,7 @@ class Customers(Resource):
         self,
         *,
         id_: int,
-    ) -> DtoResponse[models.CustomerIPAddresses]:
+    ) -> DtoResponse[models.CustomerIpAddresses]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/customers/{id_}/ip-addresses",
@@ -60,11 +60,11 @@ class Customers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CustomerIPAddresses)
+        return DtoResponse.from_response(local_response, models.CustomerIpAddresses)
 
     def create_ip_address_for_customer(
         self,
-        request: models.CustomerIPAddressCreateRequest,
+        request: models.CustomerIpAddressCreateRequest,
         *,
         id_: int,
         callback_url: Optional[str] = None,
@@ -100,7 +100,7 @@ class Customers(Resource):
 
     def get_ip_addresses_products_for_customers(
         self,
-    ) -> DtoResponse[list[models.IPAddressProduct]]:
+    ) -> DtoResponse[list[models.IpAddressProduct]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/customers/ip-addresses/products",
@@ -108,4 +108,4 @@ class Customers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.IPAddressProduct)
+        return DtoResponse.from_response(local_response, models.IpAddressProduct)

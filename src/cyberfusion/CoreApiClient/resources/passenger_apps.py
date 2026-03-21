@@ -9,7 +9,7 @@ from cyberfusion.CoreApiClient.http import DtoResponse
 class PassengerApps(Resource):
     def create_nodejs_passenger_app(
         self,
-        request: models.PassengerAppCreateNodeJSRequest,
+        request: models.PassengerAppCreateNodejsRequest,
     ) -> DtoResponse[models.PassengerAppResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",

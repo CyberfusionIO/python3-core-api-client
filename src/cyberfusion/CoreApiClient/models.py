@@ -80,12 +80,12 @@ class HTTPMethod(StrEnum):
     TRACE = "TRACE"
 
 
-class APIUserAuthenticationMethodEnum(StrEnum):
+class ApiUserAuthenticationMethodEnum(StrEnum):
     API_KEY = "API Key"
     JWT_TOKEN = "JWT Token"
 
 
-class APIUserInfo(BaseCoreApiModel):
+class ApiUserInfo(BaseCoreApiModel):
     id: int
     username: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     is_active: bool
@@ -93,7 +93,7 @@ class APIUserInfo(BaseCoreApiModel):
     clusters: List[int]
     customers: List[int]
     service_accounts: List[int]
-    authentication_method: APIUserAuthenticationMethodEnum
+    authentication_method: ApiUserAuthenticationMethodEnum
 
 
 class AllowOverrideDirectiveEnum(StrEnum):
@@ -175,18 +175,18 @@ class BorgRepositoryUpdateRequest(BaseCoreApiModel):
     keep_yearly: Optional[int] = None
 
 
-class CMSConfigurationConstant(BaseCoreApiModel):
+class CmsConfigurationConstant(BaseCoreApiModel):
     value: Union[str, int, float, bool]
     index: Optional[conint(ge=0)] = None
     name: constr(pattern=r"^[a-zA-Z0-9_]+$", min_length=1)
 
 
-class CMSConfigurationConstantUpdateRequest(BaseCoreApiModel):
+class CmsConfigurationConstantUpdateRequest(BaseCoreApiModel):
     value: Union[str, int, float, bool]
     index: Optional[conint(ge=0)] = None
 
 
-class CMSInstallNextCloudRequest(BaseCoreApiModel):
+class CmsInstallNextcloudRequest(BaseCoreApiModel):
     database_name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
     database_user_name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
     database_user_password: constr(pattern=r"^[ -~]+$", min_length=1, max_length=255)
@@ -195,7 +195,7 @@ class CMSInstallNextCloudRequest(BaseCoreApiModel):
     admin_password: constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)
 
 
-class CMSInstallWordPressRequest(BaseCoreApiModel):
+class CmsInstallWordpressRequest(BaseCoreApiModel):
     database_name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
     database_user_name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=63)
     database_user_password: constr(pattern=r"^[ -~]+$", min_length=1, max_length=255)
@@ -209,40 +209,40 @@ class CMSInstallWordPressRequest(BaseCoreApiModel):
     admin_email_address: EmailStr
 
 
-class CMSOneTimeLogin(BaseCoreApiModel):
+class CmsOneTimeLogin(BaseCoreApiModel):
     url: AnyUrl
 
 
-class CMSOptionNameEnum(StrEnum):
+class CmsOptionNameEnum(StrEnum):
     BLOG_PUBLIC = "blog_public"
 
 
-class CMSOptionUpdateRequest(BaseCoreApiModel):
+class CmsOptionUpdateRequest(BaseCoreApiModel):
     value: conint(ge=0, le=1)
 
 
-class CMSPlugin(BaseCoreApiModel):
+class CmsPlugin(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9_]+$", min_length=1)
     current_version: constr(pattern=r"^[a-z0-9.-]+$", min_length=1)
     available_version: Optional[constr(pattern=r"^[a-z0-9.-]+$", min_length=1)]
     is_enabled: bool
 
 
-class CMSSoftwareNameEnum(StrEnum):
+class CmsSoftwareNameEnum(StrEnum):
     WORDPRESS = "WordPress"
     NEXTCLOUD = "Nextcloud"
 
 
-class CMSThemeInstallFromRepositoryRequest(BaseCoreApiModel):
+class CmsThemeInstallFromRepositoryRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=60)
     version: Optional[constr(pattern=r"^[0-9.]+$", min_length=1, max_length=6)]
 
 
-class CMSThemeInstallFromURLRequest(BaseCoreApiModel):
+class CmsThemeInstallFromUrlRequest(BaseCoreApiModel):
     url: AnyUrl
 
 
-class CMSUserCredentialsUpdateRequest(BaseCoreApiModel):
+class CmsUserCredentialsUpdateRequest(BaseCoreApiModel):
     password: constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)
 
 
@@ -273,14 +273,14 @@ class NodejsVersion(RootCoreApiModel):
     root: constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$")
 
 
-class ClusterIPAddress(BaseCoreApiModel):
+class ClusterIpAddress(BaseCoreApiModel):
     ip_address: Union[IPv6Address, IPv4Address]
     dns_name: Optional[str]
     l3_ddos_protection_enabled: bool
 
 
-class ClusterIPAddresses(RootModelCollectionMixin, RootCoreApiModel):  # type: ignore[misc]
-    root: Optional[Dict[str, Dict[str, List[ClusterIPAddress]]]] = None
+class ClusterIpAddresses(RootModelCollectionMixin, RootCoreApiModel):  # type: ignore[misc]
+    root: Optional[Dict[str, Dict[str, List[ClusterIpAddress]]]] = None
 
 
 class CronCreateRequest(BaseCoreApiModel):
@@ -337,13 +337,13 @@ class CustomConfigUpdateRequest(BaseCoreApiModel):
     ] = None
 
 
-class CustomerIPAddressDatabase(BaseCoreApiModel):
+class CustomerIpAddressDatabase(BaseCoreApiModel):
     ip_address: Union[IPv6Address, IPv4Address]
     dns_name: Optional[str]
 
 
-class CustomerIPAddresses(RootModelCollectionMixin, RootCoreApiModel):  # type: ignore[misc]
-    root: Optional[Dict[str, Dict[str, List[CustomerIPAddressDatabase]]]] = None
+class CustomerIpAddresses(RootModelCollectionMixin, RootCoreApiModel):  # type: ignore[misc]
+    root: Optional[Dict[str, Dict[str, List[CustomerIpAddressDatabase]]]] = None
 
 
 class CustomerIncludes(BaseCoreApiModel):
@@ -464,7 +464,7 @@ class EncryptionTypeEnum(StrEnum):
     STARTTLS = "STARTTLS"
 
 
-class FPMPoolCreateRequest(BaseCoreApiModel):
+class FpmPoolCreateRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     version: str
     unix_user_id: int
@@ -477,7 +477,7 @@ class FPMPoolCreateRequest(BaseCoreApiModel):
     memory_limit: Optional[conint(ge=256)] = None
 
 
-class FPMPoolUpdateRequest(BaseCoreApiModel):
+class FpmPoolUpdateRequest(BaseCoreApiModel):
     max_children: Optional[int] = None
     max_requests: Optional[int] = None
     process_idle_timeout: Optional[int] = None
@@ -487,14 +487,14 @@ class FPMPoolUpdateRequest(BaseCoreApiModel):
     memory_limit: Optional[conint(ge=256)] = None
 
 
-class FTPUserCreateRequest(BaseCoreApiModel):
+class FtpUserCreateRequest(BaseCoreApiModel):
     username: constr(pattern=r"^[a-z0-9-_.@]+$", min_length=1, max_length=32)
     unix_user_id: int
     password: constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)
     directory_path: Optional[str] = None
 
 
-class FTPUserUpdateRequest(BaseCoreApiModel):
+class FtpUserUpdateRequest(BaseCoreApiModel):
     password: Optional[constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)] = (
         None
     )
@@ -528,12 +528,12 @@ class FirewallRuleServiceNameEnum(StrEnum):
     APACHE = "Apache"
 
 
-class HAProxyListenToNodeCreateRequest(BaseCoreApiModel):
+class HaproxyListenToNodeCreateRequest(BaseCoreApiModel):
     haproxy_listen_id: int
     node_id: int
 
 
-class HTTPRetryConditionEnum(StrEnum):
+class HttpRetryConditionEnum(StrEnum):
     CONNECTION_FAILURE = "Connection failure"
     EMPTY_RESPONSE = "Empty response"
     JUNK_RESPONSE = "Junk response"
@@ -551,10 +551,10 @@ class HTTPRetryConditionEnum(StrEnum):
     HTTP_STATUS_504 = "HTTP status 504"
 
 
-class HTTPRetryProperties(BaseCoreApiModel):
+class HttpRetryProperties(BaseCoreApiModel):
     tries_amount: Optional[conint(ge=1, le=3)]
     tries_failover_amount: Optional[conint(ge=1, le=3)]
-    conditions: List[HTTPRetryConditionEnum]
+    conditions: List[HttpRetryConditionEnum]
 
 
 class HealthStatusEnum(StrEnum):
@@ -584,12 +584,12 @@ class HtpasswdUserUpdateRequest(BaseCoreApiModel):
     )
 
 
-class IPAddressFamilyEnum(StrEnum):
+class IpAddressFamilyEnum(StrEnum):
     IPV6 = "IPv6"
     IPV4 = "IPv4"
 
 
-class IPAddressProductTypeEnum(StrEnum):
+class IpAddressProductTypeEnum(StrEnum):
     OUTGOING = "outgoing"
     INCOMING = "incoming"
 
@@ -679,11 +679,11 @@ class MailHostnameUpdateRequest(BaseCoreApiModel):
     certificate_id: Optional[int] = None
 
 
-class MariaDBEncryptionKeyCreateRequest(BaseCoreApiModel):
+class MariadbEncryptionKeyCreateRequest(BaseCoreApiModel):
     cluster_id: int
 
 
-class MariaDBPrivilegeEnum(StrEnum):
+class MariadbPrivilegeEnum(StrEnum):
     ALL = "ALL"
     SELECT = "SELECT"
 
@@ -749,7 +749,7 @@ class NodeGroupEnum(StrEnum):
     RABBITMQ = "RabbitMQ"
 
 
-class NodeMariaDBGroupProperties(BaseCoreApiModel):
+class NodeMariadbGroupProperties(BaseCoreApiModel):
     is_master: bool
 
 
@@ -766,7 +766,7 @@ class NodeProduct(BaseCoreApiModel):
     currency: constr(pattern=r"^[A-Z]+$", min_length=3, max_length=3)
 
 
-class NodeRabbitMQGroupProperties(BaseCoreApiModel):
+class NodeRabbitmqGroupProperties(BaseCoreApiModel):
     is_master: bool
 
 
@@ -842,7 +842,7 @@ class ObjectModelNameEnum(StrEnum):
     CLUSTERS_OS_PROPERTIES = "ClustersOsProperties"
 
 
-class PHPExtensionEnum(StrEnum):
+class PhpExtensionEnum(StrEnum):
     REDIS = "redis"
     IMAGICK = "imagick"
     SQLITE3 = "sqlite3"
@@ -866,7 +866,7 @@ class PHPExtensionEnum(StrEnum):
     MONGODB = "mongodb"
 
 
-class PHPSettings(BaseCoreApiModel):
+class PhpSettings(BaseCoreApiModel):
     apc_enable_cli: bool = False
     opcache_file_cache: bool = False
     opcache_validate_timestamps: bool = True
@@ -966,31 +966,31 @@ class RedisInstanceUpdateRequest(BaseCoreApiModel):
     eviction_policy: Optional[RedisEvictionPolicyEnum] = None
 
 
-class RootSSHKeyCreatePrivateRequest(BaseCoreApiModel):
+class RootSshKeyCreatePrivateRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     cluster_id: int
     private_key: str
 
 
-class RootSSHKeyCreatePublicRequest(BaseCoreApiModel):
+class RootSshKeyCreatePublicRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     cluster_id: int
     public_key: str
 
 
-class SSHKeyCreatePrivateRequest(BaseCoreApiModel):
+class SshKeyCreatePrivateRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
     unix_user_id: int
     private_key: str
 
 
-class SSHKeyCreatePublicRequest(BaseCoreApiModel):
+class SshKeyCreatePublicRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
     unix_user_id: int
     public_key: str
 
 
-class SecurityTXTPolicyCreateRequest(BaseCoreApiModel):
+class SecurityTxtPolicyCreateRequest(BaseCoreApiModel):
     cluster_id: int
     expires_timestamp: datetime
     email_contacts: List[EmailStr]
@@ -1012,7 +1012,7 @@ class SecurityTXTPolicyCreateRequest(BaseCoreApiModel):
     )
 
 
-class SecurityTXTPolicyUpdateRequest(BaseCoreApiModel):
+class SecurityTxtPolicyUpdateRequest(BaseCoreApiModel):
     expires_timestamp: Optional[datetime] = None
     email_contacts: Optional[List[EmailStr]] = None
     url_contacts: Optional[List[AnyUrl]] = None
@@ -1075,12 +1075,12 @@ class TaskStateEnum(StrEnum):
     REVOKED = "revoked"
 
 
-class TemporaryFTPUserCreateRequest(BaseCoreApiModel):
+class TemporaryFtpUserCreateRequest(BaseCoreApiModel):
     unix_user_id: int
     node_id: int
 
 
-class TemporaryFTPUserResource(BaseCoreApiModel):
+class TemporaryFtpUserResource(BaseCoreApiModel):
     username: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     password: constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)
     file_manager_url: AnyUrl
@@ -1097,7 +1097,7 @@ class TokenTypeEnum(StrEnum):
     BEARER = "bearer"
 
 
-class UNIXUserComparison(BaseCoreApiModel):
+class UnixUserComparison(BaseCoreApiModel):
     not_identical_paths: NestedPathsDict
     only_left_files_paths: NestedPathsDict
     only_right_files_paths: NestedPathsDict
@@ -1105,7 +1105,7 @@ class UNIXUserComparison(BaseCoreApiModel):
     only_right_directories_paths: NestedPathsDict
 
 
-class UNIXUserCreateRequest(BaseCoreApiModel):
+class UnixUserCreateRequest(BaseCoreApiModel):
     username: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
     virtual_hosts_directory: Optional[str] = None
     mail_domains_directory: Optional[str] = None
@@ -1121,7 +1121,7 @@ class UNIXUserCreateRequest(BaseCoreApiModel):
     shell_is_namespaced: bool = True
 
 
-class UNIXUserHomeDirectoryEnum(StrEnum):
+class UnixUserHomeDirectoryEnum(StrEnum):
     VAR_WWW_VHOSTS = "/var/www/vhosts"
     VAR_WWW = "/var/www"
     HOME = "/home"
@@ -1129,7 +1129,7 @@ class UNIXUserHomeDirectoryEnum(StrEnum):
     MNT_BACKUPS = "/mnt/backups"
 
 
-class UNIXUserUpdateRequest(BaseCoreApiModel):
+class UnixUserUpdateRequest(BaseCoreApiModel):
     password: Optional[constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)] = (
         None
     )
@@ -1143,35 +1143,35 @@ class UNIXUserUpdateRequest(BaseCoreApiModel):
     shell_is_namespaced: Optional[bool] = None
 
 
-class UNIXUserUsageFile(BaseCoreApiModel):
+class UnixUserUsageFile(BaseCoreApiModel):
     path: str
     size: confloat(ge=0.0)
 
 
-class UNIXUserUsageIncludes(BaseCoreApiModel):
+class UnixUserUsageIncludes(BaseCoreApiModel):
     pass
 
 
-class UNIXUserUsageResource(BaseCoreApiModel):
+class UnixUserUsageResource(BaseCoreApiModel):
     unix_user_id: int
     usage: confloat(ge=0.0)
-    files: Optional[List[UNIXUserUsageFile]]
+    files: Optional[List[UnixUserUsageFile]]
     timestamp: datetime
-    includes: UNIXUserUsageIncludes
+    includes: UnixUserUsageIncludes
 
 
-class UNIXUsersHomeDirectoryUsageIncludes(BaseCoreApiModel):
+class UnixUsersHomeDirectoryUsageIncludes(BaseCoreApiModel):
     pass
 
 
-class UNIXUsersHomeDirectoryUsageResource(BaseCoreApiModel):
+class UnixUsersHomeDirectoryUsageResource(BaseCoreApiModel):
     cluster_id: int
     usage: confloat(ge=0.0)
     timestamp: datetime
-    includes: UNIXUsersHomeDirectoryUsageIncludes
+    includes: UnixUsersHomeDirectoryUsageIncludes
 
 
-class URLRedirectCreateRequest(BaseCoreApiModel):
+class UrlRedirectCreateRequest(BaseCoreApiModel):
     domain: str
     cluster_id: int
     server_aliases: List[str]
@@ -1184,7 +1184,7 @@ class URLRedirectCreateRequest(BaseCoreApiModel):
     ]
 
 
-class URLRedirectUpdateRequest(BaseCoreApiModel):
+class UrlRedirectUpdateRequest(BaseCoreApiModel):
     server_aliases: Optional[List[str]] = None
     destination_url: Optional[AnyUrl] = None
     status_code: Optional[StatusCodeEnum] = None
@@ -1236,14 +1236,14 @@ class BorgArchiveContent(BaseCoreApiModel):
     size: Optional[conint(ge=0)]
 
 
-class CMSCreateRequest(BaseCoreApiModel):
-    software_name: CMSSoftwareNameEnum
+class CmsCreateRequest(BaseCoreApiModel):
+    software_name: CmsSoftwareNameEnum
     virtual_host_id: int
 
 
-class CMSOption(BaseCoreApiModel):
+class CmsOption(BaseCoreApiModel):
     value: conint(ge=0, le=1)
-    name: CMSOptionNameEnum
+    name: CmsOptionNameEnum
 
 
 class CertificateManagerCreateRequest(BaseCoreApiModel):
@@ -1265,10 +1265,10 @@ class ClusterCreateRequest(BaseCoreApiModel):
     cephfs_enabled: bool
 
 
-class ClusterIPAddressCreateRequest(BaseCoreApiModel):
+class ClusterIpAddressCreateRequest(BaseCoreApiModel):
     service_account_name: str
     dns_name: str
-    address_family: IPAddressFamilyEnum
+    address_family: IpAddressFamilyEnum
 
 
 class ClusterIncludes(BaseCoreApiModel):
@@ -1362,10 +1362,10 @@ class CustomConfigSnippetResource(BaseCoreApiModel):
     includes: CustomConfigSnippetIncludes
 
 
-class CustomerIPAddressCreateRequest(BaseCoreApiModel):
+class CustomerIpAddressCreateRequest(BaseCoreApiModel):
     service_account_name: str
     dns_name: str
-    address_family: IPAddressFamilyEnum
+    address_family: IpAddressFamilyEnum
 
 
 class DatabaseCreateRequest(BaseCoreApiModel):
@@ -1407,7 +1407,7 @@ class DatabaseUserGrantCreateRequest(BaseCoreApiModel):
     table_name: Optional[
         constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     ]
-    privilege_name: MariaDBPrivilegeEnum
+    privilege_name: MariadbPrivilegeEnum
 
 
 class DatabaseUserIncludes(BaseCoreApiModel):
@@ -1454,7 +1454,7 @@ class FirewallRuleCreateRequest(BaseCoreApiModel):
     port: Optional[int]
 
 
-class HAProxyListenCreateRequest(BaseCoreApiModel):
+class HaproxyListenCreateRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-z_]+$", min_length=1, max_length=64)
     cluster_id: int
     nodes_group: NodeGroupEnum
@@ -1467,12 +1467,12 @@ class HAProxyListenCreateRequest(BaseCoreApiModel):
     destination_cluster_id: int
 
 
-class HAProxyListenIncludes(BaseCoreApiModel):
+class HaproxyListenIncludes(BaseCoreApiModel):
     destination_cluster: Optional[ClusterResource]
     cluster: Optional[ClusterResource]
 
 
-class HAProxyListenResource(BaseCoreApiModel):
+class HaproxyListenResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1487,7 +1487,7 @@ class HAProxyListenResource(BaseCoreApiModel):
     )
     destination_cluster_id: int
     deployment_status: DeploymentStatusEnum
-    includes: HAProxyListenIncludes
+    includes: HaproxyListenIncludes
 
 
 class HTTPValidationError(BaseCoreApiModel):
@@ -1498,10 +1498,10 @@ class HealthResource(BaseCoreApiModel):
     status: HealthStatusEnum
 
 
-class IPAddressProduct(BaseCoreApiModel):
+class IpAddressProduct(BaseCoreApiModel):
     uuid: UUID4
     name: constr(pattern=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
-    type: IPAddressProductTypeEnum
+    type: IpAddressProductTypeEnum
     price: confloat(ge=0.0)
     period: constr(pattern=r"^[A-Z0-9]+$", min_length=2, max_length=2)
     currency: constr(pattern=r"^[A-Z]+$", min_length=3, max_length=3)
@@ -1526,11 +1526,11 @@ class VirtualHostErrorLogResource(BaseCoreApiModel):
     error_message: constr(min_length=1, max_length=65535)
 
 
-class MariaDBEncryptionKeyIncludes(BaseCoreApiModel):
+class MariadbEncryptionKeyIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
 
 
-class MariaDBEncryptionKeyResource(BaseCoreApiModel):
+class MariadbEncryptionKeyResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1538,7 +1538,7 @@ class MariaDBEncryptionKeyResource(BaseCoreApiModel):
     key: constr(pattern=r"^[a-z0-9]+$", min_length=64, max_length=64)
     cluster_id: int
     deployment_status: DeploymentStatusEnum
-    includes: MariaDBEncryptionKeyIncludes
+    includes: MariadbEncryptionKeyIncludes
 
 
 class NodeGroupDependency(BaseCoreApiModel):
@@ -1550,8 +1550,8 @@ class NodeGroupDependency(BaseCoreApiModel):
 
 class NodeGroupsProperties(BaseCoreApiModel):
     Redis: Optional[NodeRedisGroupProperties]
-    MariaDB: Optional[NodeMariaDBGroupProperties]
-    RabbitMQ: Optional[NodeRabbitMQGroupProperties]
+    MariaDB: Optional[NodeMariadbGroupProperties]
+    RabbitMQ: Optional[NodeRabbitmqGroupProperties]
 
 
 class NodeIncludes(BaseCoreApiModel):
@@ -1585,7 +1585,7 @@ class NodeUpdateRequest(BaseCoreApiModel):
     ] = None
 
 
-class PassengerAppCreateNodeJSRequest(BaseCoreApiModel):
+class PassengerAppCreateNodejsRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     app_root: str
     unix_user_id: int
@@ -1635,11 +1635,11 @@ class RedisInstanceResource(BaseCoreApiModel):
     includes: RedisInstanceIncludes
 
 
-class RootSSHKeyIncludes(BaseCoreApiModel):
+class RootSshKeyIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
 
 
-class RootSSHKeyResource(BaseCoreApiModel):
+class RootSshKeyResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1648,14 +1648,14 @@ class RootSSHKeyResource(BaseCoreApiModel):
     private_key: Optional[str]
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     deployment_status: DeploymentStatusEnum
-    includes: RootSSHKeyIncludes
+    includes: RootSshKeyIncludes
 
 
-class SecurityTXTPolicyIncludes(BaseCoreApiModel):
+class SecurityTxtPolicyIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
 
 
-class SecurityTXTPolicyResource(BaseCoreApiModel):
+class SecurityTxtPolicyResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1669,7 +1669,7 @@ class SecurityTXTPolicyResource(BaseCoreApiModel):
     opening_urls: List[AnyUrl]
     preferred_languages: List[LanguageCodeEnum]
     deployment_status: DeploymentStatusEnum
-    includes: SecurityTXTPolicyIncludes
+    includes: SecurityTxtPolicyIncludes
 
 
 class TaskCollectionIncludes(BaseCoreApiModel):
@@ -1705,11 +1705,11 @@ class TokenResource(BaseCoreApiModel):
     expires_in: int
 
 
-class UNIXUserIncludes(BaseCoreApiModel):
+class UnixUserIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource] = None
 
 
-class UNIXUserResource(BaseCoreApiModel):
+class UnixUserResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1729,14 +1729,14 @@ class UNIXUserResource(BaseCoreApiModel):
     ]
     shell_is_namespaced: bool
     deployment_status: DeploymentStatusEnum
-    includes: UNIXUserIncludes
+    includes: UnixUserIncludes
 
 
-class URLRedirectIncludes(BaseCoreApiModel):
+class UrlRedirectIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
 
 
-class URLRedirectResource(BaseCoreApiModel):
+class UrlRedirectResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1751,7 +1751,7 @@ class URLRedirectResource(BaseCoreApiModel):
         constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ]
     deployment_status: DeploymentStatusEnum
-    includes: URLRedirectIncludes
+    includes: UrlRedirectIncludes
 
 
 class VirtualHostCreateRequest(BaseCoreApiModel):
@@ -1774,7 +1774,7 @@ class VirtualHostCreateRequest(BaseCoreApiModel):
 
 
 class BorgRepositoryIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     database: Optional[DatabaseResource]
     cluster: Optional[ClusterResource]
 
@@ -1826,7 +1826,7 @@ class CertificateResource(BaseCoreApiModel):
 
 class CronIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     node: Optional[NodeResource]
 
 
@@ -1853,7 +1853,7 @@ class CronResource(BaseCoreApiModel):
 
 
 class DaemonIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
@@ -1888,17 +1888,17 @@ class DatabaseUserGrantResource(BaseCoreApiModel):
     table_name: Optional[
         constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     ]
-    privilege_name: MariaDBPrivilegeEnum
+    privilege_name: MariadbPrivilegeEnum
     deployment_status: DeploymentStatusEnum
     includes: DatabaseUserGrantIncludes
 
 
-class FPMPoolIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+class FpmPoolIncludes(BaseCoreApiModel):
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
-class FPMPoolResource(BaseCoreApiModel):
+class FpmPoolResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1915,15 +1915,15 @@ class FPMPoolResource(BaseCoreApiModel):
     memory_limit: Optional[conint(ge=256)]
     php_settings: FpmPoolPhpSettings
     deployment_status: DeploymentStatusEnum
-    includes: FPMPoolIncludes
+    includes: FpmPoolIncludes
 
 
-class FTPUserIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+class FtpUserIncludes(BaseCoreApiModel):
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
-class FTPUserResource(BaseCoreApiModel):
+class FtpUserResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1932,13 +1932,13 @@ class FTPUserResource(BaseCoreApiModel):
     unix_user_id: int
     directory_path: str
     deployment_status: DeploymentStatusEnum
-    includes: FTPUserIncludes
+    includes: FtpUserIncludes
 
 
 class FirewallRuleIncludes(BaseCoreApiModel):
     node: Optional[NodeResource]
     firewall_group: Optional[FirewallGroupResource]
-    haproxy_listen: Optional[HAProxyListenResource]
+    haproxy_listen: Optional[HaproxyListenResource]
     cluster: Optional[ClusterResource]
 
 
@@ -1957,13 +1957,13 @@ class FirewallRuleResource(BaseCoreApiModel):
     includes: FirewallRuleIncludes
 
 
-class HAProxyListenToNodeIncludes(BaseCoreApiModel):
-    haproxy_listen: Optional[HAProxyListenResource]
+class HaproxyListenToNodeIncludes(BaseCoreApiModel):
+    haproxy_listen: Optional[HaproxyListenResource]
     node: Optional[NodeResource]
     cluster: Optional[ClusterResource]
 
 
-class HAProxyListenToNodeResource(BaseCoreApiModel):
+class HaproxyListenToNodeResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -1971,7 +1971,7 @@ class HAProxyListenToNodeResource(BaseCoreApiModel):
     haproxy_listen_id: int
     node_id: int
     deployment_status: DeploymentStatusEnum
-    includes: HAProxyListenToNodeIncludes
+    includes: HaproxyListenToNodeIncludes
 
 
 class HostsEntryIncludes(BaseCoreApiModel):
@@ -1991,7 +1991,7 @@ class HostsEntryResource(BaseCoreApiModel):
 
 
 class HtpasswdFileIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
@@ -2022,7 +2022,7 @@ class HtpasswdUserResource(BaseCoreApiModel):
 
 
 class MailDomainIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
@@ -2056,7 +2056,7 @@ class MailHostnameResource(BaseCoreApiModel):
 
 
 class MalwareIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
@@ -2120,7 +2120,7 @@ class NodeHostsEntryDependency(BaseCoreApiModel):
 
 
 class PassengerAppIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
@@ -2149,12 +2149,12 @@ class PassengerAppResource(BaseCoreApiModel):
     startup_file: Optional[str]
 
 
-class SSHKeyIncludes(BaseCoreApiModel):
-    unix_user: Optional[UNIXUserResource]
+class SshKeyIncludes(BaseCoreApiModel):
+    unix_user: Optional[UnixUserResource]
     cluster: Optional[ClusterResource]
 
 
-class SSHKeyResource(BaseCoreApiModel):
+class SshKeyResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
@@ -2165,13 +2165,13 @@ class SSHKeyResource(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=128)
     unix_user_id: int
     deployment_status: DeploymentStatusEnum
-    includes: SSHKeyIncludes
+    includes: SshKeyIncludes
 
 
 class VirtualHostIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
-    unix_user: Optional[UNIXUserResource]
-    fpm_pool: Optional[FPMPoolResource]
+    unix_user: Optional[UnixUserResource]
+    fpm_pool: Optional[FpmPoolResource]
     passenger_app: Optional[PassengerAppResource]
 
 
@@ -2231,20 +2231,20 @@ class BorgArchiveResource(BaseCoreApiModel):
     includes: BorgArchiveIncludes
 
 
-class CMSIncludes(BaseCoreApiModel):
+class CmsIncludes(BaseCoreApiModel):
     virtual_host: Optional[VirtualHostResource]
     cluster: Optional[ClusterResource]
 
 
-class CMSResource(BaseCoreApiModel):
+class CmsResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
     cluster_id: int
-    software_name: CMSSoftwareNameEnum
+    software_name: CmsSoftwareNameEnum
     is_manually_created: bool
     virtual_host_id: int
-    includes: CMSIncludes
+    includes: CmsIncludes
 
 
 class CertificateManagerIncludes(BaseCoreApiModel):
@@ -2271,10 +2271,10 @@ class CertificateManagerResource(BaseCoreApiModel):
 
 class DomainRouterIncludes(BaseCoreApiModel):
     virtual_host: Optional[VirtualHostResource]
-    url_redirect: Optional[URLRedirectResource]
+    url_redirect: Optional[UrlRedirectResource]
     node: Optional[NodeResource]
     certificate: Optional[CertificateResource]
-    security_txt_policy: Optional[SecurityTXTPolicyResource]
+    security_txt_policy: Optional[SecurityTxtPolicyResource]
     cluster: Optional[ClusterResource]
 
 
@@ -2842,7 +2842,7 @@ class ClusterLoadBalancingPropertiesResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    http_retry_properties: HTTPRetryProperties
+    http_retry_properties: HttpRetryProperties
     load_balancing_method: LoadBalancingMethodEnum
     cluster_id: int
     deployment_status: DeploymentStatusEnum
@@ -2850,7 +2850,7 @@ class ClusterLoadBalancingPropertiesResource(BaseCoreApiModel):
 
 
 class ClusterLoadBalancingPropertiesUpdateRequest(BaseCoreApiModel):
-    http_retry_properties: Optional[HTTPRetryProperties] = None
+    http_retry_properties: Optional[HttpRetryProperties] = None
     load_balancing_method: Optional[LoadBalancingMethodEnum] = None
 
 
@@ -2889,10 +2889,10 @@ class ClusterMeilisearchPropertiesUpdateRequest(BaseCoreApiModel):
 
 class ClusterPhpPropertiesCreateRequest(BaseCoreApiModel):
     php_versions: List[str]
-    custom_php_modules_names: List[PHPExtensionEnum] = Field(
+    custom_php_modules_names: List[PhpExtensionEnum] = Field(
         [],
     )
-    php_settings: PHPSettings
+    php_settings: PhpSettings
     php_ioncube_enabled: bool = False
     php_sessions_spread_enabled: bool = True
 
@@ -2902,8 +2902,8 @@ class ClusterPhpPropertiesResource(BaseCoreApiModel):
     created_at: datetime
     updated_at: datetime
     php_versions: List[str]
-    custom_php_modules_names: List[PHPExtensionEnum]
-    php_settings: PHPSettings
+    custom_php_modules_names: List[PhpExtensionEnum]
+    php_settings: PhpSettings
     php_ioncube_enabled: bool
     php_sessions_spread_enabled: bool
     cluster_id: int
@@ -2913,8 +2913,8 @@ class ClusterPhpPropertiesResource(BaseCoreApiModel):
 
 class ClusterPhpPropertiesUpdateRequest(BaseCoreApiModel):
     php_versions: Optional[List[str]] = None
-    custom_php_modules_names: Optional[List[PHPExtensionEnum]] = None
-    php_settings: Optional[PHPSettings] = None
+    custom_php_modules_names: Optional[List[PhpExtensionEnum]] = None
+    php_settings: Optional[PhpSettings] = None
     php_ioncube_enabled: Optional[bool] = None
     php_sessions_spread_enabled: Optional[bool] = None
 
@@ -2923,7 +2923,7 @@ class ClusterUnixUsersPropertiesResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    unix_users_home_directory: UNIXUserHomeDirectoryEnum
+    unix_users_home_directory: UnixUserHomeDirectoryEnum
     cluster_id: int
     deployment_status: DeploymentStatusEnum
     includes: ClusterUnixUsersPropertiesIncludes
@@ -3033,7 +3033,7 @@ class DatabaseInnodbReport(BaseCoreApiModel):
     databases_innodb_data_lengths: List[DatabaseInnodbDataLengths]
 
 
-class FPMPoolChildStatus(BaseCoreApiModel):
+class FpmPoolChildStatus(BaseCoreApiModel):
     current_request_duration: int
     http_method: HTTPMethod
     http_uri: str
@@ -3041,9 +3041,9 @@ class FPMPoolChildStatus(BaseCoreApiModel):
     script: str
 
 
-class FPMPoolNodeStatus(BaseCoreApiModel):
+class FpmPoolNodeStatus(BaseCoreApiModel):
     node_id: int
-    child_statuses: List[FPMPoolChildStatus]
+    child_statuses: List[FpmPoolChildStatus]
     current_amount_children: conint(ge=0)
 
 
@@ -3158,7 +3158,7 @@ class ClustersSinglestorePropertiesSearchRequest(BaseCoreApiModel):
 
 class CmsesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
-    software_name: Optional[CMSSoftwareNameEnum] = None
+    software_name: Optional[CmsSoftwareNameEnum] = None
     is_manually_created: Optional[bool] = None
     virtual_host_id: Optional[int] = None
 
@@ -3435,7 +3435,7 @@ class CertificateManagersSearchRequest(BaseCoreApiModel):
 
 
 class ClustersLoadBalancingPropertiesSearchRequest(BaseCoreApiModel):
-    http_retry_properties: Optional[HTTPRetryProperties] = None
+    http_retry_properties: Optional[HttpRetryProperties] = None
     load_balancing_method: Optional[LoadBalancingMethodEnum] = None
     cluster_id: Optional[int] = None
 
@@ -3449,14 +3449,14 @@ class ClustersMeilisearchPropertiesSearchRequest(BaseCoreApiModel):
 
 class ClustersPhpPropertiesSearchRequest(BaseCoreApiModel):
     php_versions: Optional[str] = None
-    custom_php_modules_names: Optional[PHPExtensionEnum] = None
+    custom_php_modules_names: Optional[PhpExtensionEnum] = None
     php_ioncube_enabled: Optional[bool] = None
     php_sessions_spread_enabled: Optional[bool] = None
     cluster_id: Optional[int] = None
 
 
 class ClustersUnixUsersPropertiesSearchRequest(BaseCoreApiModel):
-    unix_users_home_directory: Optional[UNIXUserHomeDirectoryEnum] = None
+    unix_users_home_directory: Optional[UnixUserHomeDirectoryEnum] = None
     cluster_id: Optional[int] = None
 
 
@@ -3472,7 +3472,7 @@ class DatabaseUserGrantsSearchRequest(BaseCoreApiModel):
     database_id: Optional[int] = None
     database_user_id: Optional[int] = None
     table_name: Optional[str] = None
-    privilege_name: Optional[MariaDBPrivilegeEnum] = None
+    privilege_name: Optional[MariadbPrivilegeEnum] = None
 
 
 class HaproxyListensSearchRequest(BaseCoreApiModel):

@@ -5,11 +5,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class HAProxyListensToNodes(Resource):
+class HaproxyListensToNodes(Resource):
     def create_haproxy_listen_to_node(
         self,
-        request: models.HAProxyListenToNodeCreateRequest,
-    ) -> DtoResponse[models.HAProxyListenToNodeResource]:
+        request: models.HaproxyListenToNodeCreateRequest,
+    ) -> DtoResponse[models.HaproxyListenToNodeResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/haproxy-listens-to-nodes",
@@ -18,7 +18,7 @@ class HAProxyListensToNodes(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.HAProxyListenToNodeResource
+            local_response, models.HaproxyListenToNodeResource
         )
 
     def list_haproxy_listens_to_nodes(
@@ -28,7 +28,7 @@ class HAProxyListensToNodes(Resource):
         per_page: int = 50,
         include_filters: models.HaproxyListensToNodesSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.HAProxyListenToNodeResource]]:
+    ) -> DtoResponse[list[models.HaproxyListenToNodeResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/haproxy-listens-to-nodes",
@@ -46,7 +46,7 @@ class HAProxyListensToNodes(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.HAProxyListenToNodeResource
+            local_response, models.HaproxyListenToNodeResource
         )
 
     def read_haproxy_listen_to_node(
@@ -54,7 +54,7 @@ class HAProxyListensToNodes(Resource):
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.HAProxyListenToNodeResource]:
+    ) -> DtoResponse[models.HaproxyListenToNodeResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/haproxy-listens-to-nodes/{id_}",
@@ -63,7 +63,7 @@ class HAProxyListensToNodes(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.HAProxyListenToNodeResource
+            local_response, models.HaproxyListenToNodeResource
         )
 
     def delete_haproxy_listen_to_node(

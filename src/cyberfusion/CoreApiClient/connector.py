@@ -192,14 +192,14 @@ class CoreApiConnector(CoreApiClient):
         return resources.customers.Customers(self)
 
     @cached_property
-    def haproxy_listens(self) -> resources.haproxy_listens.HAProxyListens:
-        return resources.haproxy_listens.HAProxyListens(self)
+    def haproxy_listens(self) -> resources.haproxy_listens.HaproxyListens:
+        return resources.haproxy_listens.HaproxyListens(self)
 
     @cached_property
     def haproxy_listens_to_nodes(
         self,
-    ) -> resources.haproxy_listens_to_nodes.HAProxyListensToNodes:
-        return resources.haproxy_listens_to_nodes.HAProxyListensToNodes(self)
+    ) -> resources.haproxy_listens_to_nodes.HaproxyListensToNodes:
+        return resources.haproxy_listens_to_nodes.HaproxyListensToNodes(self)
 
     @cached_property
     def borg_repositories(self) -> resources.borg_repositories.BorgRepositories:
@@ -236,8 +236,8 @@ class CoreApiConnector(CoreApiClient):
         return resources.domain_routers.DomainRouters(self)
 
     @cached_property
-    def url_redirects(self) -> resources.url_redirects.URLRedirects:
-        return resources.url_redirects.URLRedirects(self)
+    def url_redirects(self) -> resources.url_redirects.UrlRedirects:
+        return resources.url_redirects.UrlRedirects(self)
 
     @cached_property
     def htpasswd_files(self) -> resources.htpasswd_files.HtpasswdFiles:
@@ -268,8 +268,8 @@ class CoreApiConnector(CoreApiClient):
     @cached_property
     def mariadb_encryption_keys(
         self,
-    ) -> resources.mariadb_encryption_keys.MariaDBEncryptionKeys:
-        return resources.mariadb_encryption_keys.MariaDBEncryptionKeys(self)
+    ) -> resources.mariadb_encryption_keys.MariadbEncryptionKeys:
+        return resources.mariadb_encryption_keys.MariadbEncryptionKeys(self)
 
     @cached_property
     def firewall_rules(self) -> resources.firewall_rules.FirewallRules:
@@ -282,8 +282,8 @@ class CoreApiConnector(CoreApiClient):
     @cached_property
     def security_txt_policies(
         self,
-    ) -> resources.security_txt_policies.SecurityTXTPolicies:
-        return resources.security_txt_policies.SecurityTXTPolicies(self)
+    ) -> resources.security_txt_policies.SecurityTxtPolicies:
+        return resources.security_txt_policies.SecurityTxtPolicies(self)
 
     @cached_property
     def firewall_groups(self) -> resources.firewall_groups.FirewallGroups:
@@ -300,16 +300,16 @@ class CoreApiConnector(CoreApiClient):
         return resources.custom_configs.CustomConfigs(self)
 
     @cached_property
-    def ftp_users(self) -> resources.ftp_users.FTPUsers:
-        return resources.ftp_users.FTPUsers(self)
+    def ftp_users(self) -> resources.ftp_users.FtpUsers:
+        return resources.ftp_users.FtpUsers(self)
 
     @cached_property
-    def cmses(self) -> resources.cmses.CMSes:
-        return resources.cmses.CMSes(self)
+    def cmses(self) -> resources.cmses.Cmses:
+        return resources.cmses.Cmses(self)
 
     @cached_property
-    def fpm_pools(self) -> resources.fpm_pools.FPMPools:
-        return resources.fpm_pools.FPMPools(self)
+    def fpm_pools(self) -> resources.fpm_pools.FpmPools:
+        return resources.fpm_pools.FpmPools(self)
 
     @cached_property
     def passenger_apps(self) -> resources.passenger_apps.PassengerApps:
@@ -332,20 +332,20 @@ class CoreApiConnector(CoreApiClient):
         return resources.nodes.Nodes(self)
 
     @cached_property
-    def unix_users(self) -> resources.unix_users.UNIXUsers:
-        return resources.unix_users.UNIXUsers(self)
+    def unix_users(self) -> resources.unix_users.UnixUsers:
+        return resources.unix_users.UnixUsers(self)
 
     @cached_property
     def logs(self) -> resources.logs.Logs:
         return resources.logs.Logs(self)
 
     @cached_property
-    def ssh_keys(self) -> resources.ssh_keys.SSHKeys:
-        return resources.ssh_keys.SSHKeys(self)
+    def ssh_keys(self) -> resources.ssh_keys.SshKeys:
+        return resources.ssh_keys.SshKeys(self)
 
     @cached_property
-    def root_ssh_keys(self) -> resources.root_ssh_keys.RootSSHKeys:
-        return resources.root_ssh_keys.RootSSHKeys(self)
+    def root_ssh_keys(self) -> resources.root_ssh_keys.RootSshKeys:
+        return resources.root_ssh_keys.RootSshKeys(self)
 
     @cached_property
     def malwares(self) -> resources.malwares.Malwares:

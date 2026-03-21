@@ -98,7 +98,7 @@ class Clusters(Resource):
         self,
         *,
         id_: int,
-    ) -> DtoResponse[models.ClusterIPAddresses]:
+    ) -> DtoResponse[models.ClusterIpAddresses]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/ip-addresses",
@@ -106,11 +106,11 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.ClusterIPAddresses)
+        return DtoResponse.from_response(local_response, models.ClusterIpAddresses)
 
     def create_ip_address_for_cluster(
         self,
-        request: models.ClusterIPAddressCreateRequest,
+        request: models.ClusterIpAddressCreateRequest,
         *,
         id_: int,
         callback_url: Optional[str] = None,
@@ -182,7 +182,7 @@ class Clusters(Resource):
 
     def get_ip_addresses_products_for_clusters(
         self,
-    ) -> DtoResponse[list[models.IPAddressProduct]]:
+    ) -> DtoResponse[list[models.IpAddressProduct]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/ip-addresses/products",
@@ -190,16 +190,16 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.IPAddressProduct)
+        return DtoResponse.from_response(local_response, models.IpAddressProduct)
 
     def list_unix_users_home_directory_usages(
         self,
         *,
         id_: int,
         timestamp: str,
-        time_unit: Optional[models.UNIXUsersHomeDirectoryUsageResource] = None,
+        time_unit: Optional[models.UnixUsersHomeDirectoryUsageResource] = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.UNIXUsersHomeDirectoryUsageResource]]:
+    ) -> DtoResponse[list[models.UnixUsersHomeDirectoryUsageResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/clusters/{id_}/usages/unix-users-home-directory",
@@ -212,7 +212,7 @@ class Clusters(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.UNIXUsersHomeDirectoryUsageResource
+            local_response, models.UnixUsersHomeDirectoryUsageResource
         )
 
     def list_nodes_dependencies(

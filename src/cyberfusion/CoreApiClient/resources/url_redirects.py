@@ -4,11 +4,11 @@ from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
 
-class URLRedirects(Resource):
+class UrlRedirects(Resource):
     def create_url_redirect(
         self,
-        request: models.URLRedirectCreateRequest,
-    ) -> DtoResponse[models.URLRedirectResource]:
+        request: models.UrlRedirectCreateRequest,
+    ) -> DtoResponse[models.UrlRedirectResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/url-redirects",
@@ -16,7 +16,7 @@ class URLRedirects(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.URLRedirectResource)
+        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
 
     def list_url_redirects(
         self,
@@ -25,7 +25,7 @@ class URLRedirects(Resource):
         per_page: int = 50,
         include_filters: models.UrlRedirectsSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.URLRedirectResource]]:
+    ) -> DtoResponse[list[models.UrlRedirectResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/url-redirects",
@@ -42,14 +42,14 @@ class URLRedirects(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.URLRedirectResource)
+        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
 
     def read_url_redirect(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.URLRedirectResource]:
+    ) -> DtoResponse[models.UrlRedirectResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/url-redirects/{id_}",
@@ -57,14 +57,14 @@ class URLRedirects(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.URLRedirectResource)
+        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
 
     def update_url_redirect(
         self,
-        request: models.URLRedirectUpdateRequest,
+        request: models.UrlRedirectUpdateRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.URLRedirectResource]:
+    ) -> DtoResponse[models.UrlRedirectResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/url-redirects/{id_}",
@@ -72,7 +72,7 @@ class URLRedirects(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.URLRedirectResource)
+        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
 
     def delete_url_redirect(
         self,

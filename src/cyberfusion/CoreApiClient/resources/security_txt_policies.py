@@ -4,11 +4,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class SecurityTXTPolicies(Resource):
+class SecurityTxtPolicies(Resource):
     def create_security_txt_policy(
         self,
-        request: models.SecurityTXTPolicyCreateRequest,
-    ) -> DtoResponse[models.SecurityTXTPolicyResource]:
+        request: models.SecurityTxtPolicyCreateRequest,
+    ) -> DtoResponse[models.SecurityTxtPolicyResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/security-txt-policies",
@@ -17,7 +17,7 @@ class SecurityTXTPolicies(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
+            local_response, models.SecurityTxtPolicyResource
         )
 
     def list_security_txt_policies(
@@ -27,7 +27,7 @@ class SecurityTXTPolicies(Resource):
         per_page: int = 50,
         include_filters: models.SecurityTxtPoliciesSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.SecurityTXTPolicyResource]]:
+    ) -> DtoResponse[list[models.SecurityTxtPolicyResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/security-txt-policies",
@@ -45,7 +45,7 @@ class SecurityTXTPolicies(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
+            local_response, models.SecurityTxtPolicyResource
         )
 
     def read_security_txt_policy(
@@ -53,7 +53,7 @@ class SecurityTXTPolicies(Resource):
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.SecurityTXTPolicyResource]:
+    ) -> DtoResponse[models.SecurityTxtPolicyResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/security-txt-policies/{id_}",
@@ -62,15 +62,15 @@ class SecurityTXTPolicies(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
+            local_response, models.SecurityTxtPolicyResource
         )
 
     def update_security_txt_policy(
         self,
-        request: models.SecurityTXTPolicyUpdateRequest,
+        request: models.SecurityTxtPolicyUpdateRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.SecurityTXTPolicyResource]:
+    ) -> DtoResponse[models.SecurityTxtPolicyResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/security-txt-policies/{id_}",
@@ -79,7 +79,7 @@ class SecurityTXTPolicies(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.SecurityTXTPolicyResource
+            local_response, models.SecurityTxtPolicyResource
         )
 
     def delete_security_txt_policy(
