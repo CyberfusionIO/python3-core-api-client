@@ -1,7 +1,7 @@
 from cyberfusion.CoreApiClient.connector import CoreApiConnector
 from tests.conftest import (
-    URLRedirectUpdateRequestFactory,
-    URLRedirectCreateRequestFactory,
+    UrlRedirectUpdateRequestFactory,
+    UrlRedirectCreateRequestFactory,
 )
 import faker
 
@@ -9,7 +9,7 @@ import faker
 def test_create_url_redirect(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
-    url_redirect_create_request_factory: URLRedirectCreateRequestFactory,
+    url_redirect_create_request_factory: UrlRedirectCreateRequestFactory,
 ) -> None:
     api_connector.url_redirects.create_url_redirect(
         url_redirect_create_request_factory.build()
@@ -19,7 +19,7 @@ def test_create_url_redirect(
 def test_update_url_redirect(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
-    url_redirect_update_request_factory: URLRedirectUpdateRequestFactory,
+    url_redirect_update_request_factory: UrlRedirectUpdateRequestFactory,
 ) -> None:
     api_connector.url_redirects.update_url_redirect(
         url_redirect_update_request_factory.build(), id_=faker.pyint()

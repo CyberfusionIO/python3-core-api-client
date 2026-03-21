@@ -5,11 +5,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class HAProxyListens(Resource):
+class HaproxyListens(Resource):
     def create_haproxy_listen(
         self,
-        request: models.HAProxyListenCreateRequest,
-    ) -> DtoResponse[models.HAProxyListenResource]:
+        request: models.HaproxyListenCreateRequest,
+    ) -> DtoResponse[models.HaproxyListenResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/haproxy-listens",
@@ -17,7 +17,7 @@ class HAProxyListens(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.HAProxyListenResource)
+        return DtoResponse.from_response(local_response, models.HaproxyListenResource)
 
     def list_haproxy_listens(
         self,
@@ -26,7 +26,7 @@ class HAProxyListens(Resource):
         per_page: int = 50,
         include_filters: models.HaproxyListensSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.HAProxyListenResource]]:
+    ) -> DtoResponse[list[models.HaproxyListenResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/haproxy-listens",
@@ -43,14 +43,14 @@ class HAProxyListens(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.HAProxyListenResource)
+        return DtoResponse.from_response(local_response, models.HaproxyListenResource)
 
     def read_haproxy_listen(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.HAProxyListenResource]:
+    ) -> DtoResponse[models.HaproxyListenResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/haproxy-listens/{id_}",
@@ -58,7 +58,7 @@ class HAProxyListens(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.HAProxyListenResource)
+        return DtoResponse.from_response(local_response, models.HaproxyListenResource)
 
     def delete_haproxy_listen(
         self,

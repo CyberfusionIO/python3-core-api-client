@@ -6,11 +6,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class FPMPools(Resource):
+class FpmPools(Resource):
     def create_fpm_pool(
         self,
-        request: models.FPMPoolCreateRequest,
-    ) -> DtoResponse[models.FPMPoolResource]:
+        request: models.FpmPoolCreateRequest,
+    ) -> DtoResponse[models.FpmPoolResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/fpm-pools",
@@ -18,7 +18,7 @@ class FPMPools(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FPMPoolResource)
+        return DtoResponse.from_response(local_response, models.FpmPoolResource)
 
     def list_fpm_pools(
         self,
@@ -27,7 +27,7 @@ class FPMPools(Resource):
         per_page: int = 50,
         include_filters: models.FpmPoolsSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.FPMPoolResource]]:
+    ) -> DtoResponse[list[models.FpmPoolResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/fpm-pools",
@@ -44,14 +44,14 @@ class FPMPools(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FPMPoolResource)
+        return DtoResponse.from_response(local_response, models.FpmPoolResource)
 
     def read_fpm_pool(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.FPMPoolResource]:
+    ) -> DtoResponse[models.FpmPoolResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/fpm-pools/{id_}",
@@ -59,14 +59,14 @@ class FPMPools(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FPMPoolResource)
+        return DtoResponse.from_response(local_response, models.FpmPoolResource)
 
     def update_fpm_pool(
         self,
-        request: models.FPMPoolUpdateRequest,
+        request: models.FpmPoolUpdateRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.FPMPoolResource]:
+    ) -> DtoResponse[models.FpmPoolResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/fpm-pools/{id_}",
@@ -74,7 +74,7 @@ class FPMPools(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FPMPoolResource)
+        return DtoResponse.from_response(local_response, models.FpmPoolResource)
 
     def delete_fpm_pool(
         self,
@@ -125,14 +125,14 @@ class FPMPools(Resource):
         self,
         *,
         id_: int,
-    ) -> DtoResponse[list[models.FPMPoolNodeStatus]]:
+    ) -> DtoResponse[list[models.FpmPoolNodeStatus]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/fpm-pools/{id_}/status",
             data=None,
         )
 
-        return DtoResponse.from_response(local_response, models.FPMPoolNodeStatus)
+        return DtoResponse.from_response(local_response, models.FpmPoolNodeStatus)
 
     def update_fpm_pool_version(
         self,
@@ -158,7 +158,7 @@ class FPMPools(Resource):
         request: models.FpmPoolUpdateSettingsRequest,
         *,
         id_: int,
-    ) -> DtoResponse[models.FPMPoolResource]:
+    ) -> DtoResponse[models.FpmPoolResource]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/fpm-pools/{id_}/settings",
@@ -166,4 +166,4 @@ class FPMPools(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FPMPoolResource)
+        return DtoResponse.from_response(local_response, models.FpmPoolResource)

@@ -5,11 +5,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class RootSSHKeys(Resource):
+class RootSshKeys(Resource):
     def create_public_root_ssh_key(
         self,
-        request: models.RootSSHKeyCreatePublicRequest,
-    ) -> DtoResponse[models.RootSSHKeyResource]:
+        request: models.RootSshKeyCreatePublicRequest,
+    ) -> DtoResponse[models.RootSshKeyResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/root-ssh-keys/public",
@@ -17,12 +17,12 @@ class RootSSHKeys(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.RootSSHKeyResource)
+        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
 
     def create_private_root_ssh_key(
         self,
-        request: models.RootSSHKeyCreatePrivateRequest,
-    ) -> DtoResponse[models.RootSSHKeyResource]:
+        request: models.RootSshKeyCreatePrivateRequest,
+    ) -> DtoResponse[models.RootSshKeyResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/root-ssh-keys/private",
@@ -30,7 +30,7 @@ class RootSSHKeys(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.RootSSHKeyResource)
+        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
 
     def list_root_ssh_keys(
         self,
@@ -39,7 +39,7 @@ class RootSSHKeys(Resource):
         per_page: int = 50,
         include_filters: models.RootSshKeysSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.RootSSHKeyResource]]:
+    ) -> DtoResponse[list[models.RootSshKeyResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/root-ssh-keys",
@@ -56,14 +56,14 @@ class RootSSHKeys(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RootSSHKeyResource)
+        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
 
     def read_root_ssh_key(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.RootSSHKeyResource]:
+    ) -> DtoResponse[models.RootSshKeyResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/root-ssh-keys/{id_}",
@@ -71,7 +71,7 @@ class RootSSHKeys(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RootSSHKeyResource)
+        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
 
     def delete_root_ssh_key(
         self,

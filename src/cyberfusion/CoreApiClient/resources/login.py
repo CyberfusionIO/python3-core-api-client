@@ -21,9 +21,9 @@ class Login(Resource):
 
     def test_access_token(
         self,
-    ) -> DtoResponse[models.APIUserInfo]:
+    ) -> DtoResponse[models.ApiUserInfo]:
         local_response = self.api_connector.send_or_fail(
             "POST", "/api/v1/login/test-token", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.APIUserInfo)
+        return DtoResponse.from_response(local_response, models.ApiUserInfo)

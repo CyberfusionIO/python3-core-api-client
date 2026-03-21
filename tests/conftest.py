@@ -32,19 +32,19 @@ class BodyLoginAccessTokenFactory(ModelFactory[models.BodyLoginAccessToken]): ..
 
 @register_fixture
 class CustomerIPAddressCreateRequestFactory(
-    ModelFactory[models.CustomerIPAddressCreateRequest]
+    ModelFactory[models.CustomerIpAddressCreateRequest]
 ): ...
 
 
 @register_fixture
 class HaproxyListenCreateRequestFactory(
-    ModelFactory[models.HAProxyListenCreateRequest]
+    ModelFactory[models.HaproxyListenCreateRequest]
 ): ...
 
 
 @register_fixture
 class HaproxyListenToNodeCreateRequestFactory(
-    ModelFactory[models.HAProxyListenToNodeCreateRequest]
+    ModelFactory[models.HaproxyListenToNodeCreateRequest]
 ): ...
 
 
@@ -94,7 +94,7 @@ class ClusterUpdateRequestFactory(UpdateFactory[models.ClusterUpdateRequest]): .
 
 @register_fixture
 class ClusterIPAddressCreateRequestFactory(
-    ModelFactory[models.ClusterIPAddressCreateRequest]
+    ModelFactory[models.ClusterIpAddressCreateRequest]
 ): ...
 
 
@@ -129,14 +129,14 @@ class DomainRouterUpdateRequestFactory(
 
 
 @register_fixture
-class URLRedirectCreateRequestFactory(
-    ModelFactory[models.URLRedirectCreateRequest]
+class UrlRedirectCreateRequestFactory(
+    ModelFactory[models.UrlRedirectCreateRequest]
 ): ...
 
 
 @register_fixture
-class URLRedirectUpdateRequestFactory(
-    UpdateFactory[models.URLRedirectUpdateRequest]
+class UrlRedirectUpdateRequestFactory(
+    UpdateFactory[models.UrlRedirectUpdateRequest]
 ): ...
 
 
@@ -192,7 +192,7 @@ class DaemonUpdateRequestFactory(UpdateFactory[models.DaemonUpdateRequest]): ...
 
 @register_fixture
 class MariadbEncryptionKeyCreateRequestFactory(
-    ModelFactory[models.MariaDBEncryptionKeyCreateRequest]
+    ModelFactory[models.MariadbEncryptionKeyCreateRequest]
 ): ...
 
 
@@ -208,13 +208,13 @@ class HostsEntryCreateRequestFactory(ModelFactory[models.HostsEntryCreateRequest
 
 @register_fixture
 class SecurityTxtPolicyCreateRequestFactory(
-    ModelFactory[models.SecurityTXTPolicyCreateRequest]
+    ModelFactory[models.SecurityTxtPolicyCreateRequest]
 ): ...
 
 
 @register_fixture
 class SecurityTxtPolicyUpdateRequestFactory(
-    UpdateFactory[models.SecurityTXTPolicyUpdateRequest]
+    UpdateFactory[models.SecurityTxtPolicyUpdateRequest]
 ): ...
 
 
@@ -261,74 +261,74 @@ class CustomConfigUpdateRequestFactory(
 
 
 @register_fixture
-class FtpUserCreateRequestFactory(ModelFactory[models.FTPUserCreateRequest]): ...
+class FtpUserCreateRequestFactory(ModelFactory[models.FtpUserCreateRequest]): ...
 
 
 @register_fixture
-class FtpUserUpdateRequestFactory(UpdateFactory[models.FTPUserUpdateRequest]): ...
+class FtpUserUpdateRequestFactory(UpdateFactory[models.FtpUserUpdateRequest]): ...
 
 
 @register_fixture
 class TemporaryFtpUserCreateRequestFactory(
-    ModelFactory[models.TemporaryFTPUserCreateRequest]
+    ModelFactory[models.TemporaryFtpUserCreateRequest]
 ): ...
 
 
 @register_fixture
-class CmsCreateRequestFactory(ModelFactory[models.CMSCreateRequest]): ...
+class CmsCreateRequestFactory(ModelFactory[models.CmsCreateRequest]): ...
 
 
 @register_fixture
-class CmsInstallWordPressRequestFactory(
-    ModelFactory[models.CMSInstallWordPressRequest]
+class CmsInstallWordpressRequestFactory(
+    ModelFactory[models.CmsInstallWordpressRequest]
 ): ...
 
 
 @register_fixture
-class CmsInstallNextCloudRequestFactory(
-    ModelFactory[models.CMSInstallNextCloudRequest]
+class CmsInstallNextcloudRequestFactory(
+    ModelFactory[models.CmsInstallNextcloudRequest]
 ): ...
 
 
 @register_fixture
-class CmsOptionUpdateRequestFactory(ModelFactory[models.CMSOptionUpdateRequest]): ...
+class CmsOptionUpdateRequestFactory(ModelFactory[models.CmsOptionUpdateRequest]): ...
 
 
 @register_fixture
 class CmsConfigurationConstantUpdateRequestFactory(
-    ModelFactory[models.CMSConfigurationConstantUpdateRequest]
+    ModelFactory[models.CmsConfigurationConstantUpdateRequest]
 ): ...
 
 
 @register_fixture
 class CmsUserCredentialsUpdateRequestFactory(
-    ModelFactory[models.CMSUserCredentialsUpdateRequest]
+    ModelFactory[models.CmsUserCredentialsUpdateRequest]
 ): ...
 
 
 @register_fixture
 class CmsThemeInstallFromRepositoryRequestFactory(
-    ModelFactory[models.CMSThemeInstallFromRepositoryRequest]
+    ModelFactory[models.CmsThemeInstallFromRepositoryRequest]
 ): ...
 
 
 @register_fixture
-class CmsThemeInstallFromURLRequestFactory(
-    ModelFactory[models.CMSThemeInstallFromURLRequest]
+class CmsThemeInstallFromUrlRequestFactory(
+    ModelFactory[models.CmsThemeInstallFromUrlRequest]
 ): ...
 
 
 @register_fixture
-class FpmPoolCreateRequestFactory(ModelFactory[models.FPMPoolCreateRequest]): ...
+class FpmPoolCreateRequestFactory(ModelFactory[models.FpmPoolCreateRequest]): ...
 
 
 @register_fixture
-class FpmPoolUpdateRequestFactory(UpdateFactory[models.FPMPoolUpdateRequest]): ...
+class FpmPoolUpdateRequestFactory(UpdateFactory[models.FpmPoolUpdateRequest]): ...
 
 
 @register_fixture
 class PassengerAppCreateNodejsRequestFactory(
-    ModelFactory[models.PassengerAppCreateNodeJSRequest]
+    ModelFactory[models.PassengerAppCreateNodejsRequest]
 ): ...
 
 
@@ -371,34 +371,34 @@ class NodeUpdateRequestFactory(UpdateFactory[models.NodeUpdateRequest]): ...
 
 
 @register_fixture
-class UnixUserCreateRequestFactory(ModelFactory[models.UNIXUserCreateRequest]): ...
+class UnixUserCreateRequestFactory(ModelFactory[models.UnixUserCreateRequest]): ...
 
 
 @register_fixture
-class UnixUserUpdateRequestFactory(UpdateFactory[models.UNIXUserUpdateRequest]): ...
+class UnixUserUpdateRequestFactory(UpdateFactory[models.UnixUserUpdateRequest]): ...
 
 
 @register_fixture
 class SshKeyCreatePublicRequestFactory(
-    ModelFactory[models.SSHKeyCreatePublicRequest]
+    ModelFactory[models.SshKeyCreatePublicRequest]
 ): ...
 
 
 @register_fixture
 class SshKeyCreatePrivateRequestFactory(
-    ModelFactory[models.SSHKeyCreatePrivateRequest]
+    ModelFactory[models.SshKeyCreatePrivateRequest]
 ): ...
 
 
 @register_fixture
 class RootSshKeyCreatePublicRequestFactory(
-    ModelFactory[models.RootSSHKeyCreatePublicRequest]
+    ModelFactory[models.RootSshKeyCreatePublicRequest]
 ): ...
 
 
 @register_fixture
 class RootSshKeyCreatePrivateRequestFactory(
-    ModelFactory[models.RootSSHKeyCreatePrivateRequest]
+    ModelFactory[models.RootSshKeyCreatePrivateRequest]
 ): ...
 
 

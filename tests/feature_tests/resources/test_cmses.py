@@ -2,13 +2,13 @@ from cyberfusion.CoreApiClient.connector import CoreApiConnector
 import random
 from cyberfusion.CoreApiClient import models
 from tests.conftest import (
-    CmsThemeInstallFromURLRequestFactory,
+    CmsThemeInstallFromUrlRequestFactory,
     CmsThemeInstallFromRepositoryRequestFactory,
     CmsUserCredentialsUpdateRequestFactory,
     CmsConfigurationConstantUpdateRequestFactory,
     CmsOptionUpdateRequestFactory,
-    CmsInstallNextCloudRequestFactory,
-    CmsInstallWordPressRequestFactory,
+    CmsInstallNextcloudRequestFactory,
+    CmsInstallWordpressRequestFactory,
     CmsCreateRequestFactory,
 )
 import faker
@@ -25,20 +25,20 @@ def test_create_cms(
 def test_install_wordpress(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
-    cms_install_word_press_request_factory: CmsInstallWordPressRequestFactory,
+    cms_install_wordpress_request_factory: CmsInstallWordpressRequestFactory,
 ) -> None:
     api_connector.cmses.install_wordpress(
-        cms_install_word_press_request_factory.build(), id_=faker.pyint()
+        cms_install_wordpress_request_factory.build(), id_=faker.pyint()
     )
 
 
 def test_install_nextcloud(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
-    cms_install_next_cloud_request_factory: CmsInstallNextCloudRequestFactory,
+    cms_install_nextcloud_request_factory: CmsInstallNextcloudRequestFactory,
 ) -> None:
     api_connector.cmses.install_nextcloud(
-        cms_install_next_cloud_request_factory.build(), id_=faker.pyint()
+        cms_install_nextcloud_request_factory.build(), id_=faker.pyint()
     )
 
 
@@ -50,7 +50,7 @@ def test_update_cms_option(
     api_connector.cmses.update_cms_option(
         cms_option_update_request_factory.build(),
         id_=faker.pyint(),
-        name=random.choice(list(models.CMSOptionNameEnum)),
+        name=random.choice(list(models.CmsOptionNameEnum)),
     )
 
 
@@ -91,7 +91,7 @@ def test_install_cms_theme_from_repository(
 def test_install_cms_theme_from_url(
     api_connector: CoreApiConnector,
     faker: faker.Faker,
-    cms_theme_install_from_url_request_factory: CmsThemeInstallFromURLRequestFactory,
+    cms_theme_install_from_url_request_factory: CmsThemeInstallFromUrlRequestFactory,
 ) -> None:
     api_connector.cmses.install_cms_theme(
         cms_theme_install_from_url_request_factory.build(), id_=faker.pyint()

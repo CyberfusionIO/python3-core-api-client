@@ -6,11 +6,11 @@ from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
 
 
-class CMSes(Resource):
+class Cmses(Resource):
     def create_cms(
         self,
-        request: models.CMSCreateRequest,
-    ) -> DtoResponse[models.CMSResource]:
+        request: models.CmsCreateRequest,
+    ) -> DtoResponse[models.CmsResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/cmses",
@@ -18,7 +18,7 @@ class CMSes(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CMSResource)
+        return DtoResponse.from_response(local_response, models.CmsResource)
 
     def list_cmses(
         self,
@@ -27,7 +27,7 @@ class CMSes(Resource):
         per_page: int = 50,
         include_filters: models.CmsesSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.CMSResource]]:
+    ) -> DtoResponse[list[models.CmsResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/cmses",
@@ -44,14 +44,14 @@ class CMSes(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.CMSResource)
+        return DtoResponse.from_response(local_response, models.CmsResource)
 
     def read_cms(
         self,
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.CMSResource]:
+    ) -> DtoResponse[models.CmsResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/cmses/{id_}",
@@ -59,7 +59,7 @@ class CMSes(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.CMSResource)
+        return DtoResponse.from_response(local_response, models.CmsResource)
 
     def delete_cms(
         self,
@@ -74,7 +74,7 @@ class CMSes(Resource):
 
     def install_wordpress(
         self,
-        request: models.CMSInstallWordPressRequest,
+        request: models.CmsInstallWordpressRequest,
         *,
         id_: int,
         callback_url: Optional[str] = None,
@@ -92,7 +92,7 @@ class CMSes(Resource):
 
     def install_nextcloud(
         self,
-        request: models.CMSInstallNextCloudRequest,
+        request: models.CmsInstallNextcloudRequest,
         *,
         id_: int,
         callback_url: Optional[str] = None,
@@ -112,7 +112,7 @@ class CMSes(Resource):
         self,
         *,
         id_: int,
-    ) -> DtoResponse[models.CMSOneTimeLogin]:
+    ) -> DtoResponse[models.CmsOneTimeLogin]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/cmses/{id_}/one-time-login",
@@ -120,26 +120,26 @@ class CMSes(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CMSOneTimeLogin)
+        return DtoResponse.from_response(local_response, models.CmsOneTimeLogin)
 
     def get_cms_plugins(
         self,
         *,
         id_: int,
-    ) -> DtoResponse[list[models.CMSPlugin]]:
+    ) -> DtoResponse[list[models.CmsPlugin]]:
         local_response = self.api_connector.send_or_fail(
             "GET", f"/api/v1/cmses/{id_}/plugins", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.CMSPlugin)
+        return DtoResponse.from_response(local_response, models.CmsPlugin)
 
     def update_cms_option(
         self,
-        request: models.CMSOptionUpdateRequest,
+        request: models.CmsOptionUpdateRequest,
         *,
         id_: int,
-        name: models.CMSOptionNameEnum,
-    ) -> DtoResponse[models.CMSOption]:
+        name: models.CmsOptionNameEnum,
+    ) -> DtoResponse[models.CmsOption]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/cmses/{id_}/options/{name}",
@@ -147,15 +147,15 @@ class CMSes(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CMSOption)
+        return DtoResponse.from_response(local_response, models.CmsOption)
 
     def update_cms_configuration_constant(
         self,
-        request: models.CMSConfigurationConstantUpdateRequest,
+        request: models.CmsConfigurationConstantUpdateRequest,
         *,
         id_: int,
         name: str,
-    ) -> DtoResponse[models.CMSConfigurationConstant]:
+    ) -> DtoResponse[models.CmsConfigurationConstant]:
         local_response = self.api_connector.send_or_fail(
             "PATCH",
             f"/api/v1/cmses/{id_}/configuration-constants/{name}",
@@ -164,12 +164,12 @@ class CMSes(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.CMSConfigurationConstant
+            local_response, models.CmsConfigurationConstant
         )
 
     def update_cms_user_credentials(
         self,
-        request: models.CMSUserCredentialsUpdateRequest,
+        request: models.CmsUserCredentialsUpdateRequest,
         *,
         id_: int,
         user_id: int,
@@ -286,8 +286,8 @@ class CMSes(Resource):
     def install_cms_theme(
         self,
         request: Union[
-            models.CMSThemeInstallFromRepositoryRequest,
-            models.CMSThemeInstallFromURLRequest,
+            models.CmsThemeInstallFromRepositoryRequest,
+            models.CmsThemeInstallFromUrlRequest,
         ],
         *,
         id_: int,

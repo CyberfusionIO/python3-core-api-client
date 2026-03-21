@@ -5,11 +5,11 @@ from cyberfusion.CoreApiClient._helpers import construct_includes_query_paramete
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
-class MariaDBEncryptionKeys(Resource):
+class MariadbEncryptionKeys(Resource):
     def create_mariadb_encryption_key(
         self,
-        request: models.MariaDBEncryptionKeyCreateRequest,
-    ) -> DtoResponse[models.MariaDBEncryptionKeyResource]:
+        request: models.MariadbEncryptionKeyCreateRequest,
+    ) -> DtoResponse[models.MariadbEncryptionKeyResource]:
         local_response = self.api_connector.send_or_fail(
             "POST",
             "/api/v1/mariadb-encryption-keys",
@@ -18,7 +18,7 @@ class MariaDBEncryptionKeys(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.MariaDBEncryptionKeyResource
+            local_response, models.MariadbEncryptionKeyResource
         )
 
     def list_mariadb_encryption_keys(
@@ -28,7 +28,7 @@ class MariaDBEncryptionKeys(Resource):
         per_page: int = 50,
         include_filters: models.MariadbEncryptionKeysSearchRequest | None = None,
         includes: list[str] | None = None,
-    ) -> DtoResponse[list[models.MariaDBEncryptionKeyResource]]:
+    ) -> DtoResponse[list[models.MariadbEncryptionKeyResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/mariadb-encryption-keys",
@@ -46,7 +46,7 @@ class MariaDBEncryptionKeys(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.MariaDBEncryptionKeyResource
+            local_response, models.MariadbEncryptionKeyResource
         )
 
     def read_mariadb_encryption_key(
@@ -54,7 +54,7 @@ class MariaDBEncryptionKeys(Resource):
         *,
         id_: int,
         includes: list[str] | None = None,
-    ) -> DtoResponse[models.MariaDBEncryptionKeyResource]:
+    ) -> DtoResponse[models.MariadbEncryptionKeyResource]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             f"/api/v1/mariadb-encryption-keys/{id_}",
@@ -63,5 +63,5 @@ class MariaDBEncryptionKeys(Resource):
         )
 
         return DtoResponse.from_response(
-            local_response, models.MariaDBEncryptionKeyResource
+            local_response, models.MariadbEncryptionKeyResource
         )
