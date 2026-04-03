@@ -16,25 +16,19 @@ class UrlRedirects(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
+        return DtoResponse.from_responses(local_response, models.UrlRedirectResource)
 
     def list_url_redirects(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.UrlRedirectsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UrlRedirectResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/url-redirects",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -42,7 +36,7 @@ class UrlRedirects(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
+        return DtoResponse.from_responses(local_responses, models.UrlRedirectResource)
 
     def read_url_redirect(
         self,
@@ -57,7 +51,7 @@ class UrlRedirects(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
+        return DtoResponse.from_responses(local_response, models.UrlRedirectResource)
 
     def update_url_redirect(
         self,
@@ -72,7 +66,7 @@ class UrlRedirects(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.UrlRedirectResource)
+        return DtoResponse.from_responses(local_response, models.UrlRedirectResource)
 
     def delete_url_redirect(
         self,
@@ -83,4 +77,4 @@ class UrlRedirects(Resource):
             "DELETE", f"/api/v1/url-redirects/{id_}", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

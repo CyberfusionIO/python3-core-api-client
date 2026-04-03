@@ -17,25 +17,19 @@ class HaproxyListens(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.HaproxyListenResource)
+        return DtoResponse.from_responses(local_response, models.HaproxyListenResource)
 
     def list_haproxy_listens(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.HaproxyListensSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.HaproxyListenResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/haproxy-listens",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -43,7 +37,7 @@ class HaproxyListens(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.HaproxyListenResource)
+        return DtoResponse.from_responses(local_responses, models.HaproxyListenResource)
 
     def read_haproxy_listen(
         self,
@@ -58,7 +52,7 @@ class HaproxyListens(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.HaproxyListenResource)
+        return DtoResponse.from_responses(local_response, models.HaproxyListenResource)
 
     def delete_haproxy_listen(
         self,
@@ -72,4 +66,4 @@ class HaproxyListens(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

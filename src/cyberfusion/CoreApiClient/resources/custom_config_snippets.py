@@ -21,27 +21,21 @@ class CustomConfigSnippets(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.CustomConfigSnippetResource
         )
 
     def list_custom_config_snippets(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.CustomConfigSnippetsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.CustomConfigSnippetResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/custom-config-snippets",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -49,8 +43,8 @@ class CustomConfigSnippets(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.CustomConfigSnippetResource
+        return DtoResponse.from_responses(
+            local_responses, models.CustomConfigSnippetResource
         )
 
     def read_custom_config_snippet(
@@ -66,7 +60,7 @@ class CustomConfigSnippets(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.CustomConfigSnippetResource
         )
 
@@ -83,7 +77,7 @@ class CustomConfigSnippets(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.CustomConfigSnippetResource
         )
 
@@ -99,4 +93,4 @@ class CustomConfigSnippets(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

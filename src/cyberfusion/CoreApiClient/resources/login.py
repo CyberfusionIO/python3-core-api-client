@@ -17,7 +17,7 @@ class Login(Resource):
             content_type="application/x-www-form-urlencoded",
         )
 
-        return DtoResponse.from_response(local_response, models.TokenResource)
+        return DtoResponse.from_responses(local_response, models.TokenResource)
 
     def test_access_token(
         self,
@@ -26,4 +26,4 @@ class Login(Resource):
             "POST", "/api/v1/login/test-token", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.ApiUserInfo)
+        return DtoResponse.from_responses(local_response, models.ApiUserInfo)

@@ -18,25 +18,19 @@ class UnixUsers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.UnixUserResource)
+        return DtoResponse.from_responses(local_response, models.UnixUserResource)
 
     def list_unix_users(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.UnixUsersSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UnixUserResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/unix-users",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class UnixUsers(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UnixUserResource)
+        return DtoResponse.from_responses(local_responses, models.UnixUserResource)
 
     def read_unix_user(
         self,
@@ -59,7 +53,7 @@ class UnixUsers(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UnixUserResource)
+        return DtoResponse.from_responses(local_response, models.UnixUserResource)
 
     def update_unix_user(
         self,
@@ -74,7 +68,7 @@ class UnixUsers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.UnixUserResource)
+        return DtoResponse.from_responses(local_response, models.UnixUserResource)
 
     def delete_unix_user(
         self,
@@ -91,7 +85,7 @@ class UnixUsers(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def compare_unix_users(
         self,
@@ -108,7 +102,7 @@ class UnixUsers(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.UnixUserComparison)
+        return DtoResponse.from_responses(local_response, models.UnixUserComparison)
 
     def list_unix_user_usages(
         self,
@@ -129,4 +123,4 @@ class UnixUsers(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.UnixUserUsageResource)
+        return DtoResponse.from_responses(local_response, models.UnixUserUsageResource)

@@ -21,25 +21,19 @@ class NodeAddOns(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_node_add_ons(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.NodeAddOnsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.NodeAddOnResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/node-add-ons",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -47,7 +41,7 @@ class NodeAddOns(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.NodeAddOnResource)
+        return DtoResponse.from_responses(local_responses, models.NodeAddOnResource)
 
     def get_node_add_on_products(
         self,
@@ -56,7 +50,7 @@ class NodeAddOns(Resource):
             "GET", "/api/v1/node-add-ons/products", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.NodeAddOnProduct)
+        return DtoResponse.from_responses(local_response, models.NodeAddOnProduct)
 
     def read_node_add_on(
         self,
@@ -71,7 +65,7 @@ class NodeAddOns(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.NodeAddOnResource)
+        return DtoResponse.from_responses(local_response, models.NodeAddOnResource)
 
     def delete_node_add_on(
         self,
@@ -88,4 +82,4 @@ class NodeAddOns(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

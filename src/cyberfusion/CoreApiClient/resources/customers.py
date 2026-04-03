@@ -10,20 +10,14 @@ class Customers(Resource):
     def list_customers(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.CustomersSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.CustomerResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/customers",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -31,7 +25,7 @@ class Customers(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.CustomerResource)
+        return DtoResponse.from_responses(local_responses, models.CustomerResource)
 
     def read_customer(
         self,
@@ -46,7 +40,7 @@ class Customers(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.CustomerResource)
+        return DtoResponse.from_responses(local_response, models.CustomerResource)
 
     def list_ip_addresses_for_customer(
         self,
@@ -60,7 +54,7 @@ class Customers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CustomerIpAddresses)
+        return DtoResponse.from_responses(local_response, models.CustomerIpAddresses)
 
     def create_ip_address_for_customer(
         self,
@@ -78,7 +72,7 @@ class Customers(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def delete_ip_address_for_customer(
         self,
@@ -96,7 +90,7 @@ class Customers(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def get_ip_addresses_products_for_customers(
         self,
@@ -108,4 +102,4 @@ class Customers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.IpAddressProduct)
+        return DtoResponse.from_responses(local_response, models.IpAddressProduct)

@@ -15,6 +15,8 @@ import datetime
 import importlib.metadata
 from cyberfusion.CoreApiClient.http import Response
 
+DEFAULT_PER_PAGE = 50
+
 
 class CoreApiClient:
     def __init__(
@@ -153,6 +155,39 @@ class CoreApiClient:
             raise CallException(local_response.body, local_response.status_code)
 
         return local_response
+
+    def send_or_fail_with_auto_pagination(
+        self,
+        method: str,
+        path: str,
+        data: Optional[dict] = None,
+        query_parameters: Optional[dict] = None,
+        *,
+        per_page: int = DEFAULT_PER_PAGE,
+        content_type: str = "application/json",
+    ) -> list[Response]:
+        query_parameters = dict(query_parameters) if query_parameters else {}
+
+        query_parameters["per_page"] = per_page
+
+        responses: list[Response] = []
+        page = 1
+
+        while True:
+            query_parameters["page"] = page
+
+            response = self.send_or_fail(
+                method, path, data, query_parameters, content_type=content_type
+            )
+
+            responses.append(response)
+
+            if "next" not in response.requests_response.links:
+                break
+
+            page += 1
+
+        return responses
 
     def get_default_requests_session(self) -> requests.sessions.Session:
         session = requests.Session()

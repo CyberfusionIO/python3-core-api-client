@@ -17,7 +17,7 @@ class RootSshKeys(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
+        return DtoResponse.from_responses(local_response, models.RootSshKeyResource)
 
     def create_private_root_ssh_key(
         self,
@@ -30,25 +30,19 @@ class RootSshKeys(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
+        return DtoResponse.from_responses(local_response, models.RootSshKeyResource)
 
     def list_root_ssh_keys(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.RootSshKeysSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.RootSshKeyResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/root-ssh-keys",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -56,7 +50,7 @@ class RootSshKeys(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
+        return DtoResponse.from_responses(local_responses, models.RootSshKeyResource)
 
     def read_root_ssh_key(
         self,
@@ -71,7 +65,7 @@ class RootSshKeys(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RootSshKeyResource)
+        return DtoResponse.from_responses(local_response, models.RootSshKeyResource)
 
     def delete_root_ssh_key(
         self,
@@ -82,4 +76,4 @@ class RootSshKeys(Resource):
             "DELETE", f"/api/v1/root-ssh-keys/{id_}", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

@@ -18,25 +18,19 @@ class PassengerApps(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.PassengerAppResource)
+        return DtoResponse.from_responses(local_response, models.PassengerAppResource)
 
     def list_passenger_apps(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.PassengerAppsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.PassengerAppResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/passenger-apps",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class PassengerApps(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.PassengerAppResource)
+        return DtoResponse.from_responses(local_responses, models.PassengerAppResource)
 
     def read_passenger_app(
         self,
@@ -59,7 +53,7 @@ class PassengerApps(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.PassengerAppResource)
+        return DtoResponse.from_responses(local_response, models.PassengerAppResource)
 
     def update_passenger_app(
         self,
@@ -74,7 +68,7 @@ class PassengerApps(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.PassengerAppResource)
+        return DtoResponse.from_responses(local_response, models.PassengerAppResource)
 
     def delete_passenger_app(
         self,
@@ -89,7 +83,7 @@ class PassengerApps(Resource):
             query_parameters={"delete_on_cluster": delete_on_cluster},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def restart_passenger_app(
         self,
@@ -106,4 +100,4 @@ class PassengerApps(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

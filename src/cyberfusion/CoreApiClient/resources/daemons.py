@@ -18,25 +18,19 @@ class Daemons(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DaemonResource)
+        return DtoResponse.from_responses(local_response, models.DaemonResource)
 
     def list_daemons(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.DaemonsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.DaemonResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/daemons",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class Daemons(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.DaemonResource)
+        return DtoResponse.from_responses(local_responses, models.DaemonResource)
 
     def read_daemon(
         self,
@@ -59,7 +53,7 @@ class Daemons(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.DaemonResource)
+        return DtoResponse.from_responses(local_response, models.DaemonResource)
 
     def update_daemon(
         self,
@@ -74,7 +68,7 @@ class Daemons(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DaemonResource)
+        return DtoResponse.from_responses(local_response, models.DaemonResource)
 
     def delete_daemon(
         self,
@@ -85,7 +79,7 @@ class Daemons(Resource):
             "DELETE", f"/api/v1/daemons/{id_}", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def restart_daemon(
         self,
@@ -102,7 +96,7 @@ class Daemons(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_logs(
         self,
@@ -110,16 +104,14 @@ class Daemons(Resource):
         daemon_id: int,
         timestamp: Optional[str] = None,
         sort: Optional[str] = None,
-        page: int = 1,
     ) -> DtoResponse[list[models.DaemonLogResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             f"/api/v1/daemons/{daemon_id}/logs",
             data=None,
             query_parameters={
                 "timestamp": timestamp,
-                "page": page,
             },
         )
 
-        return DtoResponse.from_response(local_response, models.DaemonLogResource)
+        return DtoResponse.from_responses(local_responses, models.DaemonLogResource)

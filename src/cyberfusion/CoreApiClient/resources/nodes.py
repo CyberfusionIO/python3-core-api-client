@@ -22,25 +22,19 @@ class Nodes(Resource):
             query_parameters={"callback_url": callback_url, "amount": amount},
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_nodes(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.NodesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.NodeResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/nodes",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -48,7 +42,7 @@ class Nodes(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.NodeResource)
+        return DtoResponse.from_responses(local_responses, models.NodeResource)
 
     def get_node_products(
         self,
@@ -57,7 +51,7 @@ class Nodes(Resource):
             "GET", "/api/v1/nodes/products", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.NodeProduct)
+        return DtoResponse.from_responses(local_response, models.NodeProduct)
 
     def read_node(
         self,
@@ -72,7 +66,7 @@ class Nodes(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.NodeResource)
+        return DtoResponse.from_responses(local_response, models.NodeResource)
 
     def update_node(
         self,
@@ -87,7 +81,7 @@ class Nodes(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.NodeResource)
+        return DtoResponse.from_responses(local_response, models.NodeResource)
 
     def delete_node(
         self,
@@ -104,7 +98,7 @@ class Nodes(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def upgrade_downgrade_node(
         self,
@@ -123,7 +117,7 @@ class Nodes(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def add_node_groups(
         self,
@@ -141,4 +135,4 @@ class Nodes(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

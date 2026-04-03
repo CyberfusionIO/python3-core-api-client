@@ -18,25 +18,19 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CmsResource)
+        return DtoResponse.from_responses(local_response, models.CmsResource)
 
     def list_cmses(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.CmsesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.CmsResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/cmses",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class Cmses(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.CmsResource)
+        return DtoResponse.from_responses(local_responses, models.CmsResource)
 
     def read_cms(
         self,
@@ -59,7 +53,7 @@ class Cmses(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.CmsResource)
+        return DtoResponse.from_responses(local_response, models.CmsResource)
 
     def delete_cms(
         self,
@@ -70,7 +64,7 @@ class Cmses(Resource):
             "DELETE", f"/api/v1/cmses/{id_}", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def install_wordpress(
         self,
@@ -88,7 +82,7 @@ class Cmses(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def install_nextcloud(
         self,
@@ -106,7 +100,7 @@ class Cmses(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def get_cms_one_time_login(
         self,
@@ -120,7 +114,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CmsOneTimeLogin)
+        return DtoResponse.from_responses(local_response, models.CmsOneTimeLogin)
 
     def get_cms_plugins(
         self,
@@ -131,7 +125,7 @@ class Cmses(Resource):
             "GET", f"/api/v1/cmses/{id_}/plugins", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.CmsPlugin)
+        return DtoResponse.from_responses(local_response, models.CmsPlugin)
 
     def update_cms_option(
         self,
@@ -147,7 +141,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.CmsOption)
+        return DtoResponse.from_responses(local_response, models.CmsOption)
 
     def update_cms_configuration_constant(
         self,
@@ -163,7 +157,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.CmsConfigurationConstant
         )
 
@@ -181,7 +175,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def update_cms_core(
         self,
@@ -198,7 +192,7 @@ class Cmses(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def update_cms_plugin(
         self,
@@ -216,7 +210,7 @@ class Cmses(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def search_replace_in_cms_database(
         self,
@@ -237,7 +231,7 @@ class Cmses(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def enable_cms_plugin(
         self,
@@ -252,7 +246,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def disable_cms_plugin(
         self,
@@ -267,7 +261,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def regenerate_cms_salts(
         self,
@@ -281,7 +275,7 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def install_cms_theme(
         self,
@@ -299,4 +293,4 @@ class Cmses(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

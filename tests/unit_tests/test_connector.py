@@ -296,3 +296,92 @@ def test_send_query_parameters_datetime_serialised(
     )
 
     assert str(VALUE.year) in noop_mock.last_request.qs[KEY][0]
+
+
+def test_send_or_fail_with_auto_pagination_single_page(
+    faker: faker.Faker, base_url: str, requests_mock: Mocker
+) -> None:
+    api_key = faker.user_name()
+
+    items = [{"id": 1}, {"id": 2}]
+
+    requests_mock.get(
+        "".join([base_url, "/api/v1/items"]),
+        json=items,
+        status_code=HTTPStatus.OK,
+    )
+
+    api_connector = CoreApiConnector(base_url=base_url, api_key=api_key)
+
+    responses = api_connector.send_or_fail_with_auto_pagination("GET", "/api/v1/items")
+
+    assert len(responses) == 1
+    assert responses[0].json == items
+    assert responses[0].status_code == HTTPStatus.OK
+
+
+def test_send_or_fail_with_auto_pagination_multiple_pages(
+    faker: faker.Faker, base_url: str, requests_mock: Mocker
+) -> None:
+    api_key = faker.user_name()
+
+    page1_items = [{"id": 1}, {"id": 2}]
+    page2_items = [{"id": 3}, {"id": 4}]
+    page3_items = [{"id": 5}]
+
+    responses = [
+        {
+            "json": page1_items,
+            "status_code": HTTPStatus.OK,
+            "headers": {
+                "link": '<https://example.com/api/v1/items?page=2>; rel="next"'
+            },
+        },
+        {
+            "json": page2_items,
+            "status_code": HTTPStatus.OK,
+            "headers": {
+                "link": '<https://example.com/api/v1/items?page=3>; rel="next"'
+            },
+        },
+        {
+            "json": page3_items,
+            "status_code": HTTPStatus.OK,
+            "headers": {},
+        },
+    ]
+
+    requests_mock.get(
+        "".join([base_url, "/api/v1/items"]),
+        responses,
+    )
+
+    api_connector = CoreApiConnector(base_url=base_url, api_key=api_key)
+
+    pagination_responses = api_connector.send_or_fail_with_auto_pagination(
+        "GET", "/api/v1/items"
+    )
+
+    assert len(pagination_responses) == 3
+    assert pagination_responses[0].json == page1_items
+    assert pagination_responses[1].json == page2_items
+    assert pagination_responses[2].json == page3_items
+
+
+def test_send_or_fail_with_auto_pagination_default_per_page(
+    faker: faker.Faker, base_url: str, requests_mock: Mocker
+) -> None:
+    api_key = faker.user_name()
+
+    mock = requests_mock.get(
+        "".join([base_url, "/api/v1/items"]),
+        json=[],
+        status_code=HTTPStatus.OK,
+    )
+
+    api_connector = CoreApiConnector(base_url=base_url, api_key=api_key)
+
+    api_connector.send_or_fail_with_auto_pagination("GET", "/api/v1/items")
+
+    assert mock.last_request.qs["per_page"] == ["50"]
+    assert mock.last_request.qs["page"] == ["1"]
