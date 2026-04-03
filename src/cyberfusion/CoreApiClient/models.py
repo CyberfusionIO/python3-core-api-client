@@ -287,7 +287,7 @@ class CronCreateRequest(BaseCoreApiModel):
     node_id: Optional[int]
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(pattern=r"^[!-~](?:[ -~]*[!-~])?$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
     error_count: int = 1
@@ -300,9 +300,9 @@ class CronCreateRequest(BaseCoreApiModel):
 
 
 class CronUpdateRequest(BaseCoreApiModel):
-    command: Optional[constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)] = (
-        None
-    )
+    command: Optional[
+        constr(pattern=r"^[!-~](?:[ -~]*[!-~])?$", min_length=1, max_length=65535)
+    ] = None
     email_address: Optional[EmailStr] = None
     schedule: Optional[str] = None
     error_count: Optional[int] = None
@@ -322,6 +322,9 @@ class CustomConfigServerSoftwareNameEnum(StrEnum):
 class CustomConfigSnippetTemplateNameEnum(StrEnum):
     LARAVEL = "Laravel"
     COMPRESSION = "Compression"
+    BLITZ = "Blitz"
+    WORDPRESS = "WordPress"
+    CRAFT = "Craft"
 
 
 class CustomConfigSnippetUpdateRequest(BaseCoreApiModel):
@@ -364,16 +367,16 @@ class CustomerResource(BaseCoreApiModel):
 class DaemonCreateRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(pattern=r"^[!-~](?:[ -~]*[!-~])?$", min_length=1, max_length=65535)
     nodes_ids: List[int]
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
 
 
 class DaemonUpdateRequest(BaseCoreApiModel):
-    command: Optional[constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)] = (
-        None
-    )
+    command: Optional[
+        constr(pattern=r"^[!-~](?:[ -~]*[!-~])?$", min_length=1, max_length=65535)
+    ] = None
     nodes_ids: Optional[List[int]] = None
     memory_limit: Optional[conint(ge=256)] = None
     cpu_limit: Optional[int] = None
@@ -555,6 +558,258 @@ class HttpRetryProperties(BaseCoreApiModel):
     tries_amount: Optional[conint(ge=1, le=3)]
     tries_failover_amount: Optional[conint(ge=1, le=3)]
     conditions: List[HttpRetryConditionEnum]
+
+
+class Iso3166Alpha2CountryCodeEnum(StrEnum):
+    AF = "AF"
+    AX = "AX"
+    AL = "AL"
+    DZ = "DZ"
+    AS = "AS"
+    AD = "AD"
+    AO = "AO"
+    AI = "AI"
+    AQ = "AQ"
+    AG = "AG"
+    AR = "AR"
+    AM = "AM"
+    AW = "AW"
+    AU = "AU"
+    AT = "AT"
+    AZ = "AZ"
+    BS = "BS"
+    BH = "BH"
+    BD = "BD"
+    BB = "BB"
+    BY = "BY"
+    BE = "BE"
+    BZ = "BZ"
+    BJ = "BJ"
+    BM = "BM"
+    BT = "BT"
+    BO = "BO"
+    BQ = "BQ"
+    BA = "BA"
+    BW = "BW"
+    BV = "BV"
+    BR = "BR"
+    IO = "IO"
+    BN = "BN"
+    BG = "BG"
+    BF = "BF"
+    BI = "BI"
+    CV = "CV"
+    KH = "KH"
+    CM = "CM"
+    CA = "CA"
+    KY = "KY"
+    CF = "CF"
+    TD = "TD"
+    CL = "CL"
+    CN = "CN"
+    CX = "CX"
+    CC = "CC"
+    CO = "CO"
+    KM = "KM"
+    CG = "CG"
+    CD = "CD"
+    CK = "CK"
+    CR = "CR"
+    CI = "CI"
+    HR = "HR"
+    CU = "CU"
+    CW = "CW"
+    CY = "CY"
+    CZ = "CZ"
+    DK = "DK"
+    DJ = "DJ"
+    DM = "DM"
+    DO = "DO"
+    EC = "EC"
+    EG = "EG"
+    SV = "SV"
+    GQ = "GQ"
+    ER = "ER"
+    EE = "EE"
+    SZ = "SZ"
+    ET = "ET"
+    FK = "FK"
+    FO = "FO"
+    FJ = "FJ"
+    FI = "FI"
+    FR = "FR"
+    GF = "GF"
+    PF = "PF"
+    TF = "TF"
+    GA = "GA"
+    GM = "GM"
+    GE = "GE"
+    DE = "DE"
+    GH = "GH"
+    GI = "GI"
+    GR = "GR"
+    GL = "GL"
+    GD = "GD"
+    GP = "GP"
+    GU = "GU"
+    GT = "GT"
+    GG = "GG"
+    GN = "GN"
+    GW = "GW"
+    GY = "GY"
+    HT = "HT"
+    HM = "HM"
+    VA = "VA"
+    HN = "HN"
+    HK = "HK"
+    HU = "HU"
+    IS = "IS"
+    IN = "IN"
+    ID = "ID"
+    IR = "IR"
+    IQ = "IQ"
+    IE = "IE"
+    IM = "IM"
+    IL = "IL"
+    IT = "IT"
+    JM = "JM"
+    JP = "JP"
+    JE = "JE"
+    JO = "JO"
+    KZ = "KZ"
+    KE = "KE"
+    KI = "KI"
+    KP = "KP"
+    KR = "KR"
+    KW = "KW"
+    KG = "KG"
+    LA = "LA"
+    LV = "LV"
+    LB = "LB"
+    LS = "LS"
+    LR = "LR"
+    LY = "LY"
+    LI = "LI"
+    LT = "LT"
+    LU = "LU"
+    MO = "MO"
+    MG = "MG"
+    MW = "MW"
+    MY = "MY"
+    MV = "MV"
+    ML = "ML"
+    MT = "MT"
+    MH = "MH"
+    MQ = "MQ"
+    MR = "MR"
+    MU = "MU"
+    YT = "YT"
+    MX = "MX"
+    FM = "FM"
+    MD = "MD"
+    MC = "MC"
+    MN = "MN"
+    ME = "ME"
+    MS = "MS"
+    MA = "MA"
+    MZ = "MZ"
+    MM = "MM"
+    NA = "NA"
+    NR = "NR"
+    NP = "NP"
+    NL = "NL"
+    NC = "NC"
+    NZ = "NZ"
+    NI = "NI"
+    NE = "NE"
+    NG = "NG"
+    NU = "NU"
+    NF = "NF"
+    MK = "MK"
+    MP = "MP"
+    NO = "NO"
+    OM = "OM"
+    PK = "PK"
+    PW = "PW"
+    PS = "PS"
+    PA = "PA"
+    PG = "PG"
+    PY = "PY"
+    PE = "PE"
+    PH = "PH"
+    PN = "PN"
+    PL = "PL"
+    PT = "PT"
+    PR = "PR"
+    QA = "QA"
+    RE = "RE"
+    RO = "RO"
+    RU = "RU"
+    RW = "RW"
+    BL = "BL"
+    SH = "SH"
+    KN = "KN"
+    LC = "LC"
+    MF = "MF"
+    PM = "PM"
+    VC = "VC"
+    WS = "WS"
+    SM = "SM"
+    ST = "ST"
+    SA = "SA"
+    SN = "SN"
+    RS = "RS"
+    SC = "SC"
+    SL = "SL"
+    SG = "SG"
+    SX = "SX"
+    SK = "SK"
+    SI = "SI"
+    SB = "SB"
+    SO = "SO"
+    ZA = "ZA"
+    GS = "GS"
+    SS = "SS"
+    ES = "ES"
+    LK = "LK"
+    SD = "SD"
+    SR = "SR"
+    SJ = "SJ"
+    SE = "SE"
+    CH = "CH"
+    SY = "SY"
+    TW = "TW"
+    TJ = "TJ"
+    TZ = "TZ"
+    TH = "TH"
+    TL = "TL"
+    TG = "TG"
+    TK = "TK"
+    TO = "TO"
+    TT = "TT"
+    TN = "TN"
+    TR = "TR"
+    TM = "TM"
+    TC = "TC"
+    TV = "TV"
+    UG = "UG"
+    UA = "UA"
+    AE = "AE"
+    GB = "GB"
+    US = "US"
+    UM = "UM"
+    UY = "UY"
+    UZ = "UZ"
+    VU = "VU"
+    VE = "VE"
+    VN = "VN"
+    VG = "VG"
+    VI = "VI"
+    WF = "WF"
+    EH = "EH"
+    YE = "YE"
+    ZM = "ZM"
+    ZW = "ZW"
 
 
 class HealthStatusEnum(StrEnum):
@@ -840,6 +1095,8 @@ class ObjectModelNameEnum(StrEnum):
     CLUSTERS_LOAD_BALANCING_PROPERTIES = "ClustersLoadBalancingProperties"
     CLUSTERS_FIREWALL_PROPERTIES = "ClustersFirewallProperties"
     CLUSTERS_OS_PROPERTIES = "ClustersOsProperties"
+    PROJECT = "Project"
+    PROJECT_ENVIRONMENT = "ProjectEnvironment"
 
 
 class PhpExtensionEnum(StrEnum):
@@ -991,7 +1248,9 @@ class SshKeyCreatePublicRequest(BaseCoreApiModel):
 
 
 class SecurityTxtPolicyCreateRequest(BaseCoreApiModel):
+    name: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=32)
     cluster_id: int
+    is_default: bool
     expires_timestamp: datetime
     email_contacts: List[EmailStr]
     url_contacts: List[AnyUrl]
@@ -1013,6 +1272,8 @@ class SecurityTxtPolicyCreateRequest(BaseCoreApiModel):
 
 
 class SecurityTxtPolicyUpdateRequest(BaseCoreApiModel):
+    name: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=32)
+    is_default: Optional[bool] = None
     expires_timestamp: Optional[datetime] = None
     email_contacts: Optional[List[EmailStr]] = None
     url_contacts: Optional[List[AnyUrl]] = None
@@ -1046,6 +1307,7 @@ class RegionIncludes(BaseCoreApiModel):
 class RegionResource(BaseCoreApiModel):
     id: int
     name: constr(pattern=r"^[A-Z0-9-]+$", min_length=1, max_length=32)
+    iso_3166_alpha_2_country_code: Iso3166Alpha2CountryCodeEnum
     includes: RegionIncludes
 
 
@@ -1211,6 +1473,7 @@ class VirtualHostServerSoftwareNameEnum(StrEnum):
 
 
 class VirtualHostUpdateRequest(BaseCoreApiModel):
+    domain: Optional[str] = None
     server_aliases: Optional[List[str]] = None
     document_root: Optional[str] = None
     fpm_pool_id: Optional[int] = None
@@ -1390,6 +1653,7 @@ class DatabaseResource(BaseCoreApiModel):
     optimizing_enabled: bool
     backups_enabled: bool
     deployment_status: DeploymentStatusEnum
+    project_environment_id: int | None
     includes: DatabaseIncludes
 
 
@@ -1632,6 +1896,7 @@ class RedisInstanceResource(BaseCoreApiModel):
     max_databases: int
     eviction_policy: RedisEvictionPolicyEnum
     deployment_status: DeploymentStatusEnum
+    project_environment_id: int | None
     includes: RedisInstanceIncludes
 
 
@@ -1660,6 +1925,8 @@ class SecurityTxtPolicyResource(BaseCoreApiModel):
     created_at: datetime
     updated_at: datetime
     cluster_id: int
+    name: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=32)
+    is_default: bool
     expires_timestamp: datetime
     email_contacts: List[EmailStr]
     url_contacts: List[AnyUrl]
@@ -1685,6 +1952,7 @@ class TaskCollectionResource(BaseCoreApiModel):
     uuid: UUID4
     description: constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)
     collection_type: TaskCollectionTypeEnum
+    request_id: UUID4 | None
     cluster_id: Optional[int]
     reference: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     includes: TaskCollectionIncludes
@@ -1838,7 +2106,7 @@ class CronResource(BaseCoreApiModel):
     node_id: int
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(pattern=r"^[!-~](?:[ -~]*[!-~])?$", min_length=1, max_length=65535)
     email_address: Optional[EmailStr]
     schedule: str
     error_count: int
@@ -1864,7 +2132,7 @@ class DaemonResource(BaseCoreApiModel):
     cluster_id: int
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     unix_user_id: int
-    command: constr(pattern=r"^[ -~]+$", min_length=1, max_length=65535)
+    command: constr(pattern=r"^[!-~](?:[ -~]*[!-~])?$", min_length=1, max_length=65535)
     nodes_ids: List[int]
     memory_limit: Optional[conint(ge=256)]
     cpu_limit: Optional[int]
@@ -2285,6 +2553,7 @@ class DomainRouterResource(BaseCoreApiModel):
     domain: str
     virtual_host_id: Optional[int]
     url_redirect_id: Optional[int]
+    n8n_instance_id: Optional[int]
     category: DomainRouterCategoryEnum
     cluster_id: int
     node_id: Optional[int]
@@ -2387,7 +2656,7 @@ class RequestLogResource(BaseCoreApiModel):
 
 
 class ObjectLogIncludes(BaseCoreApiModel):
-    customer: Optional[CustomerResource]
+    pass
 
 
 class ObjectLogResource(BaseCoreApiModel):
@@ -3012,6 +3281,7 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_UNIX_USER_BORG_REPOSITORIES = (
         "Cluster supports UNIX user Borg repositories"
     )
+    CLUSTER_SUPPORTS_PROJECTS = "Cluster supports projects"
 
 
 class TableInnodbDataLengths(BaseCoreApiModel):
@@ -3209,6 +3479,7 @@ class DomainRoutersSearchRequest(BaseCoreApiModel):
     domain: Optional[str] = None
     virtual_host_id: Optional[int] = None
     url_redirect_id: Optional[int] = None
+    n8n_instance_id: Optional[int] = None
     category: Optional[DomainRouterCategoryEnum] = None
     cluster_id: Optional[int] = None
     node_id: Optional[int] = None
@@ -3348,6 +3619,7 @@ class N8nInstanceResource(BaseCoreApiModel):
     domain: str
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
     cluster_id: int
+    deployment_status: DeploymentStatusEnum
     includes: N8nInstanceIncludes
 
 
@@ -3360,6 +3632,7 @@ class RedisInstancesSearchRequest(BaseCoreApiModel):
 
 class RegionsSearchRequest(BaseCoreApiModel):
     name: Optional[str] = None
+    iso_3166_alpha_2_country_code: Iso3166Alpha2CountryCodeEnum | None = None
 
 
 class RequestLogsSearchRequest(BaseCoreApiModel):
