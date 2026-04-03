@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "python3-core-api-client"
-version = "6.0.1"
+version = "6.0.2"
 description = "Python client for Core API."
 readme = "README.md"
 authors = [
@@ -12,7 +12,7 @@ authors = [
 ]
 dependencies = [
     "certifi==2026.2.25",
-    "requests==2.33.0",
+    "requests==2.33.1",
     "pydantic[email]==2.12.5",
 ]
 
