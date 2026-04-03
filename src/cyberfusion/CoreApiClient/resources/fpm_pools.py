@@ -18,25 +18,19 @@ class FpmPools(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FpmPoolResource)
+        return DtoResponse.from_responses(local_response, models.FpmPoolResource)
 
     def list_fpm_pools(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.FpmPoolsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.FpmPoolResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/fpm-pools",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class FpmPools(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FpmPoolResource)
+        return DtoResponse.from_responses(local_responses, models.FpmPoolResource)
 
     def read_fpm_pool(
         self,
@@ -59,7 +53,7 @@ class FpmPools(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FpmPoolResource)
+        return DtoResponse.from_responses(local_response, models.FpmPoolResource)
 
     def update_fpm_pool(
         self,
@@ -74,7 +68,7 @@ class FpmPools(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FpmPoolResource)
+        return DtoResponse.from_responses(local_response, models.FpmPoolResource)
 
     def delete_fpm_pool(
         self,
@@ -85,7 +79,7 @@ class FpmPools(Resource):
             "DELETE", f"/api/v1/fpm-pools/{id_}", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def restart_fpm_pool(
         self,
@@ -102,7 +96,7 @@ class FpmPools(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def reload_fpm_pool(
         self,
@@ -119,7 +113,7 @@ class FpmPools(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def get_fpm_pool_status(
         self,
@@ -132,7 +126,7 @@ class FpmPools(Resource):
             data=None,
         )
 
-        return DtoResponse.from_response(local_response, models.FpmPoolNodeStatus)
+        return DtoResponse.from_responses(local_response, models.FpmPoolNodeStatus)
 
     def update_fpm_pool_version(
         self,
@@ -151,7 +145,7 @@ class FpmPools(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def update_fpm_pool_settings(
         self,
@@ -166,4 +160,4 @@ class FpmPools(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FpmPoolResource)
+        return DtoResponse.from_responses(local_response, models.FpmPoolResource)

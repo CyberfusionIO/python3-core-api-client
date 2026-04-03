@@ -17,7 +17,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClustersCommonProperties
         )
 
@@ -36,25 +36,19 @@ class Clusters(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_clusters(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -62,7 +56,7 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.ClusterResource)
+        return DtoResponse.from_responses(local_responses, models.ClusterResource)
 
     def read_cluster(
         self,
@@ -77,7 +71,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.ClusterResource)
+        return DtoResponse.from_responses(local_response, models.ClusterResource)
 
     def update_cluster(
         self,
@@ -92,7 +86,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.ClusterResource)
+        return DtoResponse.from_responses(local_response, models.ClusterResource)
 
     def list_ip_addresses_for_cluster(
         self,
@@ -106,7 +100,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.ClusterIpAddresses)
+        return DtoResponse.from_responses(local_response, models.ClusterIpAddresses)
 
     def create_ip_address_for_cluster(
         self,
@@ -124,7 +118,7 @@ class Clusters(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def delete_ip_address_for_cluster(
         self,
@@ -142,7 +136,7 @@ class Clusters(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def enable_l3_ddos_protection_for_ip_address(
         self,
@@ -160,7 +154,7 @@ class Clusters(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def disable_l3_ddos_protection_for_ip_address(
         self,
@@ -178,7 +172,7 @@ class Clusters(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def get_ip_addresses_products_for_clusters(
         self,
@@ -190,7 +184,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.IpAddressProduct)
+        return DtoResponse.from_responses(local_response, models.IpAddressProduct)
 
     def list_unix_users_home_directory_usages(
         self,
@@ -211,7 +205,7 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.UnixUsersHomeDirectoryUsageResource
         )
 
@@ -225,7 +219,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.NodeDependenciesResource
         )
 
@@ -239,7 +233,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.NodeDependenciesResource
         )
 
@@ -253,7 +247,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.SimpleSpecificationsResource
         )
 
@@ -267,7 +261,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.CompositeSpecificationSatisfyResultResource
         )
 
@@ -281,7 +275,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterBorgPropertiesResource
         )
 
@@ -295,7 +289,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterElasticsearchPropertiesResource
         )
 
@@ -309,7 +303,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterFirewallPropertiesResource
         )
 
@@ -323,7 +317,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterGrafanaPropertiesResource
         )
 
@@ -337,7 +331,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterKernelcarePropertiesResource
         )
 
@@ -351,7 +345,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterLoadBalancingPropertiesResource
         )
 
@@ -365,7 +359,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMariadbPropertiesResource
         )
 
@@ -379,7 +373,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMeilisearchPropertiesResource
         )
 
@@ -393,7 +387,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMetabasePropertiesResource
         )
 
@@ -407,7 +401,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterNewRelicPropertiesResource
         )
 
@@ -421,7 +415,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterNodejsPropertiesResource
         )
 
@@ -435,7 +429,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterOsPropertiesResource
         )
 
@@ -449,7 +443,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterPhpPropertiesResource
         )
 
@@ -463,7 +457,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterPostgresqlPropertiesResource
         )
 
@@ -477,7 +471,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterRabbitmqPropertiesResource
         )
 
@@ -491,7 +485,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterRedisPropertiesResource
         )
 
@@ -505,7 +499,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterSinglestorePropertiesResource
         )
 
@@ -519,7 +513,7 @@ class Clusters(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterUnixUsersPropertiesResource
         )
 
@@ -536,7 +530,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterBorgPropertiesResource
         )
 
@@ -553,7 +547,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterElasticsearchPropertiesResource
         )
 
@@ -570,7 +564,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterFirewallPropertiesResource
         )
 
@@ -587,7 +581,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterGrafanaPropertiesResource
         )
 
@@ -604,7 +598,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterKernelcarePropertiesResource
         )
 
@@ -621,7 +615,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMariadbPropertiesResource
         )
 
@@ -638,7 +632,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMeilisearchPropertiesResource
         )
 
@@ -655,7 +649,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMetabasePropertiesResource
         )
 
@@ -672,7 +666,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterNewRelicPropertiesResource
         )
 
@@ -689,7 +683,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterNodejsPropertiesResource
         )
 
@@ -706,7 +700,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterOsPropertiesResource
         )
 
@@ -723,7 +717,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterPhpPropertiesResource
         )
 
@@ -740,7 +734,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterPostgresqlPropertiesResource
         )
 
@@ -757,7 +751,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterRabbitmqPropertiesResource
         )
 
@@ -774,7 +768,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterRedisPropertiesResource
         )
 
@@ -791,27 +785,21 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterSinglestorePropertiesResource
         )
 
     def list_borg_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersBorgPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterBorgPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/borg",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -819,27 +807,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterBorgPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterBorgPropertiesResource
         )
 
     def list_redis_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersRedisPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterRedisPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/redis",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -847,28 +829,22 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterRedisPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterRedisPropertiesResource
         )
 
     def list_elasticsearch_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersElasticsearchPropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterElasticsearchPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/elasticsearch",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -876,27 +852,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterElasticsearchPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterElasticsearchPropertiesResource
         )
 
     def list_firewall_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersFirewallPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterFirewallPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/firewall",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -904,27 +874,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterFirewallPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterFirewallPropertiesResource
         )
 
     def list_grafana_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersGrafanaPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterGrafanaPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/grafana",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -932,27 +896,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterGrafanaPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterGrafanaPropertiesResource
         )
 
     def list_kernelcare_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersKernelcarePropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterKernelcarePropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/kernelcare",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -960,28 +918,22 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterKernelcarePropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterKernelcarePropertiesResource
         )
 
     def list_load_balancing_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersLoadBalancingPropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterLoadBalancingPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/load-balancing",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -989,27 +941,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterLoadBalancingPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterLoadBalancingPropertiesResource
         )
 
     def list_mariadb_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersMariadbPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMariadbPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/mariadb",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1017,28 +963,22 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterMariadbPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterMariadbPropertiesResource
         )
 
     def list_meilisearch_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersMeilisearchPropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMeilisearchPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/meilisearch",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1046,27 +986,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterMeilisearchPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterMeilisearchPropertiesResource
         )
 
     def list_metabase_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersMetabasePropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterMetabasePropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/metabase",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1074,27 +1008,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterMetabasePropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterMetabasePropertiesResource
         )
 
     def list_new_relic_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersNewRelicPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterNewRelicPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/new-relic",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1102,27 +1030,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterNewRelicPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterNewRelicPropertiesResource
         )
 
     def list_nodejs_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersNodejsPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterNodejsPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/nodejs",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1130,27 +1052,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterNodejsPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterNodejsPropertiesResource
         )
 
     def list_os_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersOsPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterOsPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/os",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1158,27 +1074,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterOsPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterOsPropertiesResource
         )
 
     def list_php_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersPhpPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterPhpPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/php",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1186,27 +1096,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterPhpPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterPhpPropertiesResource
         )
 
     def list_postgresql_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersPostgresqlPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterPostgresqlPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/postgresql",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1214,27 +1118,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterPostgresqlPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterPostgresqlPropertiesResource
         )
 
     def list_rabbitmq_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersRabbitmqPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterRabbitmqPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/rabbitmq",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1242,28 +1140,22 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterRabbitmqPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterRabbitmqPropertiesResource
         )
 
     def list_singlestore_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersSinglestorePropertiesSearchRequest
         | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterSinglestorePropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/singlestore",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1271,27 +1163,21 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterSinglestorePropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterSinglestorePropertiesResource
         )
 
     def list_unix_users_properties(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ClustersUnixUsersPropertiesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ClusterUnixUsersPropertiesResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/clusters/properties/unix-users",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -1299,8 +1185,8 @@ class Clusters(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.ClusterUnixUsersPropertiesResource
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterUnixUsersPropertiesResource
         )
 
     def update_borg_properties(
@@ -1316,7 +1202,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterBorgPropertiesResource
         )
 
@@ -1333,7 +1219,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterSinglestorePropertiesResource
         )
 
@@ -1350,7 +1236,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterRedisPropertiesResource
         )
 
@@ -1367,7 +1253,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterElasticsearchPropertiesResource
         )
 
@@ -1384,7 +1270,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterFirewallPropertiesResource
         )
 
@@ -1401,7 +1287,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterGrafanaPropertiesResource
         )
 
@@ -1418,7 +1304,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterKernelcarePropertiesResource
         )
 
@@ -1435,7 +1321,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterLoadBalancingPropertiesResource
         )
 
@@ -1452,7 +1338,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMariadbPropertiesResource
         )
 
@@ -1469,7 +1355,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMeilisearchPropertiesResource
         )
 
@@ -1486,7 +1372,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterMetabasePropertiesResource
         )
 
@@ -1503,7 +1389,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterNewRelicPropertiesResource
         )
 
@@ -1520,7 +1406,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterNodejsPropertiesResource
         )
 
@@ -1537,7 +1423,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterOsPropertiesResource
         )
 
@@ -1554,7 +1440,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterPhpPropertiesResource
         )
 
@@ -1571,7 +1457,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterPostgresqlPropertiesResource
         )
 
@@ -1588,7 +1474,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.ClusterRabbitmqPropertiesResource
         )
 
@@ -1604,4 +1490,4 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseInnodbReport)
+        return DtoResponse.from_responses(local_response, models.DatabaseInnodbReport)

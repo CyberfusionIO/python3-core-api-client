@@ -17,27 +17,21 @@ class BasicAuthenticationRealms(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.BasicAuthenticationRealmResource
         )
 
     def list_basic_authentication_realms(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.BasicAuthenticationRealmsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.BasicAuthenticationRealmResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/basic-authentication-realms",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -45,8 +39,8 @@ class BasicAuthenticationRealms(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.BasicAuthenticationRealmResource
+        return DtoResponse.from_responses(
+            local_responses, models.BasicAuthenticationRealmResource
         )
 
     def read_basic_authentication_realm(
@@ -62,7 +56,7 @@ class BasicAuthenticationRealms(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response,
             models.BasicAuthenticationRealmResource,
         )
@@ -80,7 +74,7 @@ class BasicAuthenticationRealms(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.BasicAuthenticationRealmResource
         )
 
@@ -96,4 +90,4 @@ class BasicAuthenticationRealms(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

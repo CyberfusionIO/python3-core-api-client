@@ -19,7 +19,7 @@ class TaskCollections(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.TaskResult)
+        return DtoResponse.from_responses(local_response, models.TaskResult)
 
     def retry_task_collection(
         self,
@@ -38,4 +38,4 @@ class TaskCollections(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

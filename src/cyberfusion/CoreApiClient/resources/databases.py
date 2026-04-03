@@ -18,25 +18,19 @@ class Databases(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseResource)
+        return DtoResponse.from_responses(local_response, models.DatabaseResource)
 
     def list_databases(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.DatabasesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.DatabaseResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/databases",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class Databases(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseResource)
+        return DtoResponse.from_responses(local_responses, models.DatabaseResource)
 
     def read_database(
         self,
@@ -59,7 +53,7 @@ class Databases(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseResource)
+        return DtoResponse.from_responses(local_response, models.DatabaseResource)
 
     def update_database(
         self,
@@ -74,7 +68,7 @@ class Databases(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseResource)
+        return DtoResponse.from_responses(local_response, models.DatabaseResource)
 
     def delete_database(
         self,
@@ -91,7 +85,7 @@ class Databases(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def compare_databases(
         self,
@@ -108,7 +102,7 @@ class Databases(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseComparison)
+        return DtoResponse.from_responses(local_response, models.DatabaseComparison)
 
     def sync_databases(
         self,
@@ -129,7 +123,7 @@ class Databases(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_database_usages(
         self,
@@ -150,4 +144,4 @@ class Databases(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.DatabaseUsageResource)
+        return DtoResponse.from_responses(local_response, models.DatabaseUsageResource)

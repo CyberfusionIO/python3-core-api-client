@@ -32,20 +32,28 @@ class Response:
 
 
 @dataclass
-class DtoResponse(Generic[DtoType], Response):
+class DtoResponse(Generic[DtoType]):
+    requests_responses: list[RequestsResponse]
     dto: DtoType
 
     @classmethod
-    def from_response(cls, response: Response, model: type[ModelType]) -> "DtoResponse":
-        if isinstance(response.json, list):
-            dto = [model.model_validate(object_) for object_ in response.json]
-        else:
-            dto = model.model_validate(response.json)
+    def from_responses(
+        cls, responses: Response | list[Response], model: type[ModelType]
+    ) -> "DtoResponse":
+        if isinstance(responses, Response):
+            responses = [responses]
+
+        dto: list = []
+
+        for response in responses:
+            items = response.json
+
+            if isinstance(items, list):
+                dto.extend(model.model_validate(object_) for object_ in items)
+            else:
+                dto.append(model.model_validate(items))
 
         return cls(
-            status_code=response.status_code,
-            body=response.body,
-            headers=response.headers,
-            requests_response=response.requests_response,
+            requests_responses=[r.requests_response for r in responses],
             dto=dto,
         )

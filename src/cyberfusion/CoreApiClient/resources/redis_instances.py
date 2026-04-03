@@ -18,25 +18,19 @@ class RedisInstances(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.RedisInstanceResource)
+        return DtoResponse.from_responses(local_response, models.RedisInstanceResource)
 
     def list_redis_instances(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.RedisInstancesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.RedisInstanceResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/redis-instances",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class RedisInstances(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RedisInstanceResource)
+        return DtoResponse.from_responses(local_responses, models.RedisInstanceResource)
 
     def read_redis_instance(
         self,
@@ -59,7 +53,7 @@ class RedisInstances(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RedisInstanceResource)
+        return DtoResponse.from_responses(local_response, models.RedisInstanceResource)
 
     def update_redis_instance(
         self,
@@ -74,7 +68,7 @@ class RedisInstances(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.RedisInstanceResource)
+        return DtoResponse.from_responses(local_response, models.RedisInstanceResource)
 
     def delete_redis_instance(
         self,
@@ -91,4 +85,4 @@ class RedisInstances(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

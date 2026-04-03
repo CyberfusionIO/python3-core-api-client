@@ -18,25 +18,19 @@ class MailAccounts(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.MailAccountResource)
+        return DtoResponse.from_responses(local_response, models.MailAccountResource)
 
     def list_mail_accounts(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.MailAccountsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.MailAccountResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/mail-accounts",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -44,7 +38,7 @@ class MailAccounts(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.MailAccountResource)
+        return DtoResponse.from_responses(local_responses, models.MailAccountResource)
 
     def read_mail_account(
         self,
@@ -59,7 +53,7 @@ class MailAccounts(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.MailAccountResource)
+        return DtoResponse.from_responses(local_response, models.MailAccountResource)
 
     def update_mail_account(
         self,
@@ -74,7 +68,7 @@ class MailAccounts(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.MailAccountResource)
+        return DtoResponse.from_responses(local_response, models.MailAccountResource)
 
     def delete_mail_account(
         self,
@@ -91,7 +85,7 @@ class MailAccounts(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)
 
     def list_mail_account_usages(
         self,
@@ -112,6 +106,6 @@ class MailAccounts(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.MailAccountUsageResource
         )

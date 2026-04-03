@@ -17,25 +17,19 @@ class MailAliases(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.MailAliasResource)
+        return DtoResponse.from_responses(local_response, models.MailAliasResource)
 
     def list_mail_aliases(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.MailAliasesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.MailAliasResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/mail-aliases",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -43,7 +37,7 @@ class MailAliases(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.MailAliasResource)
+        return DtoResponse.from_responses(local_responses, models.MailAliasResource)
 
     def read_mail_alias(
         self,
@@ -58,7 +52,7 @@ class MailAliases(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.MailAliasResource)
+        return DtoResponse.from_responses(local_response, models.MailAliasResource)
 
     def update_mail_alias(
         self,
@@ -73,7 +67,7 @@ class MailAliases(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.MailAliasResource)
+        return DtoResponse.from_responses(local_response, models.MailAliasResource)
 
     def delete_mail_alias(
         self,
@@ -84,4 +78,4 @@ class MailAliases(Resource):
             "DELETE", f"/api/v1/mail-aliases/{id_}", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

@@ -17,25 +17,19 @@ class FirewallRules(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.FirewallRuleResource)
+        return DtoResponse.from_responses(local_response, models.FirewallRuleResource)
 
     def list_firewall_rules(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.FirewallRulesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.FirewallRuleResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/firewall-rules",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -43,7 +37,7 @@ class FirewallRules(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FirewallRuleResource)
+        return DtoResponse.from_responses(local_responses, models.FirewallRuleResource)
 
     def read_firewall_rule(
         self,
@@ -58,7 +52,7 @@ class FirewallRules(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.FirewallRuleResource)
+        return DtoResponse.from_responses(local_response, models.FirewallRuleResource)
 
     def delete_firewall_rule(
         self,
@@ -72,4 +66,4 @@ class FirewallRules(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

@@ -22,25 +22,19 @@ class BorgArchives(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_borg_archives(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.BorgArchivesSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.BorgArchiveResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/borg-archives",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -48,7 +42,7 @@ class BorgArchives(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.BorgArchiveResource)
+        return DtoResponse.from_responses(local_responses, models.BorgArchiveResource)
 
     def read_borg_archive(
         self,
@@ -63,7 +57,7 @@ class BorgArchives(Resource):
             query_parameters=construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.BorgArchiveResource)
+        return DtoResponse.from_responses(local_response, models.BorgArchiveResource)
 
     def get_borg_archive_metadata(
         self,
@@ -77,7 +71,7 @@ class BorgArchives(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(local_response, models.BorgArchiveMetadata)
+        return DtoResponse.from_responses(local_response, models.BorgArchiveMetadata)
 
     def restore_borg_archive(
         self,
@@ -96,7 +90,7 @@ class BorgArchives(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def list_borg_archive_contents(
         self,
@@ -113,7 +107,7 @@ class BorgArchives(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.BorgArchiveContent)
+        return DtoResponse.from_responses(local_response, models.BorgArchiveContent)
 
     def download_borg_archive(
         self,
@@ -132,4 +126,4 @@ class BorgArchives(Resource):
             },
         )
 
-        return DtoResponse.from_response(local_response, models.TaskCollectionResource)
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

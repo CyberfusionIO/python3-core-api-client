@@ -9,20 +9,14 @@ class Logs(Resource):
     def list_object_logs(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.ObjectLogsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.ObjectLogResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/object-logs",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -30,25 +24,19 @@ class Logs(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.ObjectLogResource)
+        return DtoResponse.from_responses(local_responses, models.ObjectLogResource)
 
     def list_request_logs(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.RequestLogsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.RequestLogResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/request-logs",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -56,4 +44,4 @@ class Logs(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(local_response, models.RequestLogResource)
+        return DtoResponse.from_responses(local_responses, models.RequestLogResource)

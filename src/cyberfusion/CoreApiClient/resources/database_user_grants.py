@@ -17,27 +17,21 @@ class DatabaseUserGrants(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_response(
+        return DtoResponse.from_responses(
             local_response, models.DatabaseUserGrantResource
         )
 
     def list_database_user_grants(
         self,
         *,
-        page: int = 1,
-        per_page: int = 50,
         include_filters: models.DatabaseUserGrantsSearchRequest | None = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.DatabaseUserGrantResource]]:
-        local_response = self.api_connector.send_or_fail(
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
             "GET",
             "/api/v1/database-user-grants",
             data=None,
-            query_parameters={
-                "page": page,
-                "per_page": per_page,
-            }
-            | (
+            query_parameters=(
                 include_filters.model_dump(exclude_unset=True)
                 if include_filters
                 else {}
@@ -45,8 +39,8 @@ class DatabaseUserGrants(Resource):
             | construct_includes_query_parameter(includes),
         )
 
-        return DtoResponse.from_response(
-            local_response, models.DatabaseUserGrantResource
+        return DtoResponse.from_responses(
+            local_responses, models.DatabaseUserGrantResource
         )
 
     def delete_database_user_grant(
@@ -60,4 +54,4 @@ class DatabaseUserGrants(Resource):
             data=None,
         )
 
-        return DtoResponse.from_response(local_response, models.DetailMessage)
+        return DtoResponse.from_responses(local_response, models.DetailMessage)

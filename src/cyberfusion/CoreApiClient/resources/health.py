@@ -12,4 +12,4 @@ class Health(Resource):
             "GET", "/api/v1/health", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_response(local_response, models.HealthResource)
+        return DtoResponse.from_responses(local_response, models.HealthResource)
