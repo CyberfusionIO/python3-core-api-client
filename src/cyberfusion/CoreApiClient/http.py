@@ -45,15 +45,19 @@ class DtoResponse(Generic[DtoType]):
 
         dto: list = []
 
+        is_list_response = False
+
         for response in responses:
             items = response.json
 
             if isinstance(items, list):
+                is_list_response = True
+
                 dto.extend(model.model_validate(object_) for object_ in items)
             else:
                 dto.append(model.model_validate(items))
 
         return cls(
             requests_responses=[r.requests_response for r in responses],
-            dto=dto,
+            dto=dto if is_list_response else dto[0],
         )
