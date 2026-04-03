@@ -1,3 +1,9 @@
+python3-core-api-client (6.0.1) unstable; urgency=low
+
+  - Fix dto always being a list for non-list responses
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Fri, 03 Apr 2026 12:00:00 +0200
+
 python3-core-api-client (6.0) unstable; urgency=low
 
   - Add automatic pagination to list methods
