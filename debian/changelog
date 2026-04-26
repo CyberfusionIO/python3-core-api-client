@@ -1,3 +1,9 @@
+python3-core-api-client (7.0) unstable; urgency=low
+
+  - Update to Core API version 1.268.0
+
+ -- William Edwards <wedwards@cyberfusion.nl>  Sun, 26 Apr 2026 12:19:00 +0200
+
 python3-core-api-client (6.0.2) unstable; urgency=low
 
   - Update dependencies
