@@ -1076,6 +1076,9 @@ class ObjectModelNameEnum(StrEnum):
     SERVICE_ACCOUNT = "ServiceAccount"
     SERVICE_ACCOUNT_SERVER = "ServiceAccountServer"
     CUSTOM_CONFIG = "CustomConfig"
+    CUSTOM_CONFIG_SNIPPET = "CustomConfigSnippet"
+    FIREWALL_GROUP = "FirewallGroup"
+    FTP_USER = "FtpUser"
     N8N_INSTANCE = "N8nInstance"
     CLUSTERS_PHP_PROPERTIES = "ClustersPhpProperties"
     CLUSTERS_NODEJS_PROPERTIES = "ClustersNodejsProperties"
@@ -1291,7 +1294,6 @@ class ServiceAccountGroupEnum(StrEnum):
     MAIL_PROXY = "Mail Proxy"
     MAIL_GATEWAY = "Mail Gateway"
     INTERNET_ROUTER = "Internet Router"
-    STORAGE_ROUTER = "Storage Router"
     PHPMYADMIN = "phpMyAdmin"
 
 
@@ -1525,7 +1527,8 @@ class ClusterCreateRequest(BaseCoreApiModel):
     customer_id: int
     region_id: int
     description: constr(pattern=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
-    cephfs_enabled: bool
+    nfs_enabled: bool
+    cephfs_enabled: Optional[bool] = None
 
 
 class ClusterIpAddressCreateRequest(BaseCoreApiModel):
@@ -1548,6 +1551,8 @@ class ClusterResource(BaseCoreApiModel):
     region_id: int
     description: constr(pattern=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
     includes: ClusterIncludes
+    nfs_enabled: bool
+    cephfs_enabled: bool | None = None
 
 
 class ClusterUpdateRequest(BaseCoreApiModel):
@@ -1965,6 +1970,9 @@ class TaskResult(BaseCoreApiModel):
     state: TaskStateEnum
     retries: conint(ge=0)
     free_form_data: Dict[str, Any]
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    duration_human_readable: str | None = None
 
 
 class TokenResource(BaseCoreApiModel):
@@ -2537,34 +2545,6 @@ class CertificateManagerResource(BaseCoreApiModel):
     includes: CertificateManagerIncludes
 
 
-class DomainRouterIncludes(BaseCoreApiModel):
-    virtual_host: Optional[VirtualHostResource]
-    url_redirect: Optional[UrlRedirectResource]
-    node: Optional[NodeResource]
-    certificate: Optional[CertificateResource]
-    security_txt_policy: Optional[SecurityTxtPolicyResource]
-    cluster: Optional[ClusterResource]
-
-
-class DomainRouterResource(BaseCoreApiModel):
-    id: int
-    created_at: datetime
-    updated_at: datetime
-    domain: str
-    virtual_host_id: Optional[int]
-    url_redirect_id: Optional[int]
-    n8n_instance_id: Optional[int]
-    category: DomainRouterCategoryEnum
-    cluster_id: int
-    node_id: Optional[int]
-    certificate_id: Optional[int]
-    security_txt_policy_id: Optional[int]
-    firewall_groups_ids: Optional[List[int]]
-    force_ssl: bool
-    deployment_status: DeploymentStatusEnum
-    includes: DomainRouterIncludes
-
-
 class MailAccountIncludes(BaseCoreApiModel):
     mail_domain: Optional[MailDomainResource]
     cluster: Optional[ClusterResource]
@@ -2602,22 +2582,6 @@ class MailAliasResource(BaseCoreApiModel):
     includes: MailAliasIncludes
 
 
-class NodeDomainRouterDependency(BaseCoreApiModel):
-    is_dependency: bool
-    impact: Optional[str]
-    reason: str
-    domain_router: DomainRouterResource
-
-
-class NodeDependenciesResource(BaseCoreApiModel):
-    hostname: str
-    groups: List[NodeGroupDependency]
-    domain_routers: List[NodeDomainRouterDependency]
-    daemons: List[NodeDaemonDependency]
-    crons: List[NodeCronDependency]
-    hosts_entries: List[NodeHostsEntryDependency]
-
-
 class DaemonLogResource(BaseCoreApiModel):
     application_name: constr(min_length=1, max_length=65535)
     priority: int
@@ -2652,6 +2616,7 @@ class RequestLogResource(BaseCoreApiModel):
     body: Any
     api_user_id: int
     request_id: UUID4
+    correlation_id: UUID4
     includes: RequestLogIncludes
 
 
@@ -3417,7 +3382,8 @@ class ClustersSearchRequest(BaseCoreApiModel):
     region_id: Optional[int] = None
     description: Optional[str] = None
     customer_id: Optional[int] = None
-    cephfs_enabled: bool | None = None
+    cephfs_enabled: Optional[bool] = None
+    nfs_enabled: Optional[bool] = None
 
 
 class ClustersSinglestorePropertiesSearchRequest(BaseCoreApiModel):
@@ -3623,6 +3589,51 @@ class N8nInstanceResource(BaseCoreApiModel):
     includes: N8nInstanceIncludes
 
 
+class DomainRouterIncludes(BaseCoreApiModel):
+    virtual_host: Optional[VirtualHostResource]
+    url_redirect: Optional[UrlRedirectResource]
+    node: Optional[NodeResource]
+    certificate: Optional[CertificateResource]
+    security_txt_policy: Optional[SecurityTxtPolicyResource]
+    n8n_instance: Optional[N8nInstanceResource]
+    cluster: Optional[ClusterResource]
+
+
+class DomainRouterResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    domain: str
+    virtual_host_id: Optional[int]
+    url_redirect_id: Optional[int]
+    n8n_instance_id: Optional[int]
+    category: DomainRouterCategoryEnum
+    cluster_id: int
+    node_id: Optional[int]
+    certificate_id: Optional[int]
+    security_txt_policy_id: Optional[int]
+    firewall_groups_ids: Optional[List[int]]
+    force_ssl: bool
+    deployment_status: DeploymentStatusEnum
+    includes: DomainRouterIncludes
+
+
+class NodeDomainRouterDependency(BaseCoreApiModel):
+    is_dependency: bool
+    impact: Optional[str]
+    reason: str
+    domain_router: DomainRouterResource
+
+
+class NodeDependenciesResource(BaseCoreApiModel):
+    hostname: str
+    groups: List[NodeGroupDependency]
+    domain_routers: List[NodeDomainRouterDependency]
+    daemons: List[NodeDaemonDependency]
+    crons: List[NodeCronDependency]
+    hosts_entries: List[NodeHostsEntryDependency]
+
+
 class RedisInstancesSearchRequest(BaseCoreApiModel):
     port: Optional[int] = None
     name: Optional[str] = None
@@ -3641,6 +3652,7 @@ class RequestLogsSearchRequest(BaseCoreApiModel):
     method: Optional[HTTPMethod] = None
     api_user_id: Optional[int] = None
     request_id: Optional[UUID4] = None
+    correlation_id: Optional[UUID4] = None
 
 
 class RootSshKeysSearchRequest(BaseCoreApiModel):
