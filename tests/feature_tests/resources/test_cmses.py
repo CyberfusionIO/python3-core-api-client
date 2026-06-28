@@ -2,6 +2,8 @@ from cyberfusion.CoreApiClient.connector import CoreApiConnector
 import random
 from cyberfusion.CoreApiClient import models
 from tests.conftest import (
+    CmsAutoInstallWordpressRequestFactory,
+    CmsConfigureRedisRequestFactory,
     CmsThemeInstallFromUrlRequestFactory,
     CmsThemeInstallFromRepositoryRequestFactory,
     CmsUserCredentialsUpdateRequestFactory,
@@ -150,3 +152,47 @@ def test_regenerate_cms_salts(
 
 def test_list_cmses(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.cmses.list_cmses()
+
+
+def test_configure_redis(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cms_configure_redis_request_factory: CmsConfigureRedisRequestFactory,
+) -> None:
+    api_connector.cmses.configure_redis(
+        cms_configure_redis_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_auto_install_wordpress(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cms_auto_install_wordpress_request_factory: CmsAutoInstallWordpressRequestFactory,
+) -> None:
+    api_connector.cmses.auto_install_wordpress(
+        cms_auto_install_wordpress_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_get_recommended_cms_database_indexes(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.cmses.get_recommended_cms_database_indexes(id_=faker.pyint())
+
+
+def test_create_recommended_cms_database_indexes(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.cmses.create_recommended_cms_database_indexes(id_=faker.pyint())
+
+
+def test_get_cms_woocommerce_hpos(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.cmses.get_cms_woocommerce_hpos(id_=faker.pyint())
+
+
+def test_generate_cms_one_time_login(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.cmses.generate_cms_one_time_login(id_=faker.pyint())

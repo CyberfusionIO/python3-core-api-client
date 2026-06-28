@@ -39,3 +39,13 @@ def test_list_daemons(api_connector: CoreApiConnector, faker: faker.Faker) -> No
 
 def test_list_logs(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.daemons.list_logs(daemon_id=faker.pyint())
+
+
+def test_read_daemon_metrics_experimental(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.daemons.read_daemon_metrics_experimental(
+        id_=faker.pyint(),
+        start_timestamp=faker.date_time(),
+        end_timestamp=faker.date_time(),
+    )

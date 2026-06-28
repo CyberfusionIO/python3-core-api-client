@@ -660,6 +660,24 @@ class FpmPoolUpdateSettingsRequestFactory(
 ): ...
 
 
+@register_fixture
+class CmsConfigureRedisRequestFactory(
+    ModelFactory[models.CmsConfigureRedisRequest]
+): ...
+
+
+@register_fixture
+class CmsAutoInstallWordpressRequestFactory(
+    ModelFactory[models.CmsAutoInstallWordpressRequest]
+): ...
+
+
+@register_fixture
+class StandardsScansSearchRequestFactory(
+    ModelFactory[models.StandardsScansSearchRequest]
+): ...
+
+
 @pytest.fixture
 def api_connector(faker: faker.Faker, base_url: str) -> CoreApiConnector:
     return CoreApiConnector(

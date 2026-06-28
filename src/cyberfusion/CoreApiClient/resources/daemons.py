@@ -1,4 +1,5 @@
 from cyberfusion.CoreApiClient import models
+from datetime import datetime
 from typing import Optional
 
 from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
@@ -97,6 +98,25 @@ class Daemons(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
+
+    def read_daemon_metrics_experimental(
+        self,
+        *,
+        id_: int,
+        start_timestamp: datetime,
+        end_timestamp: datetime,
+    ) -> DtoResponse[models.DaemonsMetricsResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/daemons/{id_}/metrics",
+            data=None,
+            query_parameters={
+                "start_timestamp": start_timestamp,
+                "end_timestamp": end_timestamp,
+            },
+        )
+
+        return DtoResponse.from_responses(local_response, models.DaemonsMetricsResource)
 
     def list_logs(
         self,

@@ -413,3 +413,11 @@ class CoreApiConnector(CoreApiClient):
     @cached_property
     def health(self) -> resources.health.Health:
         return resources.health.Health(self)
+
+    @cached_property
+    def standards_scans(self) -> resources.standards_scans.StandardsScans:
+        return resources.standards_scans.StandardsScans(self)
+
+    @cached_property
+    def available_versions(self) -> resources.available_versions.AvailableVersions:
+        return resources.available_versions.AvailableVersions(self)

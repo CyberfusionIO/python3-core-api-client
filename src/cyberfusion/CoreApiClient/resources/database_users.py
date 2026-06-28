@@ -1,4 +1,5 @@
 from cyberfusion.CoreApiClient import models
+from datetime import datetime
 from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -81,3 +82,24 @@ class DatabaseUsers(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.DetailMessage)
+
+    def read_database_user_metrics(
+        self,
+        *,
+        id_: int,
+        start_timestamp: datetime,
+        end_timestamp: datetime,
+    ) -> DtoResponse[models.DatabaseUsersMetricsResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/database-users/{id_}/metrics",
+            data=None,
+            query_parameters={
+                "start_timestamp": start_timestamp,
+                "end_timestamp": end_timestamp,
+            },
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.DatabaseUsersMetricsResource
+        )

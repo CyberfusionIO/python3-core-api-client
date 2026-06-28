@@ -1,4 +1,5 @@
 from cyberfusion.CoreApiClient import models
+from datetime import datetime
 from typing import Optional
 
 from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
@@ -138,45 +139,9 @@ class Clusters(Resource):
 
         return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
-    def enable_l3_ddos_protection_for_ip_address(
-        self,
-        *,
-        id_: int,
-        ip_address: str,
-        callback_url: Optional[str] = None,
-    ) -> DtoResponse[models.TaskCollectionResource]:
-        local_response = self.api_connector.send_or_fail(
-            "POST",
-            f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}/l3-ddos-protection",
-            data=None,
-            query_parameters={
-                "callback_url": callback_url,
-            },
-        )
-
-        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
-
-    def disable_l3_ddos_protection_for_ip_address(
-        self,
-        *,
-        id_: int,
-        ip_address: str,
-        callback_url: Optional[str] = None,
-    ) -> DtoResponse[models.TaskCollectionResource]:
-        local_response = self.api_connector.send_or_fail(
-            "DELETE",
-            f"/api/v1/clusters/{id_}/ip-addresses/{ip_address}/l3-ddos-protection",
-            data=None,
-            query_parameters={
-                "callback_url": callback_url,
-            },
-        )
-
-        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
-
     def get_ip_addresses_products_for_clusters(
         self,
-    ) -> DtoResponse[list[models.IpAddressProduct]]:
+    ) -> DtoResponse[list[models.ProductResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/clusters/ip-addresses/products",
@@ -184,7 +149,7 @@ class Clusters(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_responses(local_response, models.IpAddressProduct)
+        return DtoResponse.from_responses(local_response, models.ProductResource)
 
     def list_unix_users_home_directory_usages(
         self,
@@ -1476,6 +1441,46 @@ class Clusters(Resource):
 
         return DtoResponse.from_responses(
             local_response, models.ClusterRabbitmqPropertiesResource
+        )
+
+    def read_daemons_metrics_experimental(
+        self,
+        *,
+        id_: int,
+        start_timestamp: datetime,
+        end_timestamp: datetime,
+    ) -> DtoResponse[models.DaemonsMetricsResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/metrics/daemons",
+            data=None,
+            query_parameters={
+                "start_timestamp": start_timestamp,
+                "end_timestamp": end_timestamp,
+            },
+        )
+
+        return DtoResponse.from_responses(local_response, models.DaemonsMetricsResource)
+
+    def read_database_users_metrics_experimental(
+        self,
+        *,
+        id_: int,
+        start_timestamp: datetime,
+        end_timestamp: datetime,
+    ) -> DtoResponse[models.DatabaseUsersMetricsResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/metrics/database-users",
+            data=None,
+            query_parameters={
+                "start_timestamp": start_timestamp,
+                "end_timestamp": end_timestamp,
+            },
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.DatabaseUsersMetricsResource
         )
 
     def generate_innodb_report(

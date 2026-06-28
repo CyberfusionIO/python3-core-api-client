@@ -45,12 +45,12 @@ class NodeAddOns(Resource):
 
     def get_node_add_on_products(
         self,
-    ) -> DtoResponse[list[models.NodeAddOnProduct]]:
+    ) -> DtoResponse[list[models.ProductResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET", "/api/v1/node-add-ons/products", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_responses(local_response, models.NodeAddOnProduct)
+        return DtoResponse.from_responses(local_response, models.ProductResource)
 
     def read_node_add_on(
         self,

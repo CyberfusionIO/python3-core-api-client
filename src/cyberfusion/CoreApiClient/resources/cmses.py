@@ -294,3 +294,95 @@ class Cmses(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.DetailMessage)
+
+    def configure_redis(
+        self,
+        request: models.CmsConfigureRedisRequest,
+        *,
+        id_: int,
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/cmses/{id_}/configure/redis",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={
+                "callback_url": callback_url,
+            },
+        )
+
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
+
+    def auto_install_wordpress(
+        self,
+        request: models.CmsAutoInstallWordpressRequest,
+        *,
+        id_: int,
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/cmses/{id_}/install/wordpress/auto",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={
+                "callback_url": callback_url,
+            },
+        )
+
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
+
+    def get_recommended_cms_database_indexes(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[list[models.CmsDatabaseIndex]]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/cmses/{id_}/database-indexes",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(local_response, models.CmsDatabaseIndex)
+
+    def create_recommended_cms_database_indexes(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[list[models.CmsDatabaseIndex]]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/cmses/{id_}/database-indexes",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(local_response, models.CmsDatabaseIndex)
+
+    def get_cms_woocommerce_hpos(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.CmsWoocommerceHpos]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/cmses/{id_}/hpos",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(local_response, models.CmsWoocommerceHpos)
+
+    def generate_cms_one_time_login(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.CmsOneTimeLogin]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/cmses/{id_}/one-time-login",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(local_response, models.CmsOneTimeLogin)
