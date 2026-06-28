@@ -144,6 +144,13 @@ class BorgArchiveContentObjectTypeEnum(StrEnum):
     SYMBOLIC_LINK = "symbolic_link"
 
 
+class TimeUnitEnum(StrEnum):
+    HOURLY = "hourly"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+
+
 class BorgArchiveCreateRequest(BaseCoreApiModel):
     borg_repository_id: int
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
@@ -153,7 +160,7 @@ class BorgArchiveMetadata(BaseCoreApiModel):
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     borg_archive_id: int
     exists_on_server: bool
-    contents_path: Optional[str]
+    contents_path: str
 
 
 class BorgRepositoryCreateRequest(BaseCoreApiModel):
@@ -165,6 +172,7 @@ class BorgRepositoryCreateRequest(BaseCoreApiModel):
     keep_monthly: Optional[int]
     keep_yearly: Optional[int]
     database_id: Optional[int]
+    frequency: TimeUnitEnum
 
 
 class BorgRepositoryUpdateRequest(BaseCoreApiModel):
@@ -173,6 +181,7 @@ class BorgRepositoryUpdateRequest(BaseCoreApiModel):
     keep_weekly: Optional[int] = None
     keep_monthly: Optional[int] = None
     keep_yearly: Optional[int] = None
+    frequency: Optional[TimeUnitEnum] = None
 
 
 class CmsConfigurationConstant(BaseCoreApiModel):
@@ -205,7 +214,7 @@ class CmsInstallWordpressRequest(BaseCoreApiModel):
     site_title: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=253)
     site_url: AnyUrl
     locale: constr(pattern=r"^[a-zA-Z_]+$", min_length=1, max_length=15)
-    version: constr(pattern=r"^[0-9.]+$", min_length=1, max_length=6)
+    version: constr(pattern=r"^[0-9.]+$", min_length=1, max_length=20)
     admin_email_address: EmailStr
 
 
@@ -242,6 +251,26 @@ class CmsThemeInstallFromUrlRequest(BaseCoreApiModel):
     url: AnyUrl
 
 
+class CmsConfigureRedisRequest(BaseCoreApiModel):
+    memory_limit: conint(ge=8)
+
+
+class CmsAutoInstallWordpressRequest(BaseCoreApiModel):
+    site_title: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=253)
+    locale: constr(pattern=r"^[a-zA-Z_]+$", min_length=1, max_length=15)
+    version: constr(pattern=r"^[0-9.]+$", min_length=1, max_length=20)
+    admin_email_address: EmailStr
+
+
+class CmsWoocommerceHpos(BaseCoreApiModel):
+    enabled: bool
+
+
+class CmsDatabaseIndex(BaseCoreApiModel):
+    table_name: constr(min_length=1)
+    column_name: constr(min_length=1)
+
+
 class CmsUserCredentialsUpdateRequest(BaseCoreApiModel):
     password: constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)
 
@@ -273,10 +302,56 @@ class NodejsVersion(RootCoreApiModel):
     root: constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$")
 
 
+class NodejsVersionIncludes(BaseCoreApiModel):
+    pass
+
+
+class NodejsVersionResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    major_release: conint(ge=0)
+    minor_release: conint(ge=0)
+    point_release: conint(ge=0)
+    includes: NodejsVersionIncludes
+
+
+class PhpVersionIncludes(BaseCoreApiModel):
+    pass
+
+
+class PhpVersionResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    version: str
+    security_support_ends_at: datetime
+    includes: PhpVersionIncludes
+
+
+class WordpressVersionStabilityEnum(StrEnum):
+    LATEST = "latest"
+    OUTDATED = "outdated"
+    INSECURE = "insecure"
+
+
+class WordpressVersionIncludes(BaseCoreApiModel):
+    pass
+
+
+class WordpressVersionResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    version: str
+    stability: WordpressVersionStabilityEnum
+    includes: WordpressVersionIncludes
+
+
 class ClusterIpAddress(BaseCoreApiModel):
     ip_address: Union[IPv6Address, IPv4Address]
     dns_name: Optional[str]
-    l3_ddos_protection_enabled: bool
+    l3_ddos_protection_enabled: bool = False
 
 
 class ClusterIpAddresses(RootModelCollectionMixin, RootCoreApiModel):  # type: ignore[misc]
@@ -426,6 +501,44 @@ class DatabaseUsageResource(BaseCoreApiModel):
     includes: DatabaseUsageIncludes
 
 
+class DaemonCpuUsageMetricResource(BaseCoreApiModel):
+    daemon_name: str
+    node_hostname: str
+    timestamp: int
+    value: float
+
+
+class DaemonMemoryUsageMetricResource(BaseCoreApiModel):
+    daemon_name: str
+    node_hostname: str
+    timestamp: int
+    value: int
+
+
+class DaemonsMetricsResource(BaseCoreApiModel):
+    cpu_usages: List[DaemonCpuUsageMetricResource]
+    memory_usages: List[DaemonMemoryUsageMetricResource]
+
+
+class DatabaseUserCpuUsageMetricResource(BaseCoreApiModel):
+    database_user_name: str
+    node_hostname: str
+    timestamp: int
+    value: float
+
+
+class DatabaseUserTotalConnectionMetricResource(BaseCoreApiModel):
+    database_user_name: str
+    node_hostname: str
+    timestamp: int
+    value: int
+
+
+class DatabaseUsersMetricsResource(BaseCoreApiModel):
+    total_connections: List[DatabaseUserTotalConnectionMetricResource]
+    cpu_usages: List[DatabaseUserCpuUsageMetricResource]
+
+
 class DatabaseUserUpdateRequest(BaseCoreApiModel):
     phpmyadmin_firewall_groups_ids: Optional[List[int]] = None
     password: Optional[constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)] = (
@@ -459,6 +572,8 @@ class DomainRouterUpdateRequest(BaseCoreApiModel):
     security_txt_policy_id: Optional[int] = None
     firewall_groups_ids: Optional[List[int]] = None
     force_ssl: Optional[bool] = None
+    quic_enabled: Optional[bool] = None
+    is_standards_scan_enabled: Optional[bool] = None
 
 
 class EncryptionTypeEnum(StrEnum):
@@ -469,7 +584,7 @@ class EncryptionTypeEnum(StrEnum):
 
 class FpmPoolCreateRequest(BaseCoreApiModel):
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    version: str
+    version: constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
     unix_user_id: int
     max_children: int = 25
     max_requests: int = 20
@@ -844,9 +959,11 @@ class IpAddressFamilyEnum(StrEnum):
     IPV4 = "IPv4"
 
 
-class IpAddressProductTypeEnum(StrEnum):
-    OUTGOING = "outgoing"
-    INCOMING = "incoming"
+class ProductTypeEnum(StrEnum):
+    NODE = "Node"
+    NODE_ADD_ON = "Node Add-On"
+    INCOMING_IP_ADDRESS = "Incoming IP Address"
+    OUTGOING_IP_ADDRESS = "Outgoing IP Address"
 
 
 class LanguageCodeEnum(StrEnum):
@@ -958,17 +1075,6 @@ class NodeAddOnCreateRequest(BaseCoreApiModel):
     quantity: int
 
 
-class NodeAddOnProduct(BaseCoreApiModel):
-    uuid: UUID4
-    name: constr(pattern=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
-    memory_mib: Optional[int]
-    cpu_cores: Optional[int]
-    disk_gib: Optional[int]
-    price: confloat(ge=0.0)
-    period: constr(pattern=r"^[A-Z0-9]+$", min_length=2, max_length=2)
-    currency: constr(pattern=r"^[A-Z]+$", min_length=3, max_length=3)
-
-
 class NodeGroupEnum(StrEnum):
     ADMIN = "Admin"
     APACHE = "Apache"
@@ -1006,19 +1112,6 @@ class NodeGroupEnum(StrEnum):
 
 class NodeMariadbGroupProperties(BaseCoreApiModel):
     is_master: bool
-
-
-class NodeProduct(BaseCoreApiModel):
-    uuid: UUID4
-    name: constr(pattern=r"^[A-Z]+$", min_length=1, max_length=2)
-    memory_mib: int
-    cpu_cores: int
-    disk_gib: int
-    allow_upgrade_to: List[constr(pattern=r"^[A-Z]+$", min_length=1, max_length=2)]
-    allow_downgrade_to: List[constr(pattern=r"^[A-Z]+$", min_length=1, max_length=2)]
-    price: confloat(ge=0.0)
-    period: constr(pattern=r"^[A-Z0-9]+$", min_length=2, max_length=2)
-    currency: constr(pattern=r"^[A-Z]+$", min_length=3, max_length=3)
 
 
 class NodeRabbitmqGroupProperties(BaseCoreApiModel):
@@ -1100,6 +1193,10 @@ class ObjectModelNameEnum(StrEnum):
     CLUSTERS_OS_PROPERTIES = "ClustersOsProperties"
     PROJECT = "Project"
     PROJECT_ENVIRONMENT = "ProjectEnvironment"
+    PRODUCT = "Product"
+    TOMBSTONE = "Tombstone"
+    MALWARE = "Malware"
+    STANDARDS_SCAN = "StandardsScan"
 
 
 class PhpExtensionEnum(StrEnum):
@@ -1138,6 +1235,7 @@ class PhpSettings(BaseCoreApiModel):
         )
     )
     opcache_memory_consumption: conint(ge=192, le=1024) = 192
+    opcache_interned_strings_buffer: conint(ge=8, le=4095) = 8
     max_execution_time: conint(ge=30, le=120) = 120
     max_file_uploads: conint(ge=100, le=1000) = 100
     memory_limit: conint(ge=256, le=4096) = 256
@@ -1160,6 +1258,7 @@ class FpmPoolPhpSettings(BaseCoreApiModel):
         constr(pattern=r"^[A-Z&~_ ]+$", min_length=1, max_length=255) | None
     ) = None
     opcache_memory_consumption: conint(ge=192, le=1024) | None = None
+    opcache_interned_strings_buffer: int | None = None
     max_execution_time: conint(ge=30, le=120) | None = None
     max_file_uploads: conint(ge=100, le=1000) | None = None
     memory_limit: conint(ge=256, le=4096) | None = None
@@ -1214,7 +1313,7 @@ class RedisInstanceCreateRequest(BaseCoreApiModel):
     password: constr(pattern=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255)
     memory_limit: conint(ge=8)
     max_databases: int = 16
-    eviction_policy: RedisEvictionPolicyEnum = RedisEvictionPolicyEnum.VOLATILE_LRU
+    eviction_policy: RedisEvictionPolicyEnum = RedisEvictionPolicyEnum.ALLKEYS_LFU
 
 
 class RedisInstanceUpdateRequest(BaseCoreApiModel):
@@ -1289,6 +1388,7 @@ class SecurityTxtPolicyUpdateRequest(BaseCoreApiModel):
 
 class ServiceAccountGroupEnum(StrEnum):
     SECURITY_TXT_POLICY_SERVER = "Security TXT Policy Server"
+    CARBON_TXT_SERVER = "Carbon TXT Server"
     LOAD_BALANCER = "Load Balancer"
     BORG = "Borg"
     MAIL_PROXY = "Mail Proxy"
@@ -1350,13 +1450,6 @@ class TemporaryFtpUserResource(BaseCoreApiModel):
     file_manager_url: AnyUrl
 
 
-class TimeUnitEnum(StrEnum):
-    HOURLY = "hourly"
-    DAILY = "daily"
-    WEEKLY = "weekly"
-    MONTHLY = "monthly"
-
-
 class TokenTypeEnum(StrEnum):
     BEARER = "bearer"
 
@@ -1377,12 +1470,15 @@ class UnixUserCreateRequest(BaseCoreApiModel):
     password: Optional[constr(pattern=r"^[ -~]+$", min_length=24, max_length=255)]
     shell_name: ShellNameEnum = ShellNameEnum.BASH
     record_usage_files: bool = False
-    default_php_version: Optional[str] = None
+    default_php_version: Optional[
+        constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
+    ] = None
     default_nodejs_version: Optional[constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = None
     description: Optional[
         constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     ] = None
     shell_is_namespaced: bool = True
+    create_borg_repository: bool = False
 
 
 class UnixUserHomeDirectoryEnum(StrEnum):
@@ -1399,7 +1495,9 @@ class UnixUserUpdateRequest(BaseCoreApiModel):
     )
     shell_name: Optional[ShellNameEnum] = None
     record_usage_files: Optional[bool] = None
-    default_php_version: Optional[str] = None
+    default_php_version: Optional[
+        constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
+    ] = None
     default_nodejs_version: Optional[constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$")] = None
     description: Optional[
         constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
@@ -1642,6 +1740,7 @@ class DatabaseCreateRequest(BaseCoreApiModel):
     cluster_id: int
     optimizing_enabled: bool = False
     backups_enabled: bool = True
+    create_borg_repository: bool = False
 
 
 class DatabaseIncludes(BaseCoreApiModel):
@@ -1767,10 +1866,19 @@ class HealthResource(BaseCoreApiModel):
     status: HealthStatusEnum
 
 
-class IpAddressProduct(BaseCoreApiModel):
-    uuid: UUID4
+class ProductResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    external_id: UUID4
     name: constr(pattern=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
-    type: IpAddressProductTypeEnum
+    identifier: constr(pattern=r"^[a-zA-Z0-9- ]+$", min_length=1, max_length=64)
+    type: ProductTypeEnum
+    memory_mib: Optional[int]
+    cpu_cores: Optional[int]
+    disk_gib: Optional[int]
+    allow_upgrade_to: List[str]
+    allow_downgrade_to: List[str]
     price: confloat(ge=0.0)
     period: constr(pattern=r"^[A-Z0-9]+$", min_length=2, max_length=2)
     currency: constr(pattern=r"^[A-Z]+$", min_length=3, max_length=3)
@@ -1832,7 +1940,7 @@ class NodeResource(BaseCoreApiModel):
     created_at: datetime
     updated_at: datetime
     hostname: str
-    product: constr(pattern=r"^[A-Z]+$", min_length=1, max_length=2)
+    product: constr(pattern=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
     cluster_id: int
     groups: List[NodeGroupEnum]
     comment: Optional[
@@ -2067,7 +2175,9 @@ class BorgRepositoryResource(BaseCoreApiModel):
     keep_monthly: Optional[int]
     keep_yearly: Optional[int]
     unix_user_id: Optional[int]
+    database_id: Optional[int]
     unix_id: int
+    frequency: str
     deployment_status: DeploymentStatusEnum
     includes: BorgRepositoryIncludes
 
@@ -2180,7 +2290,7 @@ class FpmPoolResource(BaseCoreApiModel):
     updated_at: datetime
     cluster_id: int
     name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=64)
-    version: str
+    version: constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
     unix_user_id: int
     max_children: int
     max_requests: int
@@ -2365,7 +2475,7 @@ class NodeAddOnResource(BaseCoreApiModel):
 
 
 class NodeCreateRequest(BaseCoreApiModel):
-    product: constr(pattern=r"^[A-Z]+$", min_length=1, max_length=2)
+    product: constr(pattern=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
     cluster_id: int
     groups: List[NodeGroupEnum]
     comment: Optional[
@@ -2504,6 +2614,7 @@ class BorgArchiveResource(BaseCoreApiModel):
     cluster_id: int
     borg_repository_id: int
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
+    is_manually_created: bool
     includes: BorgArchiveIncludes
 
 
@@ -2643,6 +2754,17 @@ class ObjectLogResource(BaseCoreApiModel):
 
 class SimpleSpecificationsResource(RootModelCollectionMixin, RootCoreApiModel):  # type: ignore[misc]
     root: List[str]
+
+
+class PolicyResultResource(BaseCoreApiModel):
+    satisfied: bool
+    object_id: Optional[int]
+    results: Dict[str, "PolicyResultResource"]
+
+
+class PolicyResultsResource(BaseCoreApiModel):
+    summary: str
+    results: Dict[str, PolicyResultResource]
 
 
 class ConcreteSpecificationSatisfyResult(BaseCoreApiModel):
@@ -2805,7 +2927,7 @@ class ClusterLoadBalancingPropertiesIncludes(BaseCoreApiModel):
 
 
 class ClusterMariadbPropertiesCreateRequest(BaseCoreApiModel):
-    mariadb_version: str = "11.4"
+    mariadb_version: Literal["11.8"] = "11.8"
     mariadb_backup_interval: conint(ge=1, le=24) = 24
     mariadb_backup_local_retention: conint(ge=1, le=24) = 3
 
@@ -2818,7 +2940,7 @@ class ClusterMariadbPropertiesResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    mariadb_version: str
+    mariadb_version: constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$")
     mariadb_backup_interval: conint(ge=1, le=24)
     mariadb_backup_local_retention: conint(ge=1, le=24)
     cluster_id: int
@@ -3122,7 +3244,9 @@ class ClusterMeilisearchPropertiesUpdateRequest(BaseCoreApiModel):
 
 
 class ClusterPhpPropertiesCreateRequest(BaseCoreApiModel):
-    php_versions: List[str]
+    php_versions: List[
+        constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
+    ]
     custom_php_modules_names: List[PhpExtensionEnum] = Field(
         [],
     )
@@ -3135,7 +3259,9 @@ class ClusterPhpPropertiesResource(BaseCoreApiModel):
     id: int
     created_at: datetime
     updated_at: datetime
-    php_versions: List[str]
+    php_versions: List[
+        constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
+    ]
     custom_php_modules_names: List[PhpExtensionEnum]
     php_settings: PhpSettings
     php_ioncube_enabled: bool
@@ -3146,7 +3272,9 @@ class ClusterPhpPropertiesResource(BaseCoreApiModel):
 
 
 class ClusterPhpPropertiesUpdateRequest(BaseCoreApiModel):
-    php_versions: Optional[List[str]] = None
+    php_versions: Optional[
+        List[constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)]
+    ] = None
     custom_php_modules_names: Optional[List[PhpExtensionEnum]] = None
     php_settings: Optional[PhpSettings] = None
     php_ioncube_enabled: Optional[bool] = None
@@ -3270,10 +3398,10 @@ class DatabaseInnodbReport(BaseCoreApiModel):
 
 class FpmPoolChildStatus(BaseCoreApiModel):
     current_request_duration: int
-    http_method: HTTPMethod
+    http_method: str
     http_uri: str
     basic_authentication_user: Optional[str]
-    script: str
+    script: Optional[str]
 
 
 class FpmPoolNodeStatus(BaseCoreApiModel):
@@ -3292,6 +3420,7 @@ class BasicAuthenticationRealmsSearchRequest(BaseCoreApiModel):
 class BorgArchivesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
     borg_repository_id: Optional[int] = None
+    is_manually_created: Optional[bool] = None
     name: Optional[str] = None
 
 
@@ -3407,6 +3536,8 @@ class CronsSearchRequest(BaseCoreApiModel):
     email_address: Optional[EmailStr] = None
     locking_enabled: Optional[bool] = None
     is_active: Optional[bool] = None
+    command: Optional[str] = None
+    schedule: Optional[str] = None
 
 
 class CustomConfigsSearchRequest(BaseCoreApiModel):
@@ -3431,6 +3562,9 @@ class DaemonsSearchRequest(BaseCoreApiModel):
 
 class DatabaseUsersSearchRequest(BaseCoreApiModel):
     phpmyadmin_firewall_group_id: Optional[int] = None
+    name: Optional[str] = None
+    server_software_name: Optional[DatabaseServerSoftwareNameEnum] = None
+    cluster_id: Optional[int] = None
 
 
 class DatabasesSearchRequest(BaseCoreApiModel):
@@ -3453,6 +3587,8 @@ class DomainRoutersSearchRequest(BaseCoreApiModel):
     security_txt_policy_id: Optional[int] = None
     firewall_group_id: Optional[int] = None
     force_ssl: Optional[bool] = None
+    quic_enabled: Optional[bool] = None
+    is_standards_scan_enabled: Optional[bool] = None
 
 
 class FirewallGroupsSearchRequest(BaseCoreApiModel):
@@ -3614,6 +3750,8 @@ class DomainRouterResource(BaseCoreApiModel):
     security_txt_policy_id: Optional[int]
     firewall_groups_ids: Optional[List[int]]
     force_ssl: bool
+    quic_enabled: bool
+    is_standards_scan_enabled: bool
     deployment_status: DeploymentStatusEnum
     includes: DomainRouterIncludes
 
@@ -3683,7 +3821,9 @@ class UnixUsersSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
     shell_name: Optional[ShellNameEnum] = None
     record_usage_files: Optional[bool] = None
-    default_php_version: Optional[str] = None
+    default_php_version: Optional[
+        constr(pattern=r"^[0-9]{1,2}\.[0-9]{1,2}$", min_length=3, max_length=4)
+    ] = None
     default_nodejs_version: Optional[str] = None
     description: Optional[str] = None
 
@@ -3861,6 +4001,11 @@ class FpmPoolUpdateSettingPairUploadMaxFilesizeRequest(BaseCoreApiModel):
     value: conint(ge=32, le=256)
 
 
+class FpmPoolUpdateSettingPairOpcacheInternedStringsBufferRequest(BaseCoreApiModel):
+    setting: Literal["opcache_interned_strings_buffer"]
+    value: conint(ge=8, le=4095)
+
+
 class FpmPoolUpdateSettingPairRequest(RootCoreApiModel):
     root: (
         FpmPoolUpdateSettingPairApcEnableCliRequest
@@ -3869,6 +4014,7 @@ class FpmPoolUpdateSettingPairRequest(RootCoreApiModel):
         | FpmPoolUpdateSettingPairShortOpenTagRequest
         | FpmPoolUpdateSettingPairErrorReportingRequest
         | FpmPoolUpdateSettingPairOpcacheMemoryConsumptionRequest
+        | FpmPoolUpdateSettingPairOpcacheInternedStringsBufferRequest
         | FpmPoolUpdateSettingPairSessionGcMaxlifetimeRequest
         | FpmPoolUpdateSettingPairMaxExecutionTimeRequest
         | FpmPoolUpdateSettingPairMaxFileUploadsRequest
@@ -3885,6 +4031,127 @@ class FpmPoolUpdateSettingsRequest(RootCoreApiModel):
     root: list[FpmPoolUpdateSettingPairRequest]
 
 
+class StandardsScanVerdictEnum(StrEnum):
+    GREAT = "great"
+    GOOD = "good"
+    FINE = "fine"
+    BAD = "bad"
+
+
+class StandardsScanCheckStatusEnum(StrEnum):
+    REGISTERING_DOMAINS = "registering_domains"
+    TESTING_DOMAINS = "testing_domains"
+    GENERATING_REPORT = "generating_report"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    REGISTRATION_FAILED = "registration_failed"
+
+
+class StandardsScanDnssecStatusEnum(StrEnum):
+    SIGNED = "signed"
+    NOT_CONFIGURED = "not_configured"
+    INVALID_SIGNATURE = "invalid_signature"
+    UNSUPPORTED_ALGORITHM = "unsupported_algorithm"
+    RESOLVER_ERROR = "resolver_error"
+    DNS_ERROR = "dns_error"
+
+
+class StandardsScanDomainCheckStatusEnum(StrEnum):
+    COMPLETED = "completed"
+    RESULTS_UNAVAILABLE = "results_unavailable"
+
+
+class StandardsScanHttpsRedirectEnum(StrEnum):
+    ENFORCED = "enforced"
+    NOT_ENFORCED = "not_enforced"
+    HTTP_NOT_AVAILABLE = "http_not_available"
+    HTTPS_NOT_AVAILABLE = "https_not_available"
+
+
+class StandardsScanScores(BaseCoreApiModel):
+    great: float
+    good: float
+    fine: float
+    bad: float
+
+
+class StandardsScanNameserverAddresses(BaseCoreApiModel):
+    ipv4: Dict[str, bool]
+    ipv6: Dict[str, bool]
+
+
+class StandardsScanReachability(BaseCoreApiModel):
+    nameserver_reachable: Dict[str, StandardsScanNameserverAddresses]
+    website_ipv4_reachable: Dict[str, Optional[bool]]
+    website_ipv6_reachable: Dict[str, Optional[bool]]
+    verdict: StandardsScanVerdictEnum
+
+
+class StandardsScanDns(BaseCoreApiModel):
+    dnssec_status: StandardsScanDnssecStatusEnum
+    caa_enabled: bool
+    verdict: StandardsScanVerdictEnum
+
+
+class StandardsScanHttps(BaseCoreApiModel):
+    ipv4_enabled: bool
+    ipv6_enabled: bool
+    redirect: StandardsScanHttpsRedirectEnum
+    hsts: bool
+    verdict: StandardsScanVerdictEnum
+
+
+class StandardsScanSecurityTxt(BaseCoreApiModel):
+    enabled: bool
+    verdict: StandardsScanVerdictEnum
+
+
+class StandardsScanSecurityHeaders(BaseCoreApiModel):
+    x_frame_options_enabled: bool
+    x_content_type_options_enabled: bool
+    content_security_policy_enabled: bool
+    referrer_policy_enabled: bool
+    verdict: StandardsScanVerdictEnum
+
+
+class StandardsScanDomainResult(BaseCoreApiModel):
+    domain: str
+    check_status: StandardsScanDomainCheckStatusEnum
+    verdict: StandardsScanVerdictEnum
+    scores: StandardsScanScores
+    reachability: StandardsScanReachability
+    dns: StandardsScanDns
+    https: StandardsScanHttps
+    security_txt: StandardsScanSecurityTxt
+    security_headers: StandardsScanSecurityHeaders
+
+
+class StandardsScanResults(BaseCoreApiModel):
+    check_status: StandardsScanCheckStatusEnum
+    scores: Optional[StandardsScanScores] = None
+    domains: List[StandardsScanDomainResult]
+
+
+class StandardsScanIncludes(BaseCoreApiModel):
+    cluster: Optional[ClusterResource]
+
+
+class StandardsScanResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    started_at: datetime
+    domain_routers_ids: List[int]
+    deployment_status: DeploymentStatusEnum
+    includes: StandardsScanIncludes
+
+
+class StandardsScansSearchRequest(BaseCoreApiModel):
+    cluster_id: Optional[int] = None
+
+
 NestedPathsDict.model_rebuild()
 CompositeSpecificationSatisfyResult.model_rebuild()
 CompositeSpecificationSatisfyResultResource.model_rebuild()
+PolicyResultResource.model_rebuild()

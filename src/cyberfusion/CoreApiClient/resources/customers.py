@@ -94,7 +94,7 @@ class Customers(Resource):
 
     def get_ip_addresses_products_for_customers(
         self,
-    ) -> DtoResponse[list[models.IpAddressProduct]]:
+    ) -> DtoResponse[list[models.ProductResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET",
             "/api/v1/customers/ip-addresses/products",
@@ -102,4 +102,4 @@ class Customers(Resource):
             query_parameters={},
         )
 
-        return DtoResponse.from_responses(local_response, models.IpAddressProduct)
+        return DtoResponse.from_responses(local_response, models.ProductResource)

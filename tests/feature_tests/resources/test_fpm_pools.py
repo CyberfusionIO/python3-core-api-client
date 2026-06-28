@@ -54,9 +54,7 @@ def test_get_fpm_pool_status(
 def test_update_fpm_pool_version(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
-    api_connector.fpm_pools.update_fpm_pool_version(
-        id_=faker.pyint(), version=faker.pystr()
-    )
+    api_connector.fpm_pools.update_fpm_pool_version(id_=faker.pyint(), version="8.3")
 
 
 def test_update_fpm_pool_settings(

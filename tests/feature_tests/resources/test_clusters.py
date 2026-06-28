@@ -236,22 +236,6 @@ def test_delete_ip_address_for_cluster(
     )
 
 
-def test_enable_l3_ddos_protection_for_ip_address(
-    api_connector: CoreApiConnector, faker: faker.Faker
-) -> None:
-    api_connector.clusters.enable_l3_ddos_protection_for_ip_address(
-        id_=faker.pyint(), ip_address=faker.ipv6()
-    )
-
-
-def test_disable_l3_ddos_protection_for_ip_address(
-    api_connector: CoreApiConnector, faker: faker.Faker
-) -> None:
-    api_connector.clusters.disable_l3_ddos_protection_for_ip_address(
-        id_=faker.pyint(), ip_address=faker.ipv6()
-    )
-
-
 def test_get_ip_addresses_products_for_clusters(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
@@ -692,3 +676,23 @@ def test_generate_innodb_report(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.clusters.generate_innodb_report(id_=faker.pyint())
+
+
+def test_read_daemons_metrics_experimental(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_daemons_metrics_experimental(
+        id_=faker.pyint(),
+        start_timestamp=faker.date_time(),
+        end_timestamp=faker.date_time(),
+    )
+
+
+def test_read_database_users_metrics_experimental(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_database_users_metrics_experimental(
+        id_=faker.pyint(),
+        start_timestamp=faker.date_time(),
+        end_timestamp=faker.date_time(),
+    )

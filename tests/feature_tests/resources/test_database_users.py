@@ -42,3 +42,13 @@ def test_list_database_users(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.database_users.list_database_users()
+
+
+def test_read_database_user_metrics(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.database_users.read_database_user_metrics(
+        id_=faker.pyint(),
+        start_timestamp=faker.date_time(),
+        end_timestamp=faker.date_time(),
+    )

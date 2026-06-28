@@ -46,9 +46,12 @@ from . import (
     mail_accounts,
     fpm_pools,
     mail_domains,
+    standards_scans,
+    available_versions,
 )
 
 __all__ = [
+    "available_versions",
     "basic_authentication_realms",
     "borg_archives",
     "borg_repositories",
@@ -90,6 +93,7 @@ __all__ = [
     "security_txt_policies",
     "regions",
     "ssh_keys",
+    "standards_scans",
     "task_collections",
     "unix_users",
     "url_redirects",

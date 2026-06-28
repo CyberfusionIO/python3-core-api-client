@@ -46,12 +46,12 @@ class Nodes(Resource):
 
     def get_node_products(
         self,
-    ) -> DtoResponse[list[models.NodeProduct]]:
+    ) -> DtoResponse[list[models.ProductResource]]:
         local_response = self.api_connector.send_or_fail(
             "GET", "/api/v1/nodes/products", data=None, query_parameters={}
         )
 
-        return DtoResponse.from_responses(local_response, models.NodeProduct)
+        return DtoResponse.from_responses(local_response, models.ProductResource)
 
     def read_node(
         self,
