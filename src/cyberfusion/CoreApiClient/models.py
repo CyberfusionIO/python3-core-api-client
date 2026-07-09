@@ -531,7 +531,7 @@ class DatabaseUserTotalConnectionMetricResource(BaseCoreApiModel):
     database_user_name: str
     node_hostname: str
     timestamp: int
-    value: int
+    value: float
 
 
 class DatabaseUsersMetricsResource(BaseCoreApiModel):
@@ -570,6 +570,7 @@ class DomainRouterUpdateRequest(BaseCoreApiModel):
     node_id: Optional[int] = None
     certificate_id: Optional[int] = None
     security_txt_policy_id: Optional[int] = None
+    carbon_txt_id: Optional[int] = None
     firewall_groups_ids: Optional[List[int]] = None
     force_ssl: Optional[bool] = None
     quic_enabled: Optional[bool] = None
@@ -1197,6 +1198,7 @@ class ObjectModelNameEnum(StrEnum):
     TOMBSTONE = "Tombstone"
     MALWARE = "Malware"
     STANDARDS_SCAN = "StandardsScan"
+    CARBON_TXT = "CarbonTxt"
 
 
 class PhpExtensionEnum(StrEnum):
@@ -3291,6 +3293,24 @@ class ClusterUnixUsersPropertiesResource(BaseCoreApiModel):
     includes: ClusterUnixUsersPropertiesIncludes
 
 
+class ClusterWebhookPropertiesIncludes(BaseCoreApiModel):
+    pass
+
+
+class ClusterWebhookPropertiesResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    callback_url: Optional[AnyUrl]
+    cluster_id: int
+    deployment_status: DeploymentStatusEnum
+    includes: ClusterWebhookPropertiesIncludes
+
+
+class ClusterWebhookPropertiesUpdateRequest(BaseCoreApiModel):
+    callback_url: Optional[AnyUrl] = None
+
+
 class SpecificationModeEnum(StrEnum):
     SINGLE = "Single"
     OR = "Or"
@@ -3430,6 +3450,10 @@ class BorgRepositoriesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
     unix_user_id: Optional[int] = None
     database_id: Optional[int] = None
+
+
+class CarbonTxtsSearchRequest(BaseCoreApiModel):
+    cluster_id: Optional[int] = None
 
 
 class CertificatesSearchRequest(BaseCoreApiModel):
@@ -3585,6 +3609,7 @@ class DomainRoutersSearchRequest(BaseCoreApiModel):
     node_id: Optional[int] = None
     certificate_id: Optional[int] = None
     security_txt_policy_id: Optional[int] = None
+    carbon_txt_id: Optional[int] = None
     firewall_group_id: Optional[int] = None
     force_ssl: Optional[bool] = None
     quic_enabled: Optional[bool] = None
@@ -3725,12 +3750,73 @@ class N8nInstanceResource(BaseCoreApiModel):
     includes: N8nInstanceIncludes
 
 
+class CarbonTxtDisclosureDocTypeEnum(StrEnum):
+    WEB_PAGE = "web-page"
+    ANNUAL_REPORT = "annual-report"
+    SUSTAINABILITY_PAGE = "sustainability-page"
+    CERTIFICATE = "certificate"
+    CSRD_REPORT = "csrd-report"
+    AI_MODEL_CARD = "ai-model-card"
+    OTHER = "other"
+
+
+class CarbonTxtDisclosure(BaseCoreApiModel):
+    doc_type: CarbonTxtDisclosureDocTypeEnum
+    url: AnyUrl
+    valid_until: Optional[datetime] = None
+    title: Optional[constr(min_length=1, max_length=255)] = None
+
+
+class CarbonTxtUpstreamService(BaseCoreApiModel):
+    domain: constr(min_length=1, max_length=255)
+    service_type: Union[str, List[str]]
+
+
+class CarbonTxtCreateRequest(BaseCoreApiModel):
+    cluster_id: int
+    name: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=32)
+    is_default: bool
+    disclosures: List[CarbonTxtDisclosure] = Field(
+        [],
+    )
+    upstream_services: List[CarbonTxtUpstreamService] = Field(
+        [],
+    )
+
+
+class CarbonTxtUpdateRequest(BaseCoreApiModel):
+    name: Optional[
+        constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=32)
+    ] = None
+    disclosures: Optional[List[CarbonTxtDisclosure]] = None
+    upstream_services: Optional[List[CarbonTxtUpstreamService]] = None
+    is_default: Optional[bool] = None
+
+
+class CarbonTxtIncludes(BaseCoreApiModel):
+    cluster: Optional[ClusterResource]
+
+
+class CarbonTxtResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    name: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=32)
+    disclosures: List[CarbonTxtDisclosure]
+    upstream_services: List[CarbonTxtUpstreamService]
+    is_default: bool
+    deployment_status: DeploymentStatusEnum
+    includes: CarbonTxtIncludes
+
+
 class DomainRouterIncludes(BaseCoreApiModel):
     virtual_host: Optional[VirtualHostResource]
     url_redirect: Optional[UrlRedirectResource]
     node: Optional[NodeResource]
     certificate: Optional[CertificateResource]
     security_txt_policy: Optional[SecurityTxtPolicyResource]
+    carbon_txt: Optional[CarbonTxtResource]
     n8n_instance: Optional[N8nInstanceResource]
     cluster: Optional[ClusterResource]
 
@@ -3748,6 +3834,7 @@ class DomainRouterResource(BaseCoreApiModel):
     node_id: Optional[int]
     certificate_id: Optional[int]
     security_txt_policy_id: Optional[int]
+    carbon_txt_id: Optional[int]
     firewall_groups_ids: Optional[List[int]]
     force_ssl: bool
     quic_enabled: bool
@@ -3882,6 +3969,10 @@ class ClustersPhpPropertiesSearchRequest(BaseCoreApiModel):
 
 class ClustersUnixUsersPropertiesSearchRequest(BaseCoreApiModel):
     unix_users_home_directory: Optional[UnixUserHomeDirectoryEnum] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersWebhookPropertiesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
 
 

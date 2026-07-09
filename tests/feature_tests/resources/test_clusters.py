@@ -35,6 +35,7 @@ from tests.conftest import (
     ClusterPostgresqlPropertiesUpdateRequestFactory,
     ClusterRedisPropertiesUpdateRequestFactory,
     ClusterSinglestorePropertiesUpdateRequestFactory,
+    ClusterWebhookPropertiesUpdateRequestFactory,
 )
 import faker
 
@@ -392,6 +393,18 @@ def test_read_unix_users_properties(
     api_connector.clusters.read_unix_users_properties(id_=faker.pyint())
 
 
+def test_read_webhook_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_webhook_properties(id_=faker.pyint())
+
+
+def test_read_current_deployment_task_collection(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_current_deployment_task_collection(id_=faker.pyint())
+
+
 def test_list_borg_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
@@ -498,6 +511,12 @@ def test_list_unix_users_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.clusters.list_unix_users_properties()
+
+
+def test_list_webhook_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.list_webhook_properties()
 
 
 def test_update_borg_properties(
@@ -669,6 +688,16 @@ def test_update_rabbitmq_properties(
 ) -> None:
     api_connector.clusters.update_rabbitmq_properties(
         cluster_rabbitmq_properties_update_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_update_webhook_properties(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cluster_webhook_properties_update_request_factory: ClusterWebhookPropertiesUpdateRequestFactory,
+) -> None:
+    api_connector.clusters.update_webhook_properties(
+        cluster_webhook_properties_update_request_factory.build(), id_=faker.pyint()
     )
 
 

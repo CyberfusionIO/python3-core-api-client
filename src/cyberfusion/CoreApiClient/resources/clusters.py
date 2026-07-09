@@ -482,6 +482,20 @@ class Clusters(Resource):
             local_response, models.ClusterUnixUsersPropertiesResource
         )
 
+    def read_webhook_properties(
+        self, *, id_: int, includes: list[str] | None = None
+    ) -> DtoResponse[models.ClusterWebhookPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/webhook",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterWebhookPropertiesResource
+        )
+
     def create_borg_properties(
         self,
         request: models.ClusterBorgPropertiesCreateRequest,
@@ -1154,6 +1168,28 @@ class Clusters(Resource):
             local_responses, models.ClusterUnixUsersPropertiesResource
         )
 
+    def list_webhook_properties(
+        self,
+        *,
+        include_filters: models.ClustersWebhookPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None,
+    ) -> DtoResponse[list[models.ClusterWebhookPropertiesResource]]:
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
+            "GET",
+            "/api/v1/clusters/properties/webhook",
+            data=None,
+            query_parameters=(
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
+            | construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterWebhookPropertiesResource
+        )
+
     def update_borg_properties(
         self,
         request: models.ClusterBorgPropertiesUpdateRequest,
@@ -1442,6 +1478,35 @@ class Clusters(Resource):
         return DtoResponse.from_responses(
             local_response, models.ClusterRabbitmqPropertiesResource
         )
+
+    def update_webhook_properties(
+        self,
+        request: models.ClusterWebhookPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterWebhookPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/webhook",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterWebhookPropertiesResource
+        )
+
+    def read_current_deployment_task_collection(
+        self, *, id_: int, includes: list[str] | None = None
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/deployments/current/task-collection",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
 
     def read_daemons_metrics_experimental(
         self,
