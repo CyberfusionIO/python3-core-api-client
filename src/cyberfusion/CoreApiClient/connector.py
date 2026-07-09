@@ -321,6 +321,10 @@ class CoreApiConnector(CoreApiClient):
         return resources.security_txt_policies.SecurityTxtPolicies(self)
 
     @cached_property
+    def carbon_txts(self) -> resources.carbon_txts.CarbonTxts:
+        return resources.carbon_txts.CarbonTxts(self)
+
+    @cached_property
     def firewall_groups(self) -> resources.firewall_groups.FirewallGroups:
         return resources.firewall_groups.FirewallGroups(self)
 

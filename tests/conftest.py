@@ -219,6 +219,20 @@ class SecurityTxtPolicyUpdateRequestFactory(
 
 
 @register_fixture
+class CarbonTxtCreateRequestFactory(ModelFactory[models.CarbonTxtCreateRequest]): ...
+
+
+@register_fixture
+class CarbonTxtUpdateRequestFactory(UpdateFactory[models.CarbonTxtUpdateRequest]): ...
+
+
+@register_fixture
+class ClusterWebhookPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterWebhookPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
 class FirewallGroupCreateRequestFactory(
     ModelFactory[models.FirewallGroupCreateRequest]
 ): ...
