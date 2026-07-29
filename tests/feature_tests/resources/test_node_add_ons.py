@@ -31,3 +31,13 @@ def test_delete_node_add_on(
 
 def test_list_node_add_ons(api_connector: CoreApiConnector, faker: faker.Faker) -> None:
     api_connector.node_add_ons.list_node_add_ons()
+
+
+def test_schedule_create_node_add_on(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    node_add_on_create_request_factory: NodeAddOnCreateRequestFactory,
+) -> None:
+    api_connector.node_add_ons.schedule_create_node_add_on(
+        node_add_on_create_request_factory.build(), scheduled_at=faker.date_time()
+    )

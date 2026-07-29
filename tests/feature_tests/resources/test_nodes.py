@@ -55,3 +55,15 @@ def test_add_node_groups(api_connector: CoreApiConnector, faker: faker.Faker) ->
     api_connector.nodes.add_node_groups(
         id_=faker.pyint(), groups=[random.choice(list(NodeGroupEnum))]
     )
+
+
+def test_schedule_upgrade_downgrade_node(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    node_create_request_factory: NodeCreateRequestFactory,
+) -> None:
+    api_connector.nodes.schedule_upgrade_downgrade_node(
+        id_=faker.pyint(),
+        product=node_create_request_factory.build().product,
+        scheduled_at=faker.date_time(),
+    )

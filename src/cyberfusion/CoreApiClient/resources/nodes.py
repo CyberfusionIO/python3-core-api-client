@@ -1,4 +1,5 @@
 from cyberfusion.CoreApiClient import models
+from datetime import datetime
 from typing import Optional
 
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -118,6 +119,27 @@ class Nodes(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
+
+    def schedule_upgrade_downgrade_node(
+        self,
+        *,
+        id_: int,
+        product: str,
+        scheduled_at: datetime,
+    ) -> DtoResponse[models.ScheduledActionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/nodes/{id_}/xgrade/schedule",
+            data=None,
+            query_parameters={
+                "product": product,
+                "scheduled_at": scheduled_at,
+            },
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ScheduledActionResource
+        )
 
     def add_node_groups(
         self,

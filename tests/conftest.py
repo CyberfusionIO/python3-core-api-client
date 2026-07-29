@@ -233,6 +233,12 @@ class ClusterWebhookPropertiesUpdateRequestFactory(
 
 
 @register_fixture
+class ScheduledActionUpdateRequestFactory(
+    UpdateFactory[models.ScheduledActionUpdateRequest]
+): ...
+
+
+@register_fixture
 class FirewallGroupCreateRequestFactory(
     ModelFactory[models.FirewallGroupCreateRequest]
 ): ...

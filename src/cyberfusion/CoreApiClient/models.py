@@ -1199,6 +1199,7 @@ class ObjectModelNameEnum(StrEnum):
     MALWARE = "Malware"
     STANDARDS_SCAN = "StandardsScan"
     CARBON_TXT = "CarbonTxt"
+    SCHEDULED_ACTION = "ScheduledAction"
 
 
 class PhpExtensionEnum(StrEnum):
@@ -2632,6 +2633,7 @@ class CmsResource(BaseCoreApiModel):
     cluster_id: int
     software_name: CmsSoftwareNameEnum
     is_manually_created: bool
+    version: Optional[constr(pattern=r"^[0-9.]+$", min_length=1, max_length=20)]
     virtual_host_id: int
     includes: CmsIncludes
 
@@ -4240,6 +4242,177 @@ class StandardsScanResource(BaseCoreApiModel):
 
 class StandardsScansSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
+
+
+class ScheduledActionEnum(StrEnum):
+    XGRADE_NODE = "xgrade_node"
+    CREATE_NODE_ADD_ON = "create_node_add_on"
+    UPDATE_CLUSTER_NODES = "update_cluster_nodes"
+
+
+class ScheduledActionDataXgradeNode(BaseCoreApiModel):
+    data_type: Literal["xgrade_node"] = "xgrade_node"
+    node_id: int
+    product_id: int
+    original_product_id: int
+
+
+class ScheduledActionDataCreateNodeAddOn(BaseCoreApiModel):
+    data_type: Literal["create_node_add_on"] = "create_node_add_on"
+    node_id: int
+    product_id: int
+    quantity: conint(gt=0, le=4294967295)
+
+
+class ScheduledActionDataUpdateClusterNodes(BaseCoreApiModel):
+    data_type: Literal["update_cluster_nodes"] = "update_cluster_nodes"
+
+
+class ScheduledActionIncludes(BaseCoreApiModel):
+    cluster: Optional[ClusterResource]
+
+
+class ScheduledActionResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    action: ScheduledActionEnum
+    data: Union[
+        ScheduledActionDataXgradeNode,
+        ScheduledActionDataCreateNodeAddOn,
+        ScheduledActionDataUpdateClusterNodes,
+    ] = Field(..., discriminator="data_type")
+    scheduled_at: datetime
+    cluster_id: int
+    task_collection_uuid: Optional[UUID4]
+    deployment_status: DeploymentStatusEnum
+    includes: ScheduledActionIncludes
+
+
+class ScheduledActionUpdateRequest(BaseCoreApiModel):
+    scheduled_at: Optional[datetime] = None
+
+
+class ScheduledActionsSearchRequest(BaseCoreApiModel):
+    action: Optional[ScheduledActionEnum] = None
+    task_collection_uuid: Optional[UUID4] = None
+
+
+class HealthCheckCategoryEnum(StrEnum):
+    HOSTING_SECURITY = "hosting_security"
+    APPLICATION_SECURITY = "application_security"
+    PERFORMANCE = "performance"
+
+
+class HealthCheckSeverityEnum(StrEnum):
+    RECOMMENDATION = "recommendation"
+    WARNING = "warning"
+    CRITICAL = "critical"
+
+
+class HealthCheckTypeEnum(StrEnum):
+    INNODB_BUFFER_POOL_SIZE_SUFFICIENT = "InnoDB buffer pool size sufficient"
+    FPM_POOL_PHP_VERSION_UP_TO_DATE = "FPM pool PHP version up to date"
+    UNIX_USER_PHP_VERSION_UP_TO_DATE = "UNIX user PHP version up to date"
+    DATABASE_ENCRYPTION_AT_REST_ENABLED = "Database encryption at rest enabled"
+    SSH_RESTRICTED_TO_SPECIFIC_IP_NETWORKS = "SSH restricted to specific IP networks"
+    AUTOMATIC_OS_UPGRADES_ENABLED = "Automatic OS upgrades enabled"
+    OPTIMISING_FOR_DATABASE_ENABLED = "Optimising for database enabled"
+    QUIC_ENABLED_FOR_DOMAIN_ROUTER = "QUIC enabled for domain router"
+    DATABASE_INDEXES_CREATED = "Database indexes created"
+    WOOCOMMERCE_HPOS_ENABLED = "WooCommerce HPOS enabled"
+
+
+class HealthCheckDataInnodbBufferPoolSizeSufficient(BaseCoreApiModel):
+    check_type: Literal["InnoDB buffer pool size sufficient"] = (
+        "InnoDB buffer pool size sufficient"
+    )
+    current_bytes: int
+    target_bytes: int
+
+
+class HealthCheckDataFpmPoolPhpVersionUpToDate(BaseCoreApiModel):
+    check_type: Literal["FPM pool PHP version up to date"] = (
+        "FPM pool PHP version up to date"
+    )
+
+
+class HealthCheckDataUnixUserPhpVersionUpToDate(BaseCoreApiModel):
+    check_type: Literal["UNIX user PHP version up to date"] = (
+        "UNIX user PHP version up to date"
+    )
+
+
+class HealthCheckDataDatabaseEncryptionAtRestEnabled(BaseCoreApiModel):
+    check_type: Literal["Database encryption at rest enabled"] = (
+        "Database encryption at rest enabled"
+    )
+
+
+class HealthCheckDataSshRestrictedToSpecificIpNetworks(BaseCoreApiModel):
+    check_type: Literal["SSH restricted to specific IP networks"] = (
+        "SSH restricted to specific IP networks"
+    )
+
+
+class HealthCheckDataAutomaticOsUpgradesEnabled(BaseCoreApiModel):
+    check_type: Literal["Automatic OS upgrades enabled"] = (
+        "Automatic OS upgrades enabled"
+    )
+
+
+class HealthCheckDataOptimisingForDatabaseEnabled(BaseCoreApiModel):
+    check_type: Literal["Optimising for database enabled"] = (
+        "Optimising for database enabled"
+    )
+
+
+class HealthCheckDataQuicEnabledForDomainRouter(BaseCoreApiModel):
+    check_type: Literal["QUIC enabled for domain router"] = (
+        "QUIC enabled for domain router"
+    )
+
+
+class HealthCheckDataDatabaseIndexesCreated(BaseCoreApiModel):
+    check_type: Literal["Database indexes created"] = "Database indexes created"
+
+
+class HealthCheckDataWoocommerceHposEnabled(BaseCoreApiModel):
+    check_type: Literal["WooCommerce HPOS enabled"] = "WooCommerce HPOS enabled"
+
+
+class HealthCheckIncludes(BaseCoreApiModel):
+    cluster: Optional[ClusterResource]
+
+
+class HealthCheckResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    cluster_id: int
+    check_type: HealthCheckTypeEnum
+    category: HealthCheckCategoryEnum
+    healthy: bool
+    since: datetime
+    severity: HealthCheckSeverityEnum
+    silenced_at: Optional[datetime]
+    object_model_name: ObjectModelNameEnum
+    object_id: int
+    data: Union[
+        HealthCheckDataInnodbBufferPoolSizeSufficient,
+        HealthCheckDataFpmPoolPhpVersionUpToDate,
+        HealthCheckDataUnixUserPhpVersionUpToDate,
+        HealthCheckDataDatabaseEncryptionAtRestEnabled,
+        HealthCheckDataSshRestrictedToSpecificIpNetworks,
+        HealthCheckDataAutomaticOsUpgradesEnabled,
+        HealthCheckDataOptimisingForDatabaseEnabled,
+        HealthCheckDataQuicEnabledForDomainRouter,
+        HealthCheckDataDatabaseIndexesCreated,
+        HealthCheckDataWoocommerceHposEnabled,
+    ] = Field(..., discriminator="check_type")
+    motivation: constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
+    deployment_status: DeploymentStatusEnum
+    includes: HealthCheckIncludes
 
 
 NestedPathsDict.model_rebuild()

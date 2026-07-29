@@ -49,6 +49,8 @@ from . import (
     mail_domains,
     standards_scans,
     available_versions,
+    scheduled_actions,
+    health_checks,
 )
 
 __all__ = [
@@ -96,6 +98,8 @@ __all__ = [
     "regions",
     "ssh_keys",
     "standards_scans",
+    "scheduled_actions",
+    "health_checks",
     "task_collections",
     "unix_users",
     "url_redirects",

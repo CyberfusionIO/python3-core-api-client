@@ -1,4 +1,5 @@
 from cyberfusion.CoreApiClient import models
+from datetime import datetime
 from typing import Optional
 
 from cyberfusion.CoreApiClient.interfaces import Resource
@@ -22,6 +23,25 @@ class NodeAddOns(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
+
+    def schedule_create_node_add_on(
+        self,
+        request: models.NodeAddOnCreateRequest,
+        *,
+        scheduled_at: datetime,
+    ) -> DtoResponse[models.ScheduledActionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            "/api/v1/node-add-ons/schedule",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={
+                "scheduled_at": scheduled_at,
+            },
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ScheduledActionResource
+        )
 
     def list_node_add_ons(
         self,

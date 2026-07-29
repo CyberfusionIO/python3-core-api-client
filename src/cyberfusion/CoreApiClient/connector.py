@@ -325,6 +325,14 @@ class CoreApiConnector(CoreApiClient):
         return resources.carbon_txts.CarbonTxts(self)
 
     @cached_property
+    def scheduled_actions(self) -> resources.scheduled_actions.ScheduledActions:
+        return resources.scheduled_actions.ScheduledActions(self)
+
+    @cached_property
+    def health_checks(self) -> resources.health_checks.HealthChecks:
+        return resources.health_checks.HealthChecks(self)
+
+    @cached_property
     def firewall_groups(self) -> resources.firewall_groups.FirewallGroups:
         return resources.firewall_groups.FirewallGroups(self)
 
