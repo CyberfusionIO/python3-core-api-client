@@ -1561,3 +1561,20 @@ class Clusters(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.DatabaseInnodbReport)
+
+    def refresh_cluster_health_checks(
+        self,
+        *,
+        id_: int,
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/clusters/{id_}/health-checks/refresh",
+            data=None,
+            query_parameters={
+                "callback_url": callback_url,
+            },
+        )
+
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

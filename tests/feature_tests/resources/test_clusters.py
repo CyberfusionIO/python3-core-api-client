@@ -725,3 +725,9 @@ def test_read_database_users_metrics_experimental(
         start_timestamp=faker.date_time(),
         end_timestamp=faker.date_time(),
     )
+
+
+def test_refresh_cluster_health_checks(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.refresh_cluster_health_checks(id_=faker.pyint())
