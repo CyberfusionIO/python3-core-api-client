@@ -1123,6 +1123,10 @@ class NodeRedisGroupProperties(BaseCoreApiModel):
     is_master: bool
 
 
+class NodePhpGroupProperties(BaseCoreApiModel):
+    is_master: bool
+
+
 class ObjectModelNameEnum(StrEnum):
     BORG_ARCHIVE = "BorgArchive"
     BORG_REPOSITORY = "BorgRepository"
@@ -1163,6 +1167,8 @@ class ObjectModelNameEnum(StrEnum):
     BORG_REPOSITORY_SSH_KEY = "BorgRepositorySshKey"
     UNIX_USER = "UnixUser"
     UNIX_USER_RABBITMQ_CREDENTIALS = "UnixUserRabbitmqCredentials"
+    CLUSTER_RABBITMQ_CREDENTIALS = "ClusterRabbitmqCredentials"
+    SERVICE_ACCOUNT_RABBITMQ_CREDENTIALS = "ServiceAccountRabbitmqCredentials"
     HAPROXY_LISTEN = "HaproxyListen"
     HAPROXY_LISTEN_TO_NODE = "HaproxyListenToNode"
     URL_REDIRECT = "UrlRedirect"
@@ -1932,6 +1938,7 @@ class NodeGroupsProperties(BaseCoreApiModel):
     Redis: Optional[NodeRedisGroupProperties]
     MariaDB: Optional[NodeMariadbGroupProperties]
     RabbitMQ: Optional[NodeRabbitmqGroupProperties]
+    PHP: Optional[NodePhpGroupProperties]
 
 
 class NodeIncludes(BaseCoreApiModel):
@@ -4321,6 +4328,7 @@ class HealthCheckTypeEnum(StrEnum):
     QUIC_ENABLED_FOR_DOMAIN_ROUTER = "QUIC enabled for domain router"
     DATABASE_INDEXES_CREATED = "Database indexes created"
     WOOCOMMERCE_HPOS_ENABLED = "WooCommerce HPOS enabled"
+    CMS_VERSION_UP_TO_DATE = "CMS version up to date"
 
 
 class HealthCheckDataInnodbBufferPoolSizeSufficient(BaseCoreApiModel):
@@ -4381,6 +4389,10 @@ class HealthCheckDataWoocommerceHposEnabled(BaseCoreApiModel):
     check_type: Literal["WooCommerce HPOS enabled"] = "WooCommerce HPOS enabled"
 
 
+class HealthCheckDataCmsVersionUpToDate(BaseCoreApiModel):
+    check_type: Literal["CMS version up to date"] = "CMS version up to date"
+
+
 class HealthCheckIncludes(BaseCoreApiModel):
     cluster: Optional[ClusterResource]
 
@@ -4409,6 +4421,7 @@ class HealthCheckResource(BaseCoreApiModel):
         HealthCheckDataQuicEnabledForDomainRouter,
         HealthCheckDataDatabaseIndexesCreated,
         HealthCheckDataWoocommerceHposEnabled,
+        HealthCheckDataCmsVersionUpToDate,
     ] = Field(..., discriminator="check_type")
     motivation: constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
     deployment_status: DeploymentStatusEnum
