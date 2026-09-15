@@ -17,6 +17,15 @@ def test_CustomEncoder_datetime(faker: faker.Faker) -> None:
     assert json.dumps(date_time, cls=CustomEncoder)
 
 
+def test_CustomEncoder_time(faker: faker.Faker) -> None:
+    time = faker.time_object()
+
+    with pytest.raises(TypeError):
+        json.dumps(time)
+
+    assert json.dumps(time, cls=CustomEncoder)
+
+
 def test_CustomEncoder_IPv6Address(faker: faker.Faker) -> None:
     ipv6_address = IPv6Address(faker.ipv6())
 

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from enum import StrEnum, IntEnum
 from ipaddress import IPv4Address, IPv6Address
 from typing import Dict, List, Optional, Union, Any, Literal
@@ -144,7 +144,7 @@ class BorgArchiveContentObjectTypeEnum(StrEnum):
     SYMBOLIC_LINK = "symbolic_link"
 
 
-class TimeUnitEnum(StrEnum):
+class GranularityEnum(StrEnum):
     HOURLY = "hourly"
     DAILY = "daily"
     WEEKLY = "weekly"
@@ -172,7 +172,6 @@ class BorgRepositoryCreateRequest(BaseCoreApiModel):
     keep_monthly: Optional[int]
     keep_yearly: Optional[int]
     database_id: Optional[int]
-    frequency: TimeUnitEnum
 
 
 class BorgRepositoryUpdateRequest(BaseCoreApiModel):
@@ -181,7 +180,6 @@ class BorgRepositoryUpdateRequest(BaseCoreApiModel):
     keep_weekly: Optional[int] = None
     keep_monthly: Optional[int] = None
     keep_yearly: Optional[int] = None
-    frequency: Optional[TimeUnitEnum] = None
 
 
 class CmsConfigurationConstant(BaseCoreApiModel):
@@ -193,6 +191,7 @@ class CmsConfigurationConstant(BaseCoreApiModel):
 class CmsConfigurationConstantUpdateRequest(BaseCoreApiModel):
     value: Union[str, int, float, bool]
     index: Optional[conint(ge=0)] = None
+    raw: bool = False
 
 
 class CmsInstallNextcloudRequest(BaseCoreApiModel):
@@ -215,7 +214,7 @@ class CmsInstallWordpressRequest(BaseCoreApiModel):
     site_url: AnyUrl
     locale: constr(pattern=r"^[a-zA-Z_]+$", min_length=1, max_length=15)
     version: constr(pattern=r"^[0-9.]+$", min_length=1, max_length=20)
-    admin_email_address: EmailStr
+    admin_email_address: Optional[EmailStr] = None
 
 
 class CmsOneTimeLogin(BaseCoreApiModel):
@@ -259,11 +258,16 @@ class CmsAutoInstallWordpressRequest(BaseCoreApiModel):
     site_title: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=253)
     locale: constr(pattern=r"^[a-zA-Z_]+$", min_length=1, max_length=15)
     version: constr(pattern=r"^[0-9.]+$", min_length=1, max_length=20)
-    admin_email_address: EmailStr
+    admin_email_address: Optional[EmailStr] = None
 
 
 class CmsWoocommerceHpos(BaseCoreApiModel):
     enabled: bool
+
+
+class CmsServerWpCron(BaseCoreApiModel):
+    cron_id: Optional[int]
+    disabled_in_wordpress: bool
 
 
 class CmsDatabaseIndex(BaseCoreApiModel):
@@ -1203,9 +1207,9 @@ class ObjectModelNameEnum(StrEnum):
     PRODUCT = "Product"
     TOMBSTONE = "Tombstone"
     MALWARE = "Malware"
-    STANDARDS_SCAN = "StandardsScan"
     CARBON_TXT = "CarbonTxt"
     SCHEDULED_ACTION = "ScheduledAction"
+    MAINTENANCE_CAMPAIGN = "Maintenance campaign"
 
 
 class PhpExtensionEnum(StrEnum):
@@ -1418,6 +1422,7 @@ class RegionIncludes(BaseCoreApiModel):
 class RegionResource(BaseCoreApiModel):
     id: int
     name: constr(pattern=r"^[A-Z0-9-]+$", min_length=1, max_length=32)
+    timezone: constr(min_length=1)
     iso_3166_alpha_2_country_code: Iso3166Alpha2CountryCodeEnum
     includes: RegionIncludes
 
@@ -1570,6 +1575,8 @@ class ValidationError(BaseCoreApiModel):
     loc: List[Union[str, int]]
     msg: str
     type: str
+    input: Optional[Any] = None
+    ctx: Optional[Dict[str, Any]] = None
 
 
 class VirtualHostDocumentRoot(BaseCoreApiModel):
@@ -1599,9 +1606,9 @@ class VirtualHostUpdateRequest(BaseCoreApiModel):
 
 class BorgArchiveContent(BaseCoreApiModel):
     object_type: BorgArchiveContentObjectTypeEnum
-    symbolic_mode: constr(pattern=r"^[rwx\+\-dlsStT]+$", min_length=10, max_length=10)
-    username: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
-    group_name: constr(pattern=r"^[a-z0-9-_]+$", min_length=1, max_length=32)
+    symbolic_mode: str
+    username: str
+    group_name: str
     path: str
     link_target: Optional[str]
     modification_time: datetime
@@ -1635,6 +1642,7 @@ class ClusterCreateRequest(BaseCoreApiModel):
     region_id: int
     description: constr(pattern=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
     nfs_enabled: bool
+    email_address: EmailStr
     cephfs_enabled: Optional[bool] = None
 
 
@@ -1659,6 +1667,9 @@ class ClusterResource(BaseCoreApiModel):
     description: constr(pattern=r"^[a-zA-Z0-9-_. ]+$", min_length=1, max_length=255)
     includes: ClusterIncludes
     nfs_enabled: bool
+    is_ready: bool
+    create_task_collection_uuid: Optional[UUID4]
+    last_health_checks_refresh_task_collection_uuid: Optional[UUID4]
     cephfs_enabled: bool | None = None
 
 
@@ -1886,6 +1897,7 @@ class ProductResource(BaseCoreApiModel):
     memory_mib: Optional[int]
     cpu_cores: Optional[int]
     disk_gib: Optional[int]
+    bulk_disk_gib: Optional[int]
     allow_upgrade_to: List[str]
     allow_downgrade_to: List[str]
     price: confloat(ge=0.0)
@@ -1959,6 +1971,7 @@ class NodeResource(BaseCoreApiModel):
     load_balancer_health_checks_groups_pairs: Dict[NodeGroupEnum, List[NodeGroupEnum]]
     groups_properties: NodeGroupsProperties
     is_ready: bool
+    create_task_collection_uuid: Optional[UUID4]
     deployment_status: DeploymentStatusEnum
     includes: NodeIncludes
 
@@ -2077,8 +2090,15 @@ class TaskCollectionResource(BaseCoreApiModel):
     collection_type: TaskCollectionTypeEnum
     request_id: UUID4 | None
     cluster_id: Optional[int]
+    sends_notification: bool
     reference: constr(pattern=r"^[a-zA-Z0-9-_ ]+$", min_length=1, max_length=255)
     includes: TaskCollectionIncludes
+
+
+class NotifyOnFailureEnum(StrEnum):
+    EMAIL = "email"
+    NONE = "none"
+    TICKET = "ticket"
 
 
 class TaskResult(BaseCoreApiModel):
@@ -2087,6 +2107,7 @@ class TaskResult(BaseCoreApiModel):
     message: Optional[str]
     state: TaskStateEnum
     retries: conint(ge=0)
+    notify_on_failure: NotifyOnFailureEnum
     free_form_data: Dict[str, Any]
     started_at: datetime | None = None
     completed_at: datetime | None = None
@@ -2462,7 +2483,7 @@ class MalwareResource(BaseCoreApiModel):
     updated_at: datetime
     cluster_id: int
     unix_user_id: int
-    name: constr(pattern=r"^\{([A-Z]+)\}[a-zA-Z0-9-_.]+$", min_length=1, max_length=255)
+    name: constr(pattern=r"^[ -~]+$", min_length=1, max_length=255)
     path: str
     last_seen_at: datetime
     includes: MalwareIncludes
@@ -2481,6 +2502,8 @@ class NodeAddOnResource(BaseCoreApiModel):
     node_id: int
     product: constr(pattern=r"^[a-zA-Z0-9 ]+$", min_length=1, max_length=64)
     quantity: int
+    is_ready: bool
+    create_task_collection_uuid: Optional[UUID4]
     includes: NodeAddOnIncludes
 
 
@@ -2625,6 +2648,8 @@ class BorgArchiveResource(BaseCoreApiModel):
     borg_repository_id: int
     name: constr(pattern=r"^[a-zA-Z0-9-_]+$", min_length=1, max_length=64)
     is_manually_created: bool
+    is_ready: bool
+    create_task_collection_uuid: Optional[UUID4]
     includes: BorgArchiveIncludes
 
 
@@ -2640,7 +2665,10 @@ class CmsResource(BaseCoreApiModel):
     cluster_id: int
     software_name: CmsSoftwareNameEnum
     is_manually_created: bool
+    is_ready: bool
+    install_task_collection_uuid: Optional[UUID4]
     version: Optional[constr(pattern=r"^[0-9.]+$", min_length=1, max_length=20)]
+    version_updated_at: Optional[datetime]
     virtual_host_id: int
     includes: CmsIncludes
 
@@ -2830,6 +2858,24 @@ class ClusterBorgPropertiesUpdateRequest(BaseCoreApiModel):
     automatic_borg_repositories_prune_enabled: Optional[bool] = None
 
 
+class ClusterCmsPropertiesIncludes(BaseCoreApiModel):
+    pass
+
+
+class ClusterCmsPropertiesResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    default_admin_email_address: EmailStr
+    cluster_id: int
+    deployment_status: DeploymentStatusEnum
+    includes: ClusterCmsPropertiesIncludes
+
+
+class ClusterCmsPropertiesUpdateRequest(BaseCoreApiModel):
+    default_admin_email_address: Optional[EmailStr] = None
+
+
 class ClusterElasticsearchPropertiesCreateRequest(BaseCoreApiModel):
     elasticsearch_default_users_password: constr(
         pattern=r"^[a-zA-Z0-9]+$", min_length=24, max_length=255
@@ -2905,6 +2951,29 @@ class ClusterGrafanaPropertiesUpdateRequest(BaseCoreApiModel):
     grafana_domain: Optional[str] = None
 
 
+class HealthCheckProfileEnum(StrEnum):
+    DEFAULT = "default"
+    STRICT = "strict"
+
+
+class ClusterHealthCheckPropertiesIncludes(BaseCoreApiModel):
+    pass
+
+
+class ClusterHealthCheckPropertiesResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    profile: HealthCheckProfileEnum
+    cluster_id: int
+    deployment_status: DeploymentStatusEnum
+    includes: ClusterHealthCheckPropertiesIncludes
+
+
+class ClusterHealthCheckPropertiesUpdateRequest(BaseCoreApiModel):
+    profile: Optional[HealthCheckProfileEnum] = None
+
+
 class ClusterKernelcarePropertiesCreateRequest(BaseCoreApiModel):
     kernelcare_license_key: constr(
         pattern=r"^[a-zA-Z0-9]+$", min_length=16, max_length=16
@@ -2935,6 +3004,26 @@ class ClusterKernelcarePropertiesUpdateRequest(BaseCoreApiModel):
 
 class ClusterLoadBalancingPropertiesIncludes(BaseCoreApiModel):
     pass
+
+
+class ClusterMaintenancePropertiesIncludes(BaseCoreApiModel):
+    pass
+
+
+class ClusterMaintenancePropertiesResource(BaseCoreApiModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    periodic_standard_update_day_of_month: int
+    periodic_standard_update_time_of_day: time
+    cluster_id: int
+    deployment_status: DeploymentStatusEnum
+    includes: ClusterMaintenancePropertiesIncludes
+
+
+class ClusterMaintenancePropertiesUpdateRequest(BaseCoreApiModel):
+    periodic_standard_update_day_of_month: Optional[int] = None
+    periodic_standard_update_time_of_day: Optional[time] = None
 
 
 class ClusterMariadbPropertiesCreateRequest(BaseCoreApiModel):
@@ -3357,6 +3446,7 @@ class SpecificationNameEnum(StrEnum):
     CLUSTER_SUPPORTS_REDIS_INSTANCES = "Cluster supports Redis instances"
     CLUSTER_SUPPORTS_N8N_INSTANCES = "Cluster supports n8n instances"
     CLUSTER_SUPPORTS_UNIX_USERS = "Cluster supports UNIX users"
+    CLUSTER_SUPPORTS_CMSES = "Cluster supports CMSes"
     CLUSTER_SUPPORTS_FIREWALL_RULES = "Cluster supports firewall rules"
     CLUSTER_SUPPORTS_FIREWALL_GROUPS = "Cluster supports firewall groups"
     CLUSTER_SUPPORTS_MALDET_NODES = "Cluster supports maldet nodes"
@@ -3450,6 +3540,7 @@ class BorgArchivesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
     borg_repository_id: Optional[int] = None
     is_manually_created: Optional[bool] = None
+    is_ready: Optional[bool] = None
     name: Optional[str] = None
 
 
@@ -3476,6 +3567,11 @@ class ClustersBorgPropertiesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
 
 
+class ClustersCmsPropertiesSearchRequest(BaseCoreApiModel):
+    default_admin_email_address: Optional[EmailStr] = None
+    cluster_id: Optional[int] = None
+
+
 class ClustersElasticsearchPropertiesSearchRequest(BaseCoreApiModel):
     kibana_domain: Optional[str] = None
     cluster_id: Optional[int] = None
@@ -3491,8 +3587,18 @@ class ClustersGrafanaPropertiesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
 
 
+class ClustersHealthCheckPropertiesSearchRequest(BaseCoreApiModel):
+    profile: Optional[HealthCheckProfileEnum] = None
+    cluster_id: Optional[int] = None
+
+
 class ClustersKernelcarePropertiesSearchRequest(BaseCoreApiModel):
     kernelcare_license_key: Optional[str] = None
+    cluster_id: Optional[int] = None
+
+
+class ClustersMaintenancePropertiesSearchRequest(BaseCoreApiModel):
+    periodic_standard_update_day_of_month: Optional[int] = None
     cluster_id: Optional[int] = None
 
 
@@ -3546,6 +3652,7 @@ class ClustersSearchRequest(BaseCoreApiModel):
     customer_id: Optional[int] = None
     cephfs_enabled: Optional[bool] = None
     nfs_enabled: Optional[bool] = None
+    is_ready: Optional[bool] = None
 
 
 class ClustersSinglestorePropertiesSearchRequest(BaseCoreApiModel):
@@ -3558,6 +3665,7 @@ class CmsesSearchRequest(BaseCoreApiModel):
     cluster_id: Optional[int] = None
     software_name: Optional[CmsSoftwareNameEnum] = None
     is_manually_created: Optional[bool] = None
+    is_ready: Optional[bool] = None
     virtual_host_id: Optional[int] = None
 
 
@@ -3723,6 +3831,7 @@ class NodeAddOnsSearchRequest(BaseCoreApiModel):
     node_id: Optional[int] = None
     product: Optional[str] = None
     quantity: Optional[int] = None
+    is_ready: Optional[bool] = None
 
 
 class NodesSearchRequest(BaseCoreApiModel):
@@ -3877,6 +3986,7 @@ class RedisInstancesSearchRequest(BaseCoreApiModel):
 
 class RegionsSearchRequest(BaseCoreApiModel):
     name: Optional[str] = None
+    timezone: Optional[str] = None
     iso_3166_alpha_2_country_code: Iso3166Alpha2CountryCodeEnum | None = None
 
 
@@ -4255,6 +4365,7 @@ class ScheduledActionEnum(StrEnum):
     XGRADE_NODE = "xgrade_node"
     CREATE_NODE_ADD_ON = "create_node_add_on"
     UPDATE_CLUSTER_NODES = "update_cluster_nodes"
+    RESTART_NODE = "restart_node"
 
 
 class ScheduledActionDataXgradeNode(BaseCoreApiModel):
@@ -4273,6 +4384,12 @@ class ScheduledActionDataCreateNodeAddOn(BaseCoreApiModel):
 
 class ScheduledActionDataUpdateClusterNodes(BaseCoreApiModel):
     data_type: Literal["update_cluster_nodes"] = "update_cluster_nodes"
+    cluster_id: int
+
+
+class ScheduledActionDataRestartNodes(BaseCoreApiModel):
+    data_type: Literal["restart_nodes"] = "restart_nodes"
+    node_ids: List[int]
 
 
 class ScheduledActionIncludes(BaseCoreApiModel):
@@ -4288,6 +4405,7 @@ class ScheduledActionResource(BaseCoreApiModel):
         ScheduledActionDataXgradeNode,
         ScheduledActionDataCreateNodeAddOn,
         ScheduledActionDataUpdateClusterNodes,
+        ScheduledActionDataRestartNodes,
     ] = Field(..., discriminator="data_type")
     scheduled_at: datetime
     cluster_id: int
@@ -4322,13 +4440,22 @@ class HealthCheckTypeEnum(StrEnum):
     FPM_POOL_PHP_VERSION_UP_TO_DATE = "FPM pool PHP version up to date"
     UNIX_USER_PHP_VERSION_UP_TO_DATE = "UNIX user PHP version up to date"
     DATABASE_ENCRYPTION_AT_REST_ENABLED = "Database encryption at rest enabled"
-    SSH_RESTRICTED_TO_SPECIFIC_IP_NETWORKS = "SSH restricted to specific IP networks"
     AUTOMATIC_OS_UPGRADES_ENABLED = "Automatic OS upgrades enabled"
     OPTIMISING_FOR_DATABASE_ENABLED = "Optimising for database enabled"
     QUIC_ENABLED_FOR_DOMAIN_ROUTER = "QUIC enabled for domain router"
     DATABASE_INDEXES_CREATED = "Database indexes created"
     WOOCOMMERCE_HPOS_ENABLED = "WooCommerce HPOS enabled"
+    SERVER_WP_CRON_ENABLED = "Server wp-cron enabled"
     CMS_VERSION_UP_TO_DATE = "CMS version up to date"
+    PHPMYADMIN_RESTRICTED_TO_SPECIFIC_IP_NETWORKS = (
+        "phpMyAdmin restricted to specific IP networks"
+    )
+    UNIX_USER_PASSWORD_LOGIN_DISABLED = "UNIX user password login disabled"
+    FIREWALL_RULE_RESTRICTED_TO_SPECIFIC_IP_NETWORKS = (
+        "Firewall rule restricted to specific IP networks"
+    )
+    CERTIFICATE_NOT_EXPIRED = "Certificate not expired"
+    SECURITY_TXT_POLICY_NOT_EXPIRED = "Security TXT policy not expired"
 
 
 class HealthCheckDataInnodbBufferPoolSizeSufficient(BaseCoreApiModel):
@@ -4343,23 +4470,19 @@ class HealthCheckDataFpmPoolPhpVersionUpToDate(BaseCoreApiModel):
     check_type: Literal["FPM pool PHP version up to date"] = (
         "FPM pool PHP version up to date"
     )
+    security_support_ends_at: Optional[datetime]
 
 
 class HealthCheckDataUnixUserPhpVersionUpToDate(BaseCoreApiModel):
     check_type: Literal["UNIX user PHP version up to date"] = (
         "UNIX user PHP version up to date"
     )
+    security_support_ends_at: Optional[datetime]
 
 
 class HealthCheckDataDatabaseEncryptionAtRestEnabled(BaseCoreApiModel):
     check_type: Literal["Database encryption at rest enabled"] = (
         "Database encryption at rest enabled"
-    )
-
-
-class HealthCheckDataSshRestrictedToSpecificIpNetworks(BaseCoreApiModel):
-    check_type: Literal["SSH restricted to specific IP networks"] = (
-        "SSH restricted to specific IP networks"
     )
 
 
@@ -4389,8 +4512,49 @@ class HealthCheckDataWoocommerceHposEnabled(BaseCoreApiModel):
     check_type: Literal["WooCommerce HPOS enabled"] = "WooCommerce HPOS enabled"
 
 
+class HealthCheckDataServerWpCronEnabled(BaseCoreApiModel):
+    check_type: Literal["Server wp-cron enabled"] = "Server wp-cron enabled"
+
+
 class HealthCheckDataCmsVersionUpToDate(BaseCoreApiModel):
     check_type: Literal["CMS version up to date"] = "CMS version up to date"
+    version: str
+
+
+class HealthCheckDataPhpmyadminRestrictedToSpecificIpNetworks(BaseCoreApiModel):
+    check_type: Literal["phpMyAdmin restricted to specific IP networks"] = (
+        "phpMyAdmin restricted to specific IP networks"
+    )
+
+
+class HealthCheckDataUnixUserPasswordLoginDisabled(BaseCoreApiModel):
+    check_type: Literal["UNIX user password login disabled"] = (
+        "UNIX user password login disabled"
+    )
+
+
+class HealthCheckDataFirewallRuleRestrictedToSpecificIpNetworks(BaseCoreApiModel):
+    check_type: Literal["Firewall rule restricted to specific IP networks"] = (
+        "Firewall rule restricted to specific IP networks"
+    )
+
+
+class HealthCheckDataCertificateNotExpired(BaseCoreApiModel):
+    check_type: Literal["Certificate not expired"] = "Certificate not expired"
+
+
+class HealthCheckDataSecurityTxtPolicyNotExpired(BaseCoreApiModel):
+    check_type: Literal["Security TXT policy not expired"] = (
+        "Security TXT policy not expired"
+    )
+
+
+class HealthCheckMotivationResource(BaseCoreApiModel):
+    summary: constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
+    advantages: List[str]
+    tradeoffs: List[str]
+    recommended_cases: List[str]
+    documentation_url: AnyUrl
 
 
 class HealthCheckIncludes(BaseCoreApiModel):
@@ -4415,15 +4579,20 @@ class HealthCheckResource(BaseCoreApiModel):
         HealthCheckDataFpmPoolPhpVersionUpToDate,
         HealthCheckDataUnixUserPhpVersionUpToDate,
         HealthCheckDataDatabaseEncryptionAtRestEnabled,
-        HealthCheckDataSshRestrictedToSpecificIpNetworks,
         HealthCheckDataAutomaticOsUpgradesEnabled,
         HealthCheckDataOptimisingForDatabaseEnabled,
         HealthCheckDataQuicEnabledForDomainRouter,
         HealthCheckDataDatabaseIndexesCreated,
         HealthCheckDataWoocommerceHposEnabled,
+        HealthCheckDataServerWpCronEnabled,
         HealthCheckDataCmsVersionUpToDate,
+        HealthCheckDataPhpmyadminRestrictedToSpecificIpNetworks,
+        HealthCheckDataUnixUserPasswordLoginDisabled,
+        HealthCheckDataFirewallRuleRestrictedToSpecificIpNetworks,
+        HealthCheckDataCertificateNotExpired,
+        HealthCheckDataSecurityTxtPolicyNotExpired,
     ] = Field(..., discriminator="check_type")
-    motivation: constr(pattern=r"^[ -~\n]+$", min_length=1, max_length=65535)
+    motivation: HealthCheckMotivationResource
     deployment_status: DeploymentStatusEnum
     includes: HealthCheckIncludes
 

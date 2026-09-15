@@ -156,7 +156,8 @@ class Clusters(Resource):
         *,
         id_: int,
         timestamp: str,
-        time_unit: Optional[models.UnixUsersHomeDirectoryUsageResource] = None,
+        granularity: Optional[models.GranularityEnum] = None,
+        time_unit: Optional[models.GranularityEnum] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UnixUsersHomeDirectoryUsageResource]]:
         local_response = self.api_connector.send_or_fail(
@@ -165,6 +166,7 @@ class Clusters(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
+                "granularity": granularity,
                 "time_unit": time_unit,
             }
             | construct_includes_query_parameter(includes),
@@ -228,6 +230,48 @@ class Clusters(Resource):
 
         return DtoResponse.from_responses(
             local_response, models.CompositeSpecificationSatisfyResultResource
+        )
+
+    def read_cms_properties(
+        self, *, id_: int, includes: list[str] | None = None
+    ) -> DtoResponse[models.ClusterCmsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/cms",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterCmsPropertiesResource
+        )
+
+    def read_health_check_properties(
+        self, *, id_: int, includes: list[str] | None = None
+    ) -> DtoResponse[models.ClusterHealthCheckPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/health-check",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterHealthCheckPropertiesResource
+        )
+
+    def read_maintenance_properties(
+        self, *, id_: int, includes: list[str] | None = None
+    ) -> DtoResponse[models.ClusterMaintenancePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/clusters/{id_}/properties/maintenance",
+            data=None,
+            query_parameters=construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterMaintenancePropertiesResource
         )
 
     def read_borg_properties(
@@ -768,6 +812,74 @@ class Clusters(Resource):
             local_response, models.ClusterSinglestorePropertiesResource
         )
 
+    def list_cms_properties(
+        self,
+        *,
+        include_filters: models.ClustersCmsPropertiesSearchRequest | None = None,
+        includes: list[str] | None = None,
+    ) -> DtoResponse[list[models.ClusterCmsPropertiesResource]]:
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
+            "GET",
+            "/api/v1/clusters/properties/cms",
+            data=None,
+            query_parameters=(
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
+            | construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterCmsPropertiesResource
+        )
+
+    def list_health_check_properties(
+        self,
+        *,
+        include_filters: models.ClustersHealthCheckPropertiesSearchRequest
+        | None = None,
+        includes: list[str] | None = None,
+    ) -> DtoResponse[list[models.ClusterHealthCheckPropertiesResource]]:
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
+            "GET",
+            "/api/v1/clusters/properties/health-check",
+            data=None,
+            query_parameters=(
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
+            | construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterHealthCheckPropertiesResource
+        )
+
+    def list_maintenance_properties(
+        self,
+        *,
+        include_filters: models.ClustersMaintenancePropertiesSearchRequest
+        | None = None,
+        includes: list[str] | None = None,
+    ) -> DtoResponse[list[models.ClusterMaintenancePropertiesResource]]:
+        local_responses = self.api_connector.send_or_fail_with_auto_pagination(
+            "GET",
+            "/api/v1/clusters/properties/maintenance",
+            data=None,
+            query_parameters=(
+                include_filters.model_dump(exclude_unset=True)
+                if include_filters
+                else {}
+            )
+            | construct_includes_query_parameter(includes),
+        )
+
+        return DtoResponse.from_responses(
+            local_responses, models.ClusterMaintenancePropertiesResource
+        )
+
     def list_borg_properties(
         self,
         *,
@@ -1188,6 +1300,57 @@ class Clusters(Resource):
 
         return DtoResponse.from_responses(
             local_responses, models.ClusterWebhookPropertiesResource
+        )
+
+    def update_cms_properties(
+        self,
+        request: models.ClusterCmsPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterCmsPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/cms",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterCmsPropertiesResource
+        )
+
+    def update_health_check_properties(
+        self,
+        request: models.ClusterHealthCheckPropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterHealthCheckPropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/health-check",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterHealthCheckPropertiesResource
+        )
+
+    def update_maintenance_properties(
+        self,
+        request: models.ClusterMaintenancePropertiesUpdateRequest,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.ClusterMaintenancePropertiesResource]:
+        local_response = self.api_connector.send_or_fail(
+            "PATCH",
+            f"/api/v1/clusters/{id_}/properties/maintenance",
+            data=request.model_dump(exclude_unset=True),
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(
+            local_response, models.ClusterMaintenancePropertiesResource
         )
 
     def update_borg_properties(

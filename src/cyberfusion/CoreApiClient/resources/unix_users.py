@@ -109,7 +109,8 @@ class UnixUsers(Resource):
         *,
         id_: int,
         timestamp: str,
-        time_unit: Optional[models.UnixUserUsageResource] = None,
+        granularity: Optional[models.GranularityEnum] = None,
+        time_unit: Optional[models.GranularityEnum] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.UnixUserUsageResource]]:
         local_response = self.api_connector.send_or_fail(
@@ -118,6 +119,7 @@ class UnixUsers(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
+                "granularity": granularity,
                 "time_unit": time_unit,
             }
             | construct_includes_query_parameter(includes),

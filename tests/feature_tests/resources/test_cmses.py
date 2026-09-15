@@ -192,6 +192,18 @@ def test_get_cms_woocommerce_hpos(
     api_connector.cmses.get_cms_woocommerce_hpos(id_=faker.pyint())
 
 
+def test_get_cms_server_wp_cron(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.cmses.get_cms_server_wp_cron(id_=faker.pyint())
+
+
+def test_configure_cms_server_wp_cron(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.cmses.configure_cms_server_wp_cron(id_=faker.pyint())
+
+
 def test_generate_cms_one_time_login(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:

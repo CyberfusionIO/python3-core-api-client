@@ -36,6 +36,9 @@ from tests.conftest import (
     ClusterRedisPropertiesUpdateRequestFactory,
     ClusterSinglestorePropertiesUpdateRequestFactory,
     ClusterWebhookPropertiesUpdateRequestFactory,
+    ClusterCmsPropertiesUpdateRequestFactory,
+    ClusterHealthCheckPropertiesUpdateRequestFactory,
+    ClusterMaintenancePropertiesUpdateRequestFactory,
 )
 import faker
 
@@ -399,6 +402,24 @@ def test_read_webhook_properties(
     api_connector.clusters.read_webhook_properties(id_=faker.pyint())
 
 
+def test_read_cms_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_cms_properties(id_=faker.pyint())
+
+
+def test_read_health_check_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_health_check_properties(id_=faker.pyint())
+
+
+def test_read_maintenance_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.read_maintenance_properties(id_=faker.pyint())
+
+
 def test_read_current_deployment_task_collection(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
@@ -517,6 +538,24 @@ def test_list_webhook_properties(
     api_connector: CoreApiConnector, faker: faker.Faker
 ) -> None:
     api_connector.clusters.list_webhook_properties()
+
+
+def test_list_cms_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.list_cms_properties()
+
+
+def test_list_health_check_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.list_health_check_properties()
+
+
+def test_list_maintenance_properties(
+    api_connector: CoreApiConnector, faker: faker.Faker
+) -> None:
+    api_connector.clusters.list_maintenance_properties()
 
 
 def test_update_borg_properties(
@@ -698,6 +737,38 @@ def test_update_webhook_properties(
 ) -> None:
     api_connector.clusters.update_webhook_properties(
         cluster_webhook_properties_update_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_update_cms_properties(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cluster_cms_properties_update_request_factory: ClusterCmsPropertiesUpdateRequestFactory,
+) -> None:
+    api_connector.clusters.update_cms_properties(
+        cluster_cms_properties_update_request_factory.build(), id_=faker.pyint()
+    )
+
+
+def test_update_health_check_properties(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cluster_health_check_properties_update_request_factory: ClusterHealthCheckPropertiesUpdateRequestFactory,
+) -> None:
+    api_connector.clusters.update_health_check_properties(
+        cluster_health_check_properties_update_request_factory.build(),
+        id_=faker.pyint(),
+    )
+
+
+def test_update_maintenance_properties(
+    api_connector: CoreApiConnector,
+    faker: faker.Faker,
+    cluster_maintenance_properties_update_request_factory: ClusterMaintenancePropertiesUpdateRequestFactory,
+) -> None:
+    api_connector.clusters.update_maintenance_properties(
+        cluster_maintenance_properties_update_request_factory.build(),
+        id_=faker.pyint(),
     )
 
 
