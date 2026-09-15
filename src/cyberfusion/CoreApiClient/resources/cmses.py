@@ -359,6 +359,37 @@ class Cmses(Resource):
 
         return DtoResponse.from_responses(local_response, models.CmsDatabaseIndex)
 
+    def get_cms_server_wp_cron(
+        self,
+        *,
+        id_: int,
+    ) -> DtoResponse[models.CmsServerWpCron]:
+        local_response = self.api_connector.send_or_fail(
+            "GET",
+            f"/api/v1/cmses/{id_}/wordpress/wp-cron",
+            data=None,
+            query_parameters={},
+        )
+
+        return DtoResponse.from_responses(local_response, models.CmsServerWpCron)
+
+    def configure_cms_server_wp_cron(
+        self,
+        *,
+        id_: int,
+        callback_url: Optional[str] = None,
+    ) -> DtoResponse[models.TaskCollectionResource]:
+        local_response = self.api_connector.send_or_fail(
+            "POST",
+            f"/api/v1/cmses/{id_}/wordpress/wp-cron",
+            data=None,
+            query_parameters={
+                "callback_url": callback_url,
+            },
+        )
+
+        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)
+
     def get_cms_woocommerce_hpos(
         self,
         *,

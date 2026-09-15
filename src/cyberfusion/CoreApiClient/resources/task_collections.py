@@ -1,7 +1,6 @@
 from cyberfusion.CoreApiClient import models
 
 from cyberfusion.CoreApiClient.interfaces import Resource
-from cyberfusion.CoreApiClient._helpers import construct_includes_query_parameter
 from cyberfusion.CoreApiClient.http import DtoResponse
 
 
@@ -19,18 +18,3 @@ class TaskCollections(Resource):
         )
 
         return DtoResponse.from_responses(local_response, models.TaskResult)
-
-    def retry_task_collection(
-        self,
-        *,
-        uuid: str,
-        includes: list[str] | None = None,
-    ) -> DtoResponse[models.TaskCollectionResource]:
-        local_response = self.api_connector.send_or_fail(
-            "POST",
-            f"/api/v1/task-collections/{uuid}/retry",
-            data=None,
-            query_parameters=construct_includes_query_parameter(includes),
-        )
-
-        return DtoResponse.from_responses(local_response, models.TaskCollectionResource)

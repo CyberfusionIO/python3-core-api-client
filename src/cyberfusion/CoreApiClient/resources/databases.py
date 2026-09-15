@@ -130,7 +130,8 @@ class Databases(Resource):
         *,
         id_: int,
         timestamp: str,
-        time_unit: Optional[models.DatabaseUsageResource] = None,
+        granularity: Optional[models.GranularityEnum] = None,
+        time_unit: Optional[models.GranularityEnum] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.DatabaseUsageResource]]:
         local_response = self.api_connector.send_or_fail(
@@ -139,6 +140,7 @@ class Databases(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
+                "granularity": granularity,
                 "time_unit": time_unit,
             }
             | construct_includes_query_parameter(includes),

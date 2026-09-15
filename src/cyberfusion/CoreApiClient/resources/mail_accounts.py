@@ -92,7 +92,8 @@ class MailAccounts(Resource):
         *,
         id_: int,
         timestamp: str,
-        time_unit: Optional[models.MailAccountUsageResource] = None,
+        granularity: Optional[models.GranularityEnum] = None,
+        time_unit: Optional[models.GranularityEnum] = None,
         includes: list[str] | None = None,
     ) -> DtoResponse[list[models.MailAccountUsageResource]]:
         local_response = self.api_connector.send_or_fail(
@@ -101,6 +102,7 @@ class MailAccounts(Resource):
             data=None,
             query_parameters={
                 "timestamp": timestamp,
+                "granularity": granularity,
                 "time_unit": time_unit,
             }
             | construct_includes_query_parameter(includes),

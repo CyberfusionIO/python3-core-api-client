@@ -11,6 +11,8 @@ class CustomEncoder(JSONEncoder):
     def default(self, o: Any) -> str:
         if isinstance(o, datetime.date):
             return o.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        elif isinstance(o, datetime.time):
+            return o.isoformat()
         elif isinstance(o, (IPv6Address, IPv4Address, UUID, AnyUrl)):
             return str(o)
 

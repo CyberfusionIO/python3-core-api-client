@@ -233,6 +233,24 @@ class ClusterWebhookPropertiesUpdateRequestFactory(
 
 
 @register_fixture
+class ClusterCmsPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterCmsPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterHealthCheckPropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterHealthCheckPropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
+class ClusterMaintenancePropertiesUpdateRequestFactory(
+    UpdateFactory[models.ClusterMaintenancePropertiesUpdateRequest]
+): ...
+
+
+@register_fixture
 class ScheduledActionUpdateRequestFactory(
     UpdateFactory[models.ScheduledActionUpdateRequest]
 ): ...
