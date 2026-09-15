@@ -1,5 +1,7 @@
 [build-system]
-requires = ["setuptools"]
+requires = [
+    "setuptools",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,10 +13,10 @@ authors = [
     { name = "Cyberfusion", email = "support@cyberfusion.io" },
 ]
 dependencies = [
-    "certifi==2026.2.25",
-    "requests==2.33.1",
-    "pydantic[email]==2.12.5",
+    "certifi>=2026.2",
+    "requests>=2.33,<3.0",
+    "pydantic[email]>=2.12,<3.0",
 ]
 
 [project.urls]
-"Source" = "https://github.com/CyberfusionIO/python3-core-api-client"
+Source = "https://github.com/CyberfusionIO/python3-core-api-client"

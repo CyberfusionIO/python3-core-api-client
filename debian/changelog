@@ -1,6 +1,7 @@
 python3-core-api-client (10.0) unstable; urgency=low
 
   - Update to Core API version 1.282.0
+  - Don't pin library versions to exact versions
 
  -- William Edwards <wedwards@cyberfusion.nl>  Tue, 15 Sep 2026 22:21:00 +0200
 
